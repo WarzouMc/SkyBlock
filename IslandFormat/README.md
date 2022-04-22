@@ -1,75 +1,167 @@
-# File extension 
-    .island
+# Folder architecture extension 
+* name/name.island -> main file, contain island structure
+* name/nbt/*.nbt -> tiles entities nbt file
 
-# Format
+# .island file format
 
 ## File structure
 
-<style type="text/css">
-.tg  {border-collapse:collapse;border-spacing:0;}
-.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
-  overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
-  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg .tg-9wq8{border-color:inherit;text-align:center;vertical-align:middle}
-.tg .tg-uzvj{border-color:inherit;font-weight:bold;text-align:center;vertical-align:middle}
-.tg .tg-vrnj{border-color:inherit;font-style:italic;text-align:center;vertical-align:middle}
-.tg .tg-nrix{border-color:inherit;text-align:center;vertical-align:middle}
-</style>
-<table class="tg">
+<table style="text-align:center">
 <thead>
   <tr>
-    <th class="tg-uzvj">Name</th>
-    <th class="tg-uzvj" colspan="3">Byte</th>
+    <th>Name</th>
+    <th colspan="3">Byte</th>
   </tr>
 </thead>
 <tbody>
   <tr>
-    <td class="tg-9wq8">signature</td>
-    <td class="tg-9wq8" colspan="3">u4</td>
+    <td>signature</td>
+    <td colspan="3">u4</td>
   </tr>
   <tr>
-    <td class="tg-9wq8" rowspan="3">minecraft_version</td>
-    <td class="tg-9wq8" rowspan="3">u3</td>
-    <td class="tg-vrnj">major</td>
-    <td class="tg-9wq8">u1</td>
+    <td rowspan="3">minecraft_version</td>
+    <td rowspan="3">u3</td>
+    <td style="font-style:italic">major</td>
+    <td>u1</td>
   </tr>
   <tr>
-    <td class="tg-vrnj">minor</td>
-    <td class="tg-9wq8">u1</td>
+    <td style="font-style:italic">minor</td>
+    <td>u1</td>
   </tr>
   <tr>
-    <td class="tg-vrnj">revision</td>
-    <td class="tg-9wq8">u1</td>
+    <td style="font-style:italic">revision</td>
+    <td>u1</td>
   </tr>
   <tr>
-    <td class="tg-nrix">used_blocks_count</td>
-    <td class="tg-nrix" colspan="3">u2</td>
+    <td>nbt_files_count</td>
+    <td colspan="3">u2</td>
   </tr>
   <tr>
-    <td class="tg-nrix">used_blocks</td>
-    <td class="tg-nrix" colspan="3"><span style="font-style:italic">block</span>[used_blocks_count]</td>
+    <td>nbt_files</td>
+    <td colspan="3">string[nbt_files_count]</td>
   </tr>
   <tr>
-    <td class="tg-9wq8" rowspan="3">cuboid_size</td>
-    <td class="tg-9wq8" rowspan="3">u6</td>
-    <td class="tg-vrnj">width</td>
-    <td class="tg-9wq8">u2</td>
+    <td>used_blocks_count</td>
+    <td colspan="3">u2</td>
   </tr>
   <tr>
-    <td class="tg-vrnj">length</td>
-    <td class="tg-9wq8">u2</td>
+    <td>used_blocks</td>
+    <td colspan="3">block[used_blocks_count]</td>
   </tr>
   <tr>
-    <td class="tg-vrnj">height</td>
-    <td class="tg-9wq8">u2</td>
+    <td rowspan="3">cuboid_size</td>
+    <td rowspan="3">u6</td>
+    <td style="font-style:italic">width</td>
+    <td>u2</td>
   </tr>
   <tr>
-    <td class="tg-9wq8">cuboid</td>
-    <td class="tg-9wq8" colspan="3"><span style="font-style:italic">varint</span>[width*length*height]</td>
+    <td style="font-style:italic">length</td>
+    <td>u2</td>
+  </tr>
+  <tr>
+    <td style="font-style:italic">height</td>
+    <td>u2</td>
+  </tr>
+  <tr>
+    <td>cuboid</td>
+    <td colspan="3">varint[width*length*height]</td>
+  </tr>
+  <tr>
+    <td>used_entities_count</td>
+    <td colspan="3">u1</td>
+  </tr>
+  <tr>
+    <td>used_entities</td>
+    <td colspan="3">used_entity[used_entities_count]</td>
+  </tr>
+
+  <tr>
+    <td>entities_count</td>
+    <td colspan="3">u1</td>
+  </tr>
+  <tr>
+    <td>entities</td>
+    <td colspan="3">entity[entities_count]</td>
+  </tr>
+</tbody>
+</table>
+
+## String structure
+
+<table style="text-align:center">
+<thread>
+  <tr>
+    <th>Name</th>
+    <th colspan="3">Byte</th>
+  </tr>
+</thread>
+<tbody>
+  <tr>
+    <td>length</td>
+    <td>u2</td>
+  </tr>
+  <tr>
+    <td>chars</td>
+    <td>byte[length]</td>
   </tr>
 </tbody>
 </table>
 
 ## Block structure
 
+<table style="text-align:center">
+<thead>
+  <tr>
+    <th>Name</th>
+    <th colspan="3">Byte</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>full_name<br></td>
+    <td colspan="3">string<br></td>
+  </tr>
+  <tr>
+    <td rowspan="3">states_count</td>
+    <td colspan="3" rowspan="3">u2</td>
+  </tr>
+  <tr>
+  </tr>
+  <tr>
+  </tr>
+  <tr>
+    <td>states</td>
+    <td>state[states_count]</td>
+  <tr>
+    <td>nbt_files_index</td>
+    <td>u2 (FFFF if no nbt)</td>
+  </tr>
+</tbody>
+</table>
+
+## Block state structure
+
+## Used entities structure
+
+## Entity structure
+
+<table style="text-align:center">
+<thead>
+  <tr>
+    <th>Name</th>
+    <th colspan="3">Byte</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>used_entities_index</td>
+    <td colspan="3">u1</td>
+  </tr>
+  <tr>
+    <td>location</td>
+    <td>u8</td>
+  </tr>
+</tbody>
+</table>
+
+For location see protocol on [wiki.vg](https://wiki.vg/Protocol#Position)
