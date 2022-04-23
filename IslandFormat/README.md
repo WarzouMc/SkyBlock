@@ -141,7 +141,41 @@
 
 ## Block state structure
 
+<table style="text-align:center">
+<thead>
+  <tr>
+    <th>Name</th>
+    <th>Byte</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>id</td>
+    <td>u1</td>
+  </tr>
+  <tr>
+    <td>value</td>
+    <td>u1</td>
+  </tr>
+</tbody>
+</table>
+
 ## Used entities structure
+
+<table style="text-align:center">
+<thead>
+  <tr>
+    <th>Name</th>
+    <th>Byte</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>nbt_file_index</td>
+    <td>u2</td>
+  </tr>
+</tbody>
+</table>
 
 ## Entity structure
 
