@@ -1,18 +1,31 @@
 package fr.warzou.island.format.writer.file
 
+import fr.il_totore.spigotmetadata.api.SpigotMetadataAPI
 import fr.warzou.island.format.core.RawIsland
+import fr.warzou.island.format.core.common.Version
+import org.bukkit.block.Block
 
-import java.io.{Closeable, File, FileOutputStream, FileWriter}
+import java.io.{File, FileOutputStream}
 
 class Writer(file: File) {
 
   private val outputStream: FileOutputStream = new FileOutputStream(file)
+  private val nbtManager = SpigotMetadataAPI.getAPI.getNBTManager
 
   def write(island: RawIsland): Unit = {
     write("skbl")
-    writeU1Int(-1)
-    writeU1Int(15)
-    writeU1Int(5)
+    writeVersion(island.minecraftVersion)
+    writeBlocks(island.blocks)
+  }
+
+  private def writeVersion(version: Version): Unit = {
+    writeU1Int(version.major)
+    writeU1Int(version.minor)
+    writeU1Int(version.revision)
+  }
+
+  private def writeBlocks(blocks: List[Block]): Unit = {
+    blocks.foreach(block => nbtManager.getNBTTag(block)//todo)
   }
 
   private def write(string: String): Unit = write(string.getBytes)

@@ -1,6 +1,11 @@
 dependencies {
+    implementation librairies.spigot
+    implementation librairies.spigotAPI
+
     implementation librairies.annotations
     implementation librairies.scala
+    implementation librairies.spigotMetadataAPI
+
     testImplementation librairies.scalaTest
     testImplementation librairies.junit
 }

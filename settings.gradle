@@ -1,4 +1,3 @@
 rootProject.name = 'SkyBlock'
 include 'IslandFormat'
 include 'SpigotSkyBlock'
-

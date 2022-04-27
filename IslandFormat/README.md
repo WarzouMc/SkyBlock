@@ -1,6 +1,6 @@
 # Folder architecture extension 
 * name/name.island -> main file, contain island structure
-* name/nbt/*.nbt -> tiles entities nbt file
+* name/nbt/*.dat -> tiles entities nbt file
 
 # .island file format
 
