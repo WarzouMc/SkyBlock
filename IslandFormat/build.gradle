@@ -1,6 +1,6 @@
 dependencies {
-    implementation librairies.spigot
-    implementation librairies.spigotAPI
+    compileOnly librairies.spigot
+    compileOnly librairies.spigotAPI
 
     implementation librairies.annotations
     implementation librairies.scala
