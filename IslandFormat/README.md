@@ -98,7 +98,7 @@
 <tbody>
   <tr>
     <td>length</td>
-    <td>u2</td>
+    <td>u1</td>
   </tr>
   <tr>
     <td>chars</td>

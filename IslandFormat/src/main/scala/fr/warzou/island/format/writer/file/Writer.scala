@@ -5,11 +5,14 @@ import fr.warzou.island.format.core.RawIsland
 import fr.warzou.island.format.core.common.Version
 import fr.warzou.island.format.core.common.block.NotLocateBlock
 import fr.warzou.island.format.core.common.block.tileentities.BlockEntity
+import org.apache.commons.lang.ClassUtils
+import org.bukkit.Location
 import org.bukkit.block.Block
 import org.bukkit.plugin.Plugin
 
 import java.io.{File, FileOutputStream}
-import java.nio.ByteBuffer
+import java.lang.reflect.{Field, Modifier}
+import scala.annotation.tailrec
 import scala.math.BigInt.int2bigInt
 
 class Writer(val plugin: Plugin) {
@@ -36,14 +39,29 @@ class Writer(val plugin: Plugin) {
     val reducedBlocks = Writer.reduceList(blocks.map(new NotLocateBlock(_)))
     val blockEntities = Writer.reduceList(reducedBlocks.filter(BlockEntity.isBlockEntity))
     writeU2Int(outputStream, blockEntities.length)
-    //todo
-    writeU2Int(outputStream, reducedBlocks.length)
-    //todo
+    blockEntities.foreach(block => {
+      val location = block.block.getLocation
+      val name = block.getType + "" + (location.getBlockX + location.getBlockY + location.getBlockZ)
+      writeString(outputStream, name.toLowerCase)
+    })
 
-    println(reducedBlocks)
+    writeU2Int(outputStream, reducedBlocks.length)
+    reducedBlocks.foreach(block => {
+      val fullName = block.getType.name().toLowerCase
+      writeString(outputStream, fullName)
+      //todo states
+      if (BlockEntity.isBlockEntity(block.block)) writeU2Int(outputStream, blockEntities.indexOf(block))
+      else write(outputStream, Array(0xFF.asInstanceOf[Byte], 0xFF.asInstanceOf[Byte]))
+    })
+    //todo
   }
 
   private def write(outputStream: FileOutputStream, string: String): Unit = write(outputStream, string.getBytes)
+
+  private def writeString(outputStream: FileOutputStream, string: String): Unit = {
+    writeU1Int(outputStream, string.getBytes.length)
+    write(outputStream, string)
+  }
 
   private def writeU1Int(outputStream: FileOutputStream, int: Int): Unit = outputStream.write(int)
 

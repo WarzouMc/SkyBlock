@@ -11,7 +11,7 @@ class SkyBlock extends JavaPlugin {
 
   override def onEnable(): Unit = {
     val loc0 = new Location(Bukkit.getWorlds.get(0), 0, 100, 0)
-    val loc1 = new Location(Bukkit.getWorlds.get(0), 10, 100, 10)
+    val loc1 = new Location(Bukkit.getWorlds.get(0), 10, 107, 10)
     new Writer(this).write(new RawIsland("OWO", Version.from(this), coordToList(loc0, loc1)))
   }
 

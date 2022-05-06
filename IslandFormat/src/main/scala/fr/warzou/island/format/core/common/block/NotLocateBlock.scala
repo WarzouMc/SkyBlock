@@ -1,10 +1,10 @@
 package fr.warzou.island.format.core.common.block
 
-import org.bukkit.{Bukkit, Chunk, Location, Material, World}
-import org.bukkit.block.{Beacon, Biome, Block, BlockFace, BlockState, BrewingStand, Chest, CommandBlock, Dispenser, Dropper, EnchantingTable, EndGateway, EnderChest, Furnace, Hopper, Jukebox, NoteBlock, PistonMoveReaction, ShulkerBox, Sign, Skull}
+import org.bukkit.block._
 import org.bukkit.inventory.ItemStack
 import org.bukkit.metadata.MetadataValue
 import org.bukkit.plugin.Plugin
+import org.bukkit.{Bukkit, Chunk, Location, Material, World}
 
 import java.util
 
@@ -110,14 +110,13 @@ class NotLocateBlock(val block: Block) extends Block {
 
     val other = obj.asInstanceOf[Block]
     (other.isEmpty == isEmpty && other.isBlockPowered == isBlockPowered && other.isLiquid == isLiquid && other.getType == getType
-      && other.getState == getState)
+      && equalsState(other.getState))
   }
 
   private def equalsState(blockState: BlockState): Boolean = {
     blockState match {
       case sign: Sign => isCast[Sign](getState) && (cast[Sign](getState).getLines sameElements sign.getLines)
       case chest: Chest => equalsChest(chest)
-      case shulkerBox: ShulkerBox => equalsShulkerBox(shulkerBox)
       case furnace: Furnace => equalsFurnace(furnace)
       case brewingStand: BrewingStand => equalsBrewingStand(brewingStand)
       case hopper: Hopper => equalsHopper(hopper)
@@ -130,24 +129,23 @@ class NotLocateBlock(val block: Block) extends Block {
       case skull: Skull => equalsSkull(skull)
       case commandBlock: CommandBlock => equalsCommandBlock(commandBlock)
       case endGateway: EndGateway => equalsEndGateway(endGateway)
+      case daylightDetector: DaylightDetector => true
+      case structure: Structure => equalsStructure(structure)
+      case flowerPot: FlowerPot => isCast[FlowerPot](getState) && (cast[FlowerPot](getState).getContents == flowerPot.getContents)
+      case redstoneComparator: Comparator => true
+      case bed: Bed => isCast[Bed](getState) && (cast[Bed](getState).getColor == bed.getColor)
+      case shulkerBox: ShulkerBox => equalsShulkerBox(shulkerBox)
+      case container: Container => isCast[Container](getState) && (cast[Container](getState).getInventory == container.getInventory)
       case _ => true
     }
   }
 
   private def equalsChest(chest: Chest): Boolean = {
     if (!isCast[Chest](getState))
-    return false
+      return false
 
     val thisChest = cast[Chest](getState)
     thisChest.getInventory == chest.getInventory && thisChest.getCustomName == chest.getCustomName
-  }
-
-  private def equalsShulkerBox(shulkerBox: ShulkerBox): Boolean = {
-    if (!isCast[ShulkerBox](getState))
-    return false
-
-    val thisShulkerBox = cast[ShulkerBox](getState)
-    thisShulkerBox.getInventory == shulkerBox.getInventory && thisShulkerBox.getCustomName == shulkerBox.getCustomName
   }
 
   def equalsFurnace(furnace: Furnace): Boolean = {
@@ -233,6 +231,27 @@ class NotLocateBlock(val block: Block) extends Block {
 
     val thisEndGateway = cast[EndGateway](getState)
     thisEndGateway.getExitLocation == endGateway.getExitLocation && thisEndGateway.isExactTeleport == endGateway.isExactTeleport
+  }
+
+  private def equalsStructure(structure: Structure): Boolean = {
+    if (!isCast[Structure](getState))
+      return false
+
+    val thisStructure = cast[Structure](getState)
+    (thisStructure.getMetadata == structure.getMetadata && thisStructure.getRotation == structure.getRotation && thisStructure.getSeed == structure.getSeed
+      && thisStructure.getAuthor == structure.getAuthor && thisStructure.isShowAir == structure.isShowAir && thisStructure.getStructureName == structure.getStructureName
+      && thisStructure.getStructureSize == structure.getStructureSize && thisStructure.getMirror == structure.getMirror
+      && thisStructure.getUsageMode == structure.getUsageMode && thisStructure.isIgnoreEntities == structure.isIgnoreEntities
+      && thisStructure.isBoundingBoxVisible == structure.isBoundingBoxVisible && thisStructure.getIntegrity == structure.getIntegrity)
+  }
+
+  private def equalsShulkerBox(shulkerBox: ShulkerBox): Boolean = {
+    if (!isCast[ShulkerBox](getState))
+      return false
+
+    val thisShulkerBox = cast[ShulkerBox](getState)
+    (thisShulkerBox.getInventory == shulkerBox.getInventory && thisShulkerBox.getCustomName == shulkerBox.getCustomName
+      && thisShulkerBox.getColor == shulkerBox.getColor)
   }
 
   private def isCast[A](obj: Object): Boolean = obj.isInstanceOf[A]
