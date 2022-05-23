@@ -33,12 +33,12 @@
     <td>u1</td>
   </tr>
   <tr>
-    <td>nbt_files_count</td>
+    <td>nbt_count</td>
     <td colspan="3">u2</td>
   </tr>
   <tr>
     <td>nbt_files</td>
-    <td colspan="3">string[nbt_files_count]</td>
+    <td colspan="3">dat_file[nbt_count-1] (nbttag file format)</td>
   </tr>
   <tr>
     <td>used_blocks_count</td>
@@ -50,17 +50,17 @@
   </tr>
   <tr>
     <td rowspan="3">cuboid_size</td>
-    <td rowspan="3">u6</td>
+    <td rowspan="3">u3</td>
     <td style="font-style:italic">width</td>
-    <td>u2</td>
+    <td>u1</td>
   </tr>
   <tr>
     <td style="font-style:italic">length</td>
-    <td>u2</td>
+    <td>u1</td>
   </tr>
   <tr>
     <td style="font-style:italic">height</td>
-    <td>u2</td>
+    <td>u1</td>
   </tr>
   <tr>
     <td>cuboid</td>
@@ -122,19 +122,16 @@
     <td colspan="3">string<br></td>
   </tr>
   <tr>
-    <td rowspan="3">states_count</td>
-    <td colspan="3" rowspan="3">u2</td>
+    <td rowspan="3">data</td>
+    <td colspan="3" rowspan="3">u1</td>
   </tr>
   <tr>
   </tr>
   <tr>
   </tr>
-  <tr>
-    <td>states</td>
-    <td>state[states_count]</td>
   <tr>
     <td>nbt_files_index</td>
-    <td>u2 (FFFF if no nbt)</td>
+    <td>u2 (nbt_count if no nbt)</td>
   </tr>
 </tbody>
 </table>

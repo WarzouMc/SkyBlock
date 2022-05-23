@@ -1,7 +1,11 @@
 package fr.warzou.island.format.core.common.block.tileentities
 
+import fr.warzou.island.format.core.common.block.NotLocateBlock
+import net.minecraft.server.v1_12_R1.{BlockPosition, WorldServer}
 import org.bukkit.Material
 import org.bukkit.block.Block
+import org.bukkit.craftbukkit.v1_12_R1.CraftWorld
+import org.bukkit.craftbukkit.v1_12_R1.block.CraftBlock
 
 class BlockEntity {
 
@@ -18,7 +22,12 @@ case object BlockEntity {
     Material.DAYLIGHT_DETECTOR, Material.DAYLIGHT_DETECTOR_INVERTED, Material.FLOWER_POT, Material.REDSTONE_COMPARATOR_OFF,
     Material.REDSTONE_COMPARATOR_ON, Material.BED_BLOCK, Material.CAULDRON) ::: shulkerList
 
-  def isBlockEntity(block: Block): Boolean = isBlockEntity(block.getType)
+  def isBlockEntity(notLocateBlock: NotLocateBlock): Boolean = {
+    val block = notLocateBlock.block
+    val location = block.getLocation
+    val worldServer = location.getWorld.asInstanceOf[CraftWorld].getHandle
+    worldServer.getTileEntity(new BlockPosition(location.getBlockX, location.getBlockY, location.getBlockZ)) != null
+  }
 
   def isBlockEntity(material: Material): Boolean = material.isBlock && tileEntities.contains(material)
 
