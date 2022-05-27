@@ -37,8 +37,8 @@
     <td colspan="3">u2</td>
   </tr>
   <tr>
-    <td>nbt_files</td>
-    <td colspan="3">dat_file[nbt_count-1] (nbttag file format)</td>
+    <td>nbts</td>
+    <td colspan="3">nbt[nbt_count-1]</td>
   </tr>
   <tr>
     <td>used_blocks_count</td>
@@ -66,15 +66,6 @@
     <td>cuboid</td>
     <td colspan="3">varint[width*length*height]</td>
   </tr>
-  <tr>
-    <td>used_entities_count</td>
-    <td colspan="3">u1</td>
-  </tr>
-  <tr>
-    <td>used_entities</td>
-    <td colspan="3">used_entity[used_entities_count]</td>
-  </tr>
-
   <tr>
     <td>entities_count</td>
     <td colspan="3">u1</td>
@@ -185,14 +176,33 @@
 </thead>
 <tbody>
   <tr>
-    <td>used_entities_index</td>
-    <td colspan="3">u1</td>
-  </tr>
-  <tr>
     <td>location</td>
     <td>u8</td>
+  </tr>
+  <tr>
+    <td>nbt_tag</td>
+    <td>nbt</td>
   </tr>
 </tbody>
 </table>
 
 For location see protocol on [wiki.vg](https://wiki.vg/Protocol#Position)
+
+## Nbt structure
+
+<table style="text-align:center">
+<thead>
+  <td>Name</td>
+  <td>Byte</td>
+</thead>
+<tbody>
+  <tr>
+    <td>length</td>
+    <td>u2</td>
+  </tr>
+  <tr>
+    <td>bytes</td>
+    <td>byte[length]</td>
+  </tr>
+</tbody>
+</table>

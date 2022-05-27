@@ -1,19 +1,21 @@
 package fr.warzou.island.format.writer.file
 
 import fr.il_totore.spigotmetadata.api.SpigotMetadataAPI
-import fr.il_totore.spigotmetadata.api.nbt.NBTOutputStream
+import fr.il_totore.spigotmetadata.api.nbt.{NBTOutputStream, NBTTagCompound}
 import fr.warzou.island.format.core.RawIsland
 import fr.warzou.island.format.core.common.Version
 import fr.warzou.island.format.core.common.block.NotLocateBlock
 import fr.warzou.island.format.core.common.block.tileentities.BlockEntity
 import fr.warzou.island.format.core.common.cuboid.Cuboid
-import fr.warzou.island.format.writer.file.Writer.writeVarInt
+import fr.warzou.island.format.writer.file.Writer.{writeLocation, writeVarInt}
+import org.bukkit.Location
 import org.bukkit.block.Block
+import org.bukkit.entity.Entity
 import org.bukkit.plugin.Plugin
 
-import java.io.{ByteArrayOutputStream, File, FileOutputStream}
+import java.io.{ByteArrayOutputStream, File, FileOutputStream, OutputStream}
+import java.nio.ByteBuffer
 import scala.annotation.tailrec
-import scala.math.BigInt.int2bigInt
 
 class Writer(val plugin: Plugin) {
 
@@ -28,6 +30,7 @@ class Writer(val plugin: Plugin) {
     writeVersion(outputStream, island.minecraftVersion)
     val notLocateBlocks = writeBlocks(outputStream, island.blocks)
     writeCuboid(outputStream, island.cuboid, island.blocks, notLocateBlocks)
+    writeEntities(outputStream, island.entities, island.cuboid)
   }
 
   private def writeVersion(outputStream: FileOutputStream, version: Version): Unit = {
@@ -58,21 +61,32 @@ class Writer(val plugin: Plugin) {
     reducedBlocks
   }
 
-  private def writeBlockState(outputStream: FileOutputStream, block: NotLocateBlock): Unit = {
+  private def writeBlockState(outputStream: FileOutputStream, block: NotLocateBlock): Unit =
+    writeNBT(outputStream, nbtManager.getNBTTag(block.block))
+
+  private def writeCuboid(outputStream: FileOutputStream, cuboid: Cuboid, blocks: List[Block], notLocateBlocks: List[NotLocateBlock]): Unit = {
+    writeU1Int(outputStream, cuboid.xSize)
+    writeU1Int(outputStream, cuboid.zSize)
+    writeU1Int(outputStream, cuboid.ySize)
+
+    blocks.map(new NotLocateBlock(_)).foreach(block => writeVarInt(outputStream, notLocateBlocks.indexOf(block), (o: FileOutputStream, b: Byte) => write(o, b)))
+  }
+
+  private def writeEntities(outputStream: FileOutputStream, entities: List[Entity], cuboid: Cuboid): Unit = {
+    writeU1Int(outputStream, entities.length)
+    entities.foreach(entity => {
+      writeLocation(outputStream, entity.getLocation, cuboid, writeU8Long)
+      writeNBT(outputStream, nbtManager.getNBTTag(entity))
+    })
+  }
+
+  private def writeNBT(outputStream: FileOutputStream, nbt: NBTTagCompound): Unit = {
     val byteArrayOutputStream = new ByteArrayOutputStream()
     val nbtOutputStream = new NBTOutputStream(nbtManager, byteArrayOutputStream)
-    nbtOutputStream.writeTag(nbtManager.getNBTTag(block.block))
+    nbtOutputStream.writeTag(nbt)
     val array = byteArrayOutputStream.toByteArray
     writeU2Int(outputStream, array.length)
     write(outputStream, array)
-  }
-
-  private def writeCuboid(outputStream: FileOutputStream, cuboid: Cuboid, blocks: List[Block], notLocateBlocks: List[NotLocateBlock]): Unit = {
-    writeU1Int(outputStream, cuboid.xSize())
-    writeU1Int(outputStream, cuboid.zSize())
-    writeU1Int(outputStream, cuboid.ySize())
-
-    blocks.map(new NotLocateBlock(_)).foreach(block => writeVarInt(outputStream, notLocateBlocks.indexOf(block), (o: FileOutputStream, b: Byte) => write(o, b)))
   }
 
   private def write(outputStream: FileOutputStream, string: String): Unit = write(outputStream, string.getBytes)
@@ -84,16 +98,11 @@ class Writer(val plugin: Plugin) {
 
   private def writeU1Int(outputStream: FileOutputStream, int: Int): Unit = outputStream.write(int)
 
-  private def writeU2Int(outputStream: FileOutputStream, int: Int): Unit = {
-    val list = int.toByteArray
-    val result: List[Byte] = list.length match {
-      case 0 => List[Byte](0, 0)
-      case 1 => 0x00 :: list.toList
-      case 2 => list.toList
-      case _ => list.takeRight(2).toList
-    }
-    write(outputStream, result.toArray)
-  }
+  private def writeU2Int(outputStream: FileOutputStream, int: Int): Unit =
+    write(outputStream, ByteBuffer.allocate(2).putShort(int.toShort).array())
+
+  private def writeU8Long(outputStream: FileOutputStream, long: Long): Unit =
+    write(outputStream, ByteBuffer.allocate(8).putLong(long).array())
 
   private def write(outputStream: FileOutputStream, byte: Byte): Unit = outputStream.write(byte)
 
@@ -120,9 +129,6 @@ class Writer(val plugin: Plugin) {
 
 case object Writer {
 
-  private val SEGMENT_BITS = 0x7F
-  private val CONTINUE_BIT = 0x80
-
   def reduceList[A](list: List[A]): List[A] = list.foldRight(list)((value, acc) => reduceList(value, acc))
 
   def reduceList[A](element: A, list: List[A]): List[A] =
@@ -133,11 +139,19 @@ case object Writer {
     ).reverse
 
   @tailrec
-  def writeVarInt(outputStream: FileOutputStream, value: Int, writer: (FileOutputStream, Byte) => Unit): Unit = {
-    if ((value & ~SEGMENT_BITS) == 0) writer(outputStream, value.toByte)
+  def writeVarInt[A <: OutputStream](outputStream: A, value: Int, writer: (A, Byte) => Unit): Unit = {
+    if ((value & ~0x7F) == 0) writer(outputStream, value.toByte)
     else {
-      writer(outputStream, ((value & SEGMENT_BITS) | CONTINUE_BIT).toByte)
+      writer(outputStream, ((value & 0x7F) | 0x80).toByte)
       writeVarInt(outputStream, value >>> 7, writer)
     }
+  }
+
+  def writeLocation[A <: OutputStream](outputStream: A, location: Location, cuboid: Cuboid, u8Writer: (A, Long) => Unit): Unit = {
+    val x = location.getBlockX - cuboid.minX
+    val y = location.getBlockY - cuboid.minY
+    val z = location.getBlockZ - cuboid.minZ
+    val long = ((x & 0x3FFFFFF) << 38) | ((z & 0x3FFFFFF) << 12) | (y & 0xFFF)
+    u8Writer(outputStream, long)
   }
 }
