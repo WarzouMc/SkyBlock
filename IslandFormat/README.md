@@ -15,10 +15,6 @@
 </thead>
 <tbody>
   <tr>
-    <td>signature</td>
-    <td colspan="3">u4</td>
-  </tr>
-  <tr>
     <td rowspan="3">minecraft_version</td>
     <td rowspan="3">u3</td>
     <td style="font-style:italic">major</td>
@@ -33,11 +29,11 @@
     <td>u1</td>
   </tr>
   <tr>
-    <td>nbt_count</td>
+    <td>block_entity_count</td>
     <td colspan="3">u2</td>
   </tr>
   <tr>
-    <td>nbts</td>
+    <td>block_entities</td>
     <td colspan="3">nbt[nbt_count-1]</td>
   </tr>
   <tr>

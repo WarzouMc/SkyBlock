@@ -26,7 +26,6 @@ class Writer(val plugin: Plugin) {
     val folder = createFolder(island)
     val islandFile = createFile(folder, island)
     val outputStream = new FileOutputStream(islandFile)
-    write(outputStream, "skbl")
     writeVersion(outputStream, island.minecraftVersion)
     val notLocateBlocks = writeBlocks(outputStream, island.blocks)
     writeCuboid(outputStream, island.cuboid, island.blocks, notLocateBlocks)
@@ -116,7 +115,8 @@ class Writer(val plugin: Plugin) {
   }
 
   private def createFile(islandRoot: File, island: RawIsland): File = {
-    val islandFile = new File(islandRoot, s"${island.name}.island")
+    createIslandsRoot()
+    val islandFile = new File(root, s"${island.name}.island")
     if  (!islandFile.exists()) islandFile.createNewFile()
     islandFile
   }
