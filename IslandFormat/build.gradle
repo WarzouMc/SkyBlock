@@ -6,6 +6,8 @@ dependencies {
     implementation librairies.scala
     implementation librairies.spigotMetadataAPI
 
+    testImplementation librairies.spigot
+    testImplementation librairies.spigotAPI
     testImplementation librairies.scalaTest
     testImplementation librairies.junit
 

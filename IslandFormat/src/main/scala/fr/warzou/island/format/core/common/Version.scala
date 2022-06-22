@@ -5,7 +5,30 @@ import org.bukkit.plugin.Plugin
 import java.util.regex.Pattern
 
 case class Version(major: Int, minor: Int, revision: Int) {
+
+  def >(version: Version): Boolean =
+    major > version.major || (major == version.major && minor > version.minor) ||
+      (major == version.major && minor == version.minor && revision > version.revision)
+
+  def <(version: Version): Boolean =
+    major < version.major || (major == version.major && minor < version.minor) ||
+      (major == version.major && minor == version.minor && revision < version.revision)
+
+  def >=(version: Version): Boolean = this > version || this == version
+
+  def <=(version: Version): Boolean = this < version || this == version
+
   override def toString: String = s"$major.$minor.$revision"
+
+  override def equals(obj: Any): Boolean = {
+    if (obj == null)
+      return false
+    if (!obj.isInstanceOf[Version])
+      return false
+
+    val version = obj.asInstanceOf[Version]
+    version.major == major && version.minor == minor && version.revision == revision
+  }
 }
 
 object Version {

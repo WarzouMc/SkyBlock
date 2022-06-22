@@ -26,16 +26,16 @@ class IslandFileReader(val plugin: Plugin, val name: String) {
     val cuboid = readCuboid()
     val blocks = readBlocks(cuboid)
     val entities = readEntities()
-    new RawIsland(name, version, cuboid, blocks, entities)
+    new RawIsland(plugin, name, version, cuboid, blocks, entities)
   }
 
-  private def readVersion(): Version = new Version(reader.read(), reader.read(), reader.read())
+  private def readVersion(): Version = new Version(readByte(), readByte(), readByte())
 
   private def readCuboid(): Cuboid = {
     val location0 = new Location(Bukkit.getWorlds.get(0), 0, 0, 0)
-    val x = reader.read()
-    val z = reader.read()
-    val y = reader.read()
+    val x = readByte()
+    val z = readByte()
+    val y = readByte()
     val location1 = new Location(Bukkit.getWorlds.get(0), x, y , z)
     new Cuboid(location0, location1)
   }
@@ -46,7 +46,7 @@ class IslandFileReader(val plugin: Plugin, val name: String) {
     (0 until blockEntityCount - 1).foreach(blockEntities(_) = readNBT().readTag(NBTTagType.COMPOUND))
     val usedBlockCount = readU2Short()
     val usedBlocks = new Array[FileBlock](usedBlockCount - 1)
-    (0 until blockEntityCount - 1).foreach(usedBlocks(_) = new FileBlock(readString(), reader.read,
+    (0 until blockEntityCount - 1).foreach(usedBlocks(_) = new FileBlock(readString(), readByte(),
       {
         val index = readU2Short()
         if (index == blockEntityCount) None
@@ -59,14 +59,14 @@ class IslandFileReader(val plugin: Plugin, val name: String) {
   }
 
   private def readEntities(): List[FileEntity] = {
-    val count = reader.read
+    val count = readByte()
     val entities = new Array[FileEntity](count)
     (0 until count).foreach(i => {
       val long = readU8Long()
       val x = long >> 38
       val y = long & 0xFFF
       val z = (long >> 12) & 0x3FFFFFF
-      val entityType = EntityType.values()(reader.read())
+      val entityType = EntityType.values()(readByte())
       val nbt = readNBT().readTag(NBTTagType.COMPOUND)
       entities(i) = new FileEntity(new Location(Bukkit.getWorlds.get(0), x, y, z), entityType, nbt)
     })
@@ -80,9 +80,9 @@ class IslandFileReader(val plugin: Plugin, val name: String) {
   }
 
   private def readByte(): Byte = {
-    val int = reader.read
+    val int = readByte()
     if (int == -1) throw new IndexOutOfBoundsException("Try to read a byte after the file end !")
-    int.toByte
+    int
   }
 
   private def readNByte(length: Int): Array[Byte] = {
@@ -92,7 +92,7 @@ class IslandFileReader(val plugin: Plugin, val name: String) {
   }
 
   private def readString(): String = {
-    val length = reader.read
+    val length = readByte()
     new String(readNByte(length), StandardCharsets.UTF_8)
   }
 

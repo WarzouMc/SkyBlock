@@ -29,7 +29,7 @@ class IslandFileWriter(plugin: Plugin, name: String, cuboid: Cuboid) {
 
   private def enumerateBlocks(): List[Block] = {
     (cuboid.minX to cuboid.maxX).foldRight(List[List[Block]]())((face, acc0) => {
-      (cuboid.minY to cuboid.minY).foldRight(List[List[Block]]())((line, acc1) => {
+      (cuboid.minY to cuboid.maxY).foldRight(List[List[Block]]())((line, acc1) => {
         (cuboid.minZ to cuboid.maxZ).map(Bukkit.getWorlds.get(0).getBlockAt(face, line, _)).toList :: acc1
       }).flatten :: acc0
     }).flatten
