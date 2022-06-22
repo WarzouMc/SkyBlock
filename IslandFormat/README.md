@@ -60,7 +60,7 @@
   </tr>
   <tr>
     <td>cuboid</td>
-    <td colspan="3">varint[width*length*height]</td>
+    <td colspan="3">varint&#185;[width*length*height]</td>
   </tr>
   <tr>
     <td>entities_count</td>
@@ -72,6 +72,8 @@
   </tr>
 </tbody>
 </table>
+
+&#185; [Varint](https://wiki.vg/Protocol#VarInt_and_VarLong) protocol link
 
 ## String structure
 
@@ -117,46 +119,8 @@
   <tr>
   </tr>
   <tr>
-    <td>nbt_files_index</td>
-    <td>u2 (nbt_count if no nbt)</td>
-  </tr>
-</tbody>
-</table>
-
-## Block state structure
-
-<table style="text-align:center">
-<thead>
-  <tr>
-    <th>Name</th>
-    <th>Byte</th>
-  </tr>
-</thead>
-<tbody>
-  <tr>
-    <td>id</td>
-    <td>u1</td>
-  </tr>
-  <tr>
-    <td>value</td>
-    <td>u1</td>
-  </tr>
-</tbody>
-</table>
-
-## Used entities structure
-
-<table style="text-align:center">
-<thead>
-  <tr>
-    <th>Name</th>
-    <th>Byte</th>
-  </tr>
-</thead>
-<tbody>
-  <tr>
-    <td>nbt_file_index</td>
-    <td>u2</td>
+    <td>block_entity_index</td>
+    <td>u2 (block_entity_count if no nbt)</td>
   </tr>
 </tbody>
 </table>
@@ -174,6 +138,10 @@
   <tr>
     <td>location</td>
     <td>u8</td>
+  </tr>
+  <tr>
+    <td>type_id</td>
+    <td>u1</td>
   </tr>
   <tr>
     <td>nbt_tag</td>

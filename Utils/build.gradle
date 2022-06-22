@@ -1,13 +1,7 @@
 dependencies {
-    compileOnly librairies.spigot
-    compileOnly librairies.spigotAPI
-
     implementation librairies.annotations
     implementation librairies.scala
-    implementation librairies.spigotMetadataAPI
 
     testImplementation librairies.scalaTest
     testImplementation librairies.junit
-
-    api project(":Utils")
 }

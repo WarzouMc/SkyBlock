@@ -1,20 +1,24 @@
 package fr.warzou.island.format.core.common.cuboid
 
-import org.bukkit.Location
+import org.bukkit.{Bukkit, Location}
 
 class Cuboid(corner0: Location, corner1: Location) {
 
-  def xSize: Int = Math.abs(corner1.getBlockX - corner0.getBlockX)
-  def ySize: Int = Math.abs(corner1.getBlockY - corner0.getBlockY)
-  def zSize: Int = Math.abs(corner1.getBlockZ - corner0.getBlockZ)
+  val xSize: Int = Math.abs(corner1.getBlockX - corner0.getBlockX)
+  val ySize: Int = Math.abs(corner1.getBlockY - corner0.getBlockY)
+  val zSize: Int = Math.abs(corner1.getBlockZ - corner0.getBlockZ)
 
-  def minX: Int = Math.min(corner0.getBlockX, corner1.getBlockX)
-  def maxX: Int = Math.max(corner0.getBlockX, corner1.getBlockX)
+  val minX: Int = Math.min(corner0.getBlockX, corner1.getBlockX)
+  val maxX: Int = Math.max(corner0.getBlockX, corner1.getBlockX)
 
-  def minY: Int = Math.min(corner0.getBlockY, corner1.getBlockY)
-  def maxY: Int = Math.max(corner0.getBlockY, corner1.getBlockY)
+  val minY: Int = Math.min(corner0.getBlockY, corner1.getBlockY)
+  val maxY: Int = Math.max(corner0.getBlockY, corner1.getBlockY)
 
-  def minZ: Int = Math.min(corner0.getBlockZ, corner1.getBlockZ)
-  def maxZ: Int = Math.max(corner0.getBlockZ, corner1.getBlockZ)
+  val minZ: Int = Math.min(corner0.getBlockZ, corner1.getBlockZ)
+  val maxZ: Int = Math.max(corner0.getBlockZ, corner1.getBlockZ)
 
+  val minCorner = new Location(Bukkit.getWorlds.get(0), minX, minY, minZ)
+  val maxCorner = new Location(Bukkit.getWorlds.get(0), maxX, maxY, maxZ)
+
+  val blockCount: Int = xSize * ySize * zSize
 }
