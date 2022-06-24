@@ -4,19 +4,19 @@ import fr.il_totore.spigotmetadata.api.nbt.{NBTInputStream, NBTTagCompound, NBTT
 import fr.warzou.island.format.core.RawIsland
 import fr.warzou.island.format.core.common.Version
 import fr.warzou.island.format.core.common.block.FileBlock
-import fr.warzou.island.format.core.common.cuboid.Cuboid
 import fr.warzou.island.format.core.common.entity.FileEntity
+import fr.warzou.skyblock.adapter.api.AdapterAPI
+import fr.warzou.skyblock.adapter.api.world.Location
 import fr.warzou.skyblock.utils.IOUtils
-import org.bukkit.entity.EntityType
-import org.bukkit.plugin.Plugin
-import org.bukkit.{Bukkit, Location}
+import fr.warzou.skyblock.utils.cuboid.Cuboid
 
 import java.io.{ByteArrayInputStream, File, FileReader}
 import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
 
-class IslandFileReader(val plugin: Plugin, val name: String) {
+class IslandFileReader(val adapterAPI: AdapterAPI, val name: String) {
 
+  private val plugin = adapterAPI.getPlugin
   private val root = new File(plugin.getDataFolder, "islands")
   private val reader = new FileReader(new File(root, name))
   private val nbtManager = SpigotMetadataAPI.getAPI.getNBTManager
@@ -29,14 +29,14 @@ class IslandFileReader(val plugin: Plugin, val name: String) {
     new RawIsland(plugin, name, version, cuboid, blocks, entities)
   }
 
-  private def readVersion(): Version = new Version(readByte(), readByte(), readByte())
+  private def readVersion(): Version = Version(readByte(), readByte(), readByte())
 
   private def readCuboid(): Cuboid = {
-    val location0 = new Location(Bukkit.getWorlds.get(0), 0, 0, 0)
+    val location0 = adapterAPI.createLocation(0, 0, 0)
     val x = readByte()
     val z = readByte()
     val y = readByte()
-    val location1 = new Location(Bukkit.getWorlds.get(0), x, y , z)
+    val location1 = adapterAPI.createLocation(x, y , z)
     new Cuboid(location0, location1)
   }
 

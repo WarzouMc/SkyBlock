@@ -1,5 +1,7 @@
 package fr.warzou.skyblock.utils
 
+import scala.collection.IterableFactory
+
 object ArrayUtils {
 
   /**

@@ -1,23 +1,18 @@
 package fr.warzou.island.format.writer.file
 
-import fr.il_totore.spigotmetadata.api.SpigotMetadataAPI
-import fr.il_totore.spigotmetadata.api.nbt.{NBTOutputStream, NBTTagCompound}
 import fr.warzou.island.format.core.common.Version
 import fr.warzou.island.format.core.common.block.NotLocateBlock
 import fr.warzou.island.format.core.common.block.tileentities.BlockEntity
-import fr.warzou.island.format.core.common.cuboid.Cuboid
+import fr.warzou.skyblock.adapter.api.entity.Entity
+import fr.warzou.skyblock.adapter.api.world._
+import fr.warzou.skyblock.utils.cuboid.Cuboid
 import fr.warzou.skyblock.utils.{ArrayUtils, IOUtils}
-import org.bukkit.Location
-import org.bukkit.block.Block
-import org.bukkit.entity.Entity
 
 import java.io.{ByteArrayOutputStream, OutputStream}
 import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
 
 protected class Writer(outputStream: OutputStream, minecraftVersion: Version, cuboid: Cuboid, blocks: List[Block], entities: List[Entity]) {
-
-  private val nbtManager = SpigotMetadataAPI.getAPI.getNBTManager
 
   def write(): Unit = {
     writeVersion(minecraftVersion)
@@ -64,19 +59,10 @@ protected class Writer(outputStream: OutputStream, minecraftVersion: Version, cu
   private def writeEntities(entities: List[Entity], cuboid: Cuboid): Unit = {
     writeU1Int(entities.length)
     entities.foreach(entity => {
-      writeLocation(entity.getLocation, cuboid, writeU8Long)
-      writeU1Int(entity.getType.ordinal())
-      writeNBT(nbtManager.getNBTTag(entity))
+      writeLocation(entity.location, cuboid, writeU8Long)
+      writeString(entity.name)
+      writeArray(entity.nbt)
     })
-  }
-
-  private def writeNBT(nbt: NBTTagCompound): Unit = {
-    val byteArrayOutputStream = new ByteArrayOutputStream()
-    val nbtOutputStream = new NBTOutputStream(nbtManager, byteArrayOutputStream)
-    nbtOutputStream.writeTag(nbt)
-    val array = byteArrayOutputStream.toByteArray
-    writeU2Int(array.length)
-    write(array)
   }
 
   private def writeLocation(location: Location, cuboid: Cuboid, u8Writer: Long => Unit): Unit = {
@@ -99,6 +85,11 @@ protected class Writer(outputStream: OutputStream, minecraftVersion: Version, cu
   private def writeU2Int(int: Int): Unit = write(ByteBuffer.allocate(2).putShort(int.toShort).array())
 
   private def writeU8Long(long: Long): Unit = write(ByteBuffer.allocate(8).putLong(long).array())
+
+  private def writeArray(bytes: Array[Byte]): Unit = {
+    writeU2Int(bytes.length)
+    write(bytes)
+  }
 
   private def write(byte: Byte): Unit = outputStream.write(byte)
 

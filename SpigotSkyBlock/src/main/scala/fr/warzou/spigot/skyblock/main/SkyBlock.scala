@@ -1,7 +1,7 @@
 package fr.warzou.spigot.skyblock.main
 
-import fr.warzou.island.format.core.common.cuboid.Cuboid
 import fr.warzou.island.format.writer.file.IslandFileWriter
+import fr.warzou.skyblock.utils.cuboid.Cuboid
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.{Bukkit, Location}
 

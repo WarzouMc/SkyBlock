@@ -2,9 +2,8 @@ package fr.warzou.island.format.writer.file
 
 import fr.warzou.island.format.core.RawIsland
 import fr.warzou.island.format.core.common.Version
-import fr.warzou.island.format.core.common.cuboid.Cuboid
 import fr.warzou.island.format.reader.IslandFileReader
-import net.minecraft.server.v1_12_R1.AxisAlignedBB
+import fr.warzou.skyblock.adapter.api.AdapterAPI
 import org.bukkit.block.Block
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld
 import org.bukkit.entity.Entity
@@ -14,15 +13,16 @@ import org.bukkit.{Bukkit, Location}
 import java.io.{File, FileOutputStream}
 import scala.jdk.CollectionConverters._
 
-class IslandFileWriter(plugin: Plugin, name: String, cuboid: Cuboid) {
+class IslandFileWriter(adapter: AdapterAPI, name: String, cuboid: Cuboid) {
 
+  private val plugin = adapter.getPlugin
   private val root = new File(plugin.getDataFolder, "islands")
 
   def writeIsland(): RawIsland = {
     val folder = createFolder()
     val islandFile = createFile(folder)
     val outputStream = new FileOutputStream(islandFile)
-    val writer = new Writer(outputStream, Version.from(plugin), cuboid, enumerateBlocks(), enumerateEntities())
+    val writer = new Writer(outputStream, Version.from(plugin), cuboid, enumerateBlocks(), adapter.enumerateEntities(cuboid))
     writer.write()
     new IslandFileReader(plugin, name).read()
   }
@@ -37,7 +37,7 @@ class IslandFileWriter(plugin: Plugin, name: String, cuboid: Cuboid) {
 
   private def enumerateEntities(): List[Entity] = {
     val bb: AxisAlignedBB = new AxisAlignedBB(cuboid.minX, cuboid.minY, cuboid.minZ, cuboid.maxX, cuboid.maxY, cuboid.maxZ)
-    val entityList: java.util.List[net.minecraft.server.v1_12_R1.Entity] = cuboid.minCorner.getWorld.asInstanceOf[CraftWorld]
+    val entityList: java.util.List[net.minecraft.server.v1_12_R1.Entity] = cuboid.minCorner(adapter).getWorld.asInstanceOf[CraftWorld]
       .getHandle.getEntities(null, bb, (e: net.minecraft.server.v1_12_R1.Entity) => true)
     entityList.asScala.map(_.getBukkitEntity).toList
   }
