@@ -140,8 +140,8 @@
     <td>u8</td>
   </tr>
   <tr>
-    <td>type_id</td>
-    <td>u1</td>
+    <td>type_name</td>
+    <td>string</td>
   </tr>
   <tr>
     <td>nbt_tag</td>

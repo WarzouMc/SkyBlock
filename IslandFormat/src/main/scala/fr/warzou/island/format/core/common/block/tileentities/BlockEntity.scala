@@ -11,6 +11,7 @@ class BlockEntity {
 
 }
 
+// TODO: move in Adapater, sponge -> methode ???, spigot -> like that or with name? 
 case object BlockEntity {
 
   private val shulkerList: List[Material] = Material.values().filter(_.name().endsWith("SHULKER_BOX")).toList
