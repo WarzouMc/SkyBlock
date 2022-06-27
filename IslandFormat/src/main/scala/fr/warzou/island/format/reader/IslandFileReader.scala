@@ -1,16 +1,12 @@
 package fr.warzou.island.format.reader
-import fr.il_totore.spigotmetadata.api.SpigotMetadataAPI
-import fr.il_totore.spigotmetadata.api.nbt.{NBTInputStream, NBTTagCompound, NBTTagType}
 import fr.warzou.island.format.core.RawIsland
-import fr.warzou.island.format.core.common.Version
-import fr.warzou.island.format.core.common.block.FileBlock
-import fr.warzou.island.format.core.common.entity.FileEntity
 import fr.warzou.skyblock.adapter.api.AdapterAPI
-import fr.warzou.skyblock.adapter.api.world.Location
-import fr.warzou.skyblock.utils.IOUtils
+import fr.warzou.skyblock.adapter.api.entity.Entity
+import fr.warzou.skyblock.adapter.api.world.{Block, Location}
 import fr.warzou.skyblock.utils.cuboid.Cuboid
+import fr.warzou.skyblock.utils.{IOUtils, Version}
 
-import java.io.{ByteArrayInputStream, File, FileReader}
+import java.io.{File, FileReader}
 import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
 
@@ -18,15 +14,17 @@ class IslandFileReader(val adapterAPI: AdapterAPI, val name: String) {
 
   private val plugin = adapterAPI.getPlugin
   private val root = new File(plugin.getDataFolder, "islands")
-  private val reader = new FileReader(new File(root, name))
-  private val nbtManager = SpigotMetadataAPI.getAPI.getNBTManager
+  private val reader = new FileReader(new File(root, s"$name.island"))
 
   def read(): RawIsland = {
     val version = readVersion()
+    val usedBlock = readBlocks()
     val cuboid = readCuboid()
-    val blocks = readBlocks(cuboid)
+    val blocks = new Array[Block](cuboid.blockCount)
+    (0 until cuboid.blockCount).foreach(blocks(_) = usedBlock(IOUtils.readVarInt(reader)))
+
     val entities = readEntities()
-    new RawIsland(plugin, name, version, cuboid, blocks, entities)
+    new RawIsland(plugin, name, version, cuboid, blocks.toList, entities)
   }
 
   private def readVersion(): Version = Version(readByte(), readByte(), readByte())
@@ -36,67 +34,77 @@ class IslandFileReader(val adapterAPI: AdapterAPI, val name: String) {
     val x = readByte()
     val z = readByte()
     val y = readByte()
-    val location1 = adapterAPI.createLocation(x, y , z)
+
+    val location1 = adapterAPI.createLocation(x, y, z)
     new Cuboid(location0, location1)
   }
 
-  private def readBlocks(cuboid: Cuboid): List[FileBlock] = {
-    val blockEntityCount = readU2Short()
-    val blockEntities = new Array[NBTTagCompound](blockEntityCount - 1)
-    (0 until blockEntityCount - 1).foreach(blockEntities(_) = readNBT().readTag(NBTTagType.COMPOUND))
-    val usedBlockCount = readU2Short()
-    val usedBlocks = new Array[FileBlock](usedBlockCount - 1)
-    (0 until blockEntityCount - 1).foreach(usedBlocks(_) = new FileBlock(readString(), readByte(),
-      {
-        val index = readU2Short()
-        if (index == blockEntityCount) None
-        else Some(blockEntities(index))
-      }))
+  private def readBlocks(): Array[Block] = {
+    val blockEntityCount = readByte()
+    val blockEntities = new Array[Array[Byte]](blockEntityCount - 1)
+    (0 until blockEntityCount - 1).foreach(blockEntities(_) = readNByte(readU2Short()).map(_.toByte))
+    val usedBlockCount = readByte()
+    val usedBlocks = new Array[Block](usedBlockCount)
+    (0 until usedBlockCount).foreach(usedBlocks(_) =
+      new Block {
+        private val _name = readString()
+        private val _data = readByte()
+        private val nbtIndex = readByte()
 
-    val blocks = new Array[FileBlock](cuboid.blockCount)
-    (0 until cuboid.blockCount).foreach(blocks(_) = usedBlocks(IOUtils.readVarInt(reader)))
-    blocks.toList
+        override def name: String = _name
+
+        override def data: Int = _data
+
+        override def isBlockEntity: Boolean = nbtIndex != blockEntityCount
+
+        override def nbt: Option[Array[Byte]] = if (isBlockEntity) Some(blockEntities(nbtIndex)) else None
+      }
+    )
+    usedBlocks
   }
 
-  private def readEntities(): List[FileEntity] = {
+  private def readEntities(): List[Entity] = {
     val count = readByte()
-    val entities = new Array[FileEntity](count)
+    val entities = new Array[Entity](count)
     (0 until count).foreach(i => {
       val long = readU8Long()
       val x = long >> 38
       val y = long & 0xFFF
       val z = (long >> 12) & 0x3FFFFFF
-      val entityType = EntityType.values()(readByte())
-      val nbt = readNBT().readTag(NBTTagType.COMPOUND)
-      entities(i) = new FileEntity(new Location(Bukkit.getWorlds.get(0), x, y, z), entityType, nbt)
+
+      entities(i) = new Entity {
+        private val _location = adapterAPI.createLocation(x.toDouble, y.toDouble, z.toDouble)
+        private val entityName = readString()
+        private val _nbt = readNByte(readU2Short()).map(_.toByte)
+
+        override def location: Location = _location
+
+        override def name: String = entityName
+
+        override def nbt: Array[Byte] = _nbt
+      }
     })
     entities.toList
   }
 
-  private def readNBT(): NBTInputStream = {
-    val length = readU2Short()
-    val array = readNByte(length)
-    new NBTInputStream(nbtManager, new ByteArrayInputStream(array))
-  }
-
-  private def readByte(): Byte = {
-    val int = readByte()
+  private def readByte(): Int = {
+    val int = reader.read()
     if (int == -1) throw new IndexOutOfBoundsException("Try to read a byte after the file end !")
     int
   }
 
-  private def readNByte(length: Int): Array[Byte] = {
-    val array = new Array[Byte](length)
+  private def readNByte(length: Int): Array[Int] = {
+    val array = new Array[Int](length)
     (0 until length).foreach(array(_) = readByte())
     array
   }
 
   private def readString(): String = {
     val length = readByte()
-    new String(readNByte(length), StandardCharsets.UTF_8)
+    new String(readNByte(length).map(_.toByte), StandardCharsets.UTF_8)
   }
 
-  private def readU2Short(): Short = ByteBuffer.wrap(readNByte( 2)).getShort
+  private def readU2Short(): Short = ByteBuffer.wrap(readNByte( 2).map(_.toByte)).getShort
 
-  private def readU8Long(): Long = ByteBuffer.wrap(readNByte( 8)).getLong
+  private def readU8Long(): Long = ByteBuffer.wrap(readNByte( 8).map(_.toByte)).getLong
 }

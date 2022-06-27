@@ -1,7 +1,3 @@
-# Folder architecture extension 
-* name/name.island -> main file, contain island structure
-* name/nbt/*.dat -> tiles entities nbt file
-
 # .island file format
 
 ## File structure
@@ -30,7 +26,7 @@
   </tr>
   <tr>
     <td>block_entity_count</td>
-    <td colspan="3">u2</td>
+    <td colspan="3">u1</td>
   </tr>
   <tr>
     <td>block_entities</td>
@@ -38,7 +34,7 @@
   </tr>
   <tr>
     <td>used_blocks_count</td>
-    <td colspan="3">u2</td>
+    <td colspan="3">u1</td>
   </tr>
   <tr>
     <td>used_blocks</td>
@@ -120,7 +116,7 @@
   </tr>
   <tr>
     <td>block_entity_index</td>
-    <td>u2 (block_entity_count if no nbt)</td>
+    <td>u1 (block_entity_count if no nbt)</td>
   </tr>
 </tbody>
 </table>

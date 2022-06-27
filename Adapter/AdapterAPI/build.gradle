@@ -1,0 +1,7 @@
+dependencies {
+    implementation librairies.annotations
+    implementation librairies.scala
+
+    testImplementation librairies.scalaTest
+    testImplementation librairies.junit
+}

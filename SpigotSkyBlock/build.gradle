@@ -7,4 +7,6 @@ dependencies {
     testImplementation librairies.junit
 
     api project(':IslandFormat')
+    api project(':Utils')
+    api project(':Adapter:SpigotAdapter:V1_12_R1')
 }

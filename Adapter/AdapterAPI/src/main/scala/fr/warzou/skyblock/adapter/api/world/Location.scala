@@ -1,16 +1,23 @@
 package fr.warzou.skyblock.adapter.api.world
 
-import fr.warzou.skyblock.adapter.api.AdapterAPI
-
 trait Location {
 
-  def getWorld: Option[String]
+  def world: Option[String]
 
-  def getBlockX: Int
-  def getBlockY: Int
-  def getBlockZ: Int
+  def blockX: Int
+  def blockY: Int
+  def blockZ: Int
 
-  def getX: Double
-  def getY: Double
-  def getZ: Double
+  def x: Double
+  def y: Double
+  def z: Double
+
+  def locationInWorld(world: String): Location
+
+  def block: Block = {
+    if (world.isEmpty) throw new IllegalStateException("Cannot found world !")
+    block(world.get)
+  }
+
+  def block(world: String): Block
 }

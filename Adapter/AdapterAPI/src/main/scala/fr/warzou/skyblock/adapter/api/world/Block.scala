@@ -1,6 +1,5 @@
 package fr.warzou.skyblock.adapter.api.world
 
-// TODO: equals (if normal block -> compare type and data else if block entity always false)
 trait Block {
 
   def name: String
@@ -9,6 +8,6 @@ trait Block {
 
   def isBlockEntity: Boolean
 
-  def nbt: Array[Byte]
+  def nbt: Option[Array[Byte]]
 
 }

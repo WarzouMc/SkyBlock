@@ -31,7 +31,7 @@ case class Version(major: Int, minor: Int, revision: Int) {
 
 object Version {
 
-  def from(plugin: MinecraftPlugin): Version = from(plugin.version())
+  def from(plugin: MinecraftPlugin): Version = from(plugin.version)
 
   def from(string: String): Version = {
     val split = string.split('.')

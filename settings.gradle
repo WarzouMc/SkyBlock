@@ -7,4 +7,6 @@ include 'Adapter:AdapterAPI'
 findProject(':Adapter:AdapterAPI')?.name = 'AdapterAPI'
 include 'Adapter:SpigotAdapter'
 findProject(':Adapter:SpigotAdapter')?.name = 'SpigotAdapter'
+include 'Adapter:SpigotAdapter:V1_12_R1'
+findProject(':Adapter:SpigotAdapter:V1_12_R1')?.name = 'V1_12_R1'
 

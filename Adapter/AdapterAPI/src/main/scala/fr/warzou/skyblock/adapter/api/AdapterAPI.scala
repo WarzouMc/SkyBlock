@@ -1,9 +1,11 @@
 package fr.warzou.skyblock.adapter.api
 
 import fr.warzou.skyblock.adapter.api.AdapterAPI.alreadyInitialized
+import fr.warzou.skyblock.adapter.api.entity.EntitiesGetter
 import fr.warzou.skyblock.adapter.api.handler.AdapterHandler
 import fr.warzou.skyblock.adapter.api.plugin.MinecraftPlugin
 import fr.warzou.skyblock.adapter.api.world.Location
+import fr.warzou.skyblock.utils.server.{ServerAPI, Spigot}
 
 class AdapterAPI(val adapterHandler: AdapterHandler) {
 
@@ -12,15 +14,23 @@ class AdapterAPI(val adapterHandler: AdapterHandler) {
     alreadyInitialized = true
   }
 
-  def getPlugin: MinecraftPlugin = this.adapterHandler.minecraftPlugin()
+  def getPlugin: MinecraftPlugin = adapterHandler.minecraftPlugin()
 
   def createLocation(x: Double, y: Double, z: Double): Location = createLocation(None, x, y, z)
 
   def createLocation(world: Option[String], x: Double, y: Double, z: Double): Location = adapterHandler.createLocation(world, x, y, z)
 
-  def getEntitiesGetter: EntitiesGetter = adapterHandler.getEntitiesGetter
+  def entitiesGetter: EntitiesGetter = adapterHandler.getEntitiesGetter
 }
 
-private case object AdapterAPI {
+case object AdapterAPI {
   private var alreadyInitialized = false
+
+  def createAdapter(serverAPI: ServerAPI, plugin: Object): AdapterAPI = {
+    serverAPI match {
+      case Spigot() => Class.forName("fr.warzou.skyblock.adapter.spigot.SpigotAdapter")
+        .getConstructors.apply(0).newInstance(plugin).asInstanceOf[AdapterClass].adapter
+      case _ => throw new IllegalArgumentException("Unknown server api")
+    }
+  }
 }
