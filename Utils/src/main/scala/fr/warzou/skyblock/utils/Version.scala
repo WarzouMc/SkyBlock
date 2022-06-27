@@ -35,7 +35,6 @@ object Version {
 
   def from(string: String): Version = {
     val split = string.split('.')
-    println(split.mkString("Array(", ", ", ")"))
     if (split.length != 3 && split.length != 2) throw new IllegalArgumentException(s"Any version is recognize in $string !")
     new Version(split(0).toInt, split(1).toInt, if (split.length == 2) 0 else split(2).toInt)
   }

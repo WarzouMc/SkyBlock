@@ -3,6 +3,8 @@ dependencies {
     compileOnly librairies.spigotAPI
 
     implementation librairies.scala
+    implementation librairies.spigotMetadataAPI
+
     testImplementation librairies.scalaTest
     testImplementation librairies.junit
 

@@ -1,13 +1,15 @@
 package fr.warzou.skyblock.adapter.spigot.world
 
 import fr.il_totore.spigotmetadata.api.SpigotMetadataAPI
-import fr.il_totore.spigotmetadata.api.nbt.{NBTManager, NBTOutputStream}
+import fr.il_totore.spigotmetadata.api.nbt.{NBTManager, NBTOutputStream, NamedNBT}
 import fr.warzou.skyblock.adapter.api.world.Block
 import fr.warzou.skyblock.adapter.spigot.world.SpigotBlock.nbtManager
 import net.minecraft.server.v1_12_R1.BlockPosition
 import org.apache.commons.io.output.ByteArrayOutputStream
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld
 import org.bukkit.{NamespacedKey, block}
+
+import java.util.UUID
 
 class SpigotBlock(_block: block.Block) extends Block {
   override def name: String = NamespacedKey.minecraft(_block.getType.name().toLowerCase()).toString
