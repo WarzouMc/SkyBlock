@@ -5,9 +5,9 @@ import fr.warzou.skyblock.adapter.api.world.{Block, Location}
 
 class Cuboid(corner0: Location, corner1: Location) {
 
-  val xSize: Int = Math.abs(corner1.blockX - corner0.blockX)
-  val ySize: Int = Math.abs(corner1.blockY - corner0.blockY)
-  val zSize: Int = Math.abs(corner1.blockZ - corner0.blockZ)
+  val xSize: Int = Math.abs(corner1.blockX - corner0.blockX) + 1
+  val ySize: Int = Math.abs(corner1.blockY - corner0.blockY) + 1
+  val zSize: Int = Math.abs(corner1.blockZ - corner0.blockZ) + 1
 
   val minX: Int = Math.min(corner0.blockX, corner1.blockX)
   val maxX: Int = Math.max(corner0.blockX, corner1.blockX)

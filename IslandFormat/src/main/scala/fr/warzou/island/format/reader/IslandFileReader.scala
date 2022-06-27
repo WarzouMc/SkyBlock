@@ -20,6 +20,7 @@ class IslandFileReader(val adapterAPI: AdapterAPI, val name: String) {
     val version = readVersion()
     val usedBlock = readBlocks()
     val cuboid = readCuboid()
+
     val blocks = new Array[Block](cuboid.blockCount)
     (0 until cuboid.blockCount).foreach(blocks(_) = usedBlock(IOUtils.readVarInt(reader)))
 
@@ -35,7 +36,7 @@ class IslandFileReader(val adapterAPI: AdapterAPI, val name: String) {
     val z = readByte()
     val y = readByte()
 
-    val location1 = adapterAPI.createLocation(x, y, z)
+    val location1 = adapterAPI.createLocation(x - 1, y - 1, z - 1)
     new Cuboid(location0, location1)
   }
 
