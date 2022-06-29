@@ -28,7 +28,7 @@ protected class Writer(outputStream: OutputStream, minecraftVersion: Version, cu
     val reducedBlocks = ArrayUtils.reduceList(blocks)
     val blockEntities = ArrayUtils.reduceList(reducedBlocks.filter(_.isBlockEntity))
     writeU1Int(blockEntities.length + 1)
-    println(blockEntities.head.nbt.get.mkString("Array(", ", ", ")"))
+    println("before write -> " + blockEntities.head.nbt.get.mkString("Array(", ", ", ")") + " length : " + blockEntities.head.nbt.get.length)
     blockEntities.map(_.nbt.get).foreach(writeArray)
 
     writeU1Int(reducedBlocks.length)

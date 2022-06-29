@@ -14,7 +14,7 @@ class AdapterAPI(val adapterHandler: AdapterHandler) {
     alreadyInitialized = true
   }
 
-  def getPlugin: MinecraftPlugin = adapterHandler.minecraftPlugin()
+  def plugin: MinecraftPlugin = adapterHandler.minecraftPlugin()
 
   def createLocation(x: Double, y: Double, z: Double): Location = createLocation(None, x, y, z)
 

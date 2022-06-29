@@ -3,7 +3,7 @@ package fr.warzou.skyblock.utils.cuboid
 import fr.warzou.skyblock.adapter.api.AdapterAPI
 import fr.warzou.skyblock.adapter.api.world.{Block, Location}
 
-class Cuboid(corner0: Location, corner1: Location) {
+case class Cuboid(corner0: Location, corner1: Location) {
 
   val xSize: Int = Math.abs(corner1.blockX - corner0.blockX) + 1
   val ySize: Int = Math.abs(corner1.blockY - corner0.blockY) + 1
@@ -22,6 +22,14 @@ class Cuboid(corner0: Location, corner1: Location) {
 
   def minCorner(adapter: AdapterAPI): Location = adapter.createLocation(minX, minY, minZ)
   def maxCorner(adapter: AdapterAPI): Location = adapter.createLocation(maxX, maxY, maxZ)
+
+  def world: Option[String] = {
+    (corner0.world, corner1.world) match {
+      case (None, None) => None
+      case (Some(world0), Some(world1)) => Option.when(world0 == world1)(world0)
+      case _ => None
+    }
+  }
 
   def enumerateBlocks(adapter: AdapterAPI, world: String): List[Block] = {
     (minX to maxX).foldRight(List[List[Block]]())((face, acc0) => {

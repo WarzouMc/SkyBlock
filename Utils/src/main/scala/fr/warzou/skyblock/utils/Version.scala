@@ -31,6 +31,8 @@ case class Version(major: Int, minor: Int, revision: Int) {
 
 object Version {
 
+  val V1_12_1: Version = from("1.12.1")
+
   def from(plugin: MinecraftPlugin): Version = from(plugin.version)
 
   def from(string: String): Version = {

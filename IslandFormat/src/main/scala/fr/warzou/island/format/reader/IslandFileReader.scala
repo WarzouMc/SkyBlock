@@ -1,5 +1,5 @@
 package fr.warzou.island.format.reader
-import fr.warzou.island.format.core.RawIsland
+import fr.warzou.island.format.core.Island
 import fr.warzou.skyblock.adapter.api.AdapterAPI
 import fr.warzou.skyblock.adapter.api.entity.Entity
 import fr.warzou.skyblock.adapter.api.world.{Block, Location}
@@ -12,11 +12,11 @@ import java.nio.charset.StandardCharsets
 
 class IslandFileReader(val adapterAPI: AdapterAPI, val name: String) {
 
-  private val plugin = adapterAPI.getPlugin
+  private val plugin = adapterAPI.plugin
   private val root = new File(plugin.getDataFolder, "islands")
   private val reader = new FileReader(new File(root, s"$name.island"))
 
-  def read(): RawIsland = {
+  def read(): Island = {
     val version = readVersion()
     val usedBlock = readBlocks()
     val cuboid = readCuboid()
@@ -25,7 +25,7 @@ class IslandFileReader(val adapterAPI: AdapterAPI, val name: String) {
     (0 until cuboid.blockCount).foreach(blocks(_) = usedBlock(IOUtils.readVarInt(reader)))
 
     val entities = readEntities()
-    new RawIsland(plugin, name, version, cuboid, blocks.toList, entities)
+    Island(adapterAPI, name, version, cuboid, blocks.toList, entities)
   }
 
   private def readVersion(): Version = Version(readByte(), readByte(), readByte())
