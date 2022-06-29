@@ -12,7 +12,7 @@ import fr.warzou.skyblock.utils.island.IslandUtils
 
 import java.nio.file.FileAlreadyExistsException
 
-case class Island(adapterAPI: AdapterAPI, name: String, originalVersion: Version, cuboid: Cuboid, blocks: List[Block], entities: List[Entity]) {
+case class RawIsland(adapterAPI: AdapterAPI, name: String, originalVersion: Version, cuboid: Cuboid, blocks: List[Block], entities: List[Entity]) {
   val plugin: MinecraftPlugin = adapterAPI.plugin
   val version: Version = Version.from(plugin)
 
@@ -23,23 +23,23 @@ case class Island(adapterAPI: AdapterAPI, name: String, originalVersion: Version
 }
 
 
-case object Island {
+case object RawIsland {
 
-  def create(adapter: AdapterAPI, islandName: String, cuboid: Cuboid): Island = {
+  def create(adapter: AdapterAPI, islandName: String, cuboid: Cuboid): RawIsland = {
     checkName(adapter.plugin, islandName)
     if (cuboid.world.isEmpty)
     throw new IllegalStateException("Cannot find an unique world in cuboid !")
     val blocks = cuboid.enumerateBlocks(adapter, cuboid.world.get)
     val entities = adapter.entitiesGetter.enumerateEntity(adapter, cuboid)
-    Island(adapter, islandName, Version.from(adapter.plugin), cuboid, blocks, entities)
+    RawIsland(adapter, islandName, Version.from(adapter.plugin), cuboid, blocks, entities)
   }
 
-  def createOrGet(adapter: AdapterAPI, islandName: String, cuboid: Cuboid): Island = {
+  def createOrGet(adapter: AdapterAPI, islandName: String, cuboid: Cuboid): RawIsland = {
     if (IslandUtils.allIslandName(adapter.plugin).contains(islandName)) fromName(adapter, islandName)
     else create(adapter, islandName, cuboid)
   }
 
-  def fromName(adapter: AdapterAPI, name: String): Island = {
+  def fromName(adapter: AdapterAPI, name: String): RawIsland = {
     if (!IslandUtils.allIslandName(adapter.plugin).contains(name))
       throw new IllegalArgumentException(s"Cannot found island with name '$name' !")
     val reader = new IslandFileReader(adapter, name)

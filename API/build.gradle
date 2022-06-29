@@ -1,0 +1,11 @@
+dependencies {
+    implementation librairies.annotations
+    implementation librairies.scala
+
+    testImplementation librairies.scalaTest
+    testImplementation librairies.junit
+
+    api project(':IslandFormat')
+    api project(':Utils')
+    api project(':Adapter:AdapterAPI')
+}

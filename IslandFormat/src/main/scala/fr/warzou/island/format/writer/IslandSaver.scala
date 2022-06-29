@@ -1,10 +1,10 @@
 package fr.warzou.island.format.writer
 
-import fr.warzou.island.format.core.Island
+import fr.warzou.island.format.core.RawIsland
 
 import java.io.{File, FileOutputStream}
 
-class IslandSaver(island: Island) {
+class IslandSaver(island: RawIsland) {
 
   private val adapter = island.adapterAPI
   private val plugin = adapter.plugin

@@ -1,5 +1,5 @@
 package fr.warzou.island.format.reader
-import fr.warzou.island.format.core.Island
+import fr.warzou.island.format.core.RawIsland
 import fr.warzou.skyblock.adapter.api.AdapterAPI
 import fr.warzou.skyblock.adapter.api.entity.Entity
 import fr.warzou.skyblock.adapter.api.world.{Block, Location}
@@ -16,7 +16,7 @@ class IslandFileReader(val adapterAPI: AdapterAPI, val name: String) {
   private val root = new File(plugin.getDataFolder, "islands")
   private val reader = new FileReader(new File(root, s"$name.island"))
 
-  def read(): Island = {
+  def read(): RawIsland = {
     val version = readVersion()
     val usedBlock = readBlocks()
     val cuboid = readCuboid()
@@ -25,7 +25,7 @@ class IslandFileReader(val adapterAPI: AdapterAPI, val name: String) {
     (0 until cuboid.blockCount).foreach(blocks(_) = usedBlock(IOUtils.readVarInt(reader)))
 
     val entities = readEntities()
-    Island(adapterAPI, name, version, cuboid, blocks.toList, entities)
+    RawIsland(adapterAPI, name, version, cuboid, blocks.toList, entities)
   }
 
   private def readVersion(): Version = Version(readByte(), readByte(), readByte())
@@ -37,7 +37,7 @@ class IslandFileReader(val adapterAPI: AdapterAPI, val name: String) {
     val y = readByte()
 
     val location1 = adapterAPI.createLocation(x - 1, y - 1, z - 1)
-    new Cuboid(location0, location1)
+    Cuboid(location0, location1)
   }
 
   private def readBlocks(): Array[Block] = {

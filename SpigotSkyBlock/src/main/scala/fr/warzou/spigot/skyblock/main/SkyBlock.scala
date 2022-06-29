@@ -1,6 +1,6 @@
 package fr.warzou.spigot.skyblock.main
 
-import fr.warzou.island.format.core.Island
+import fr.warzou.island.format.core.RawIsland
 import fr.warzou.skyblock.adapter.api.AdapterAPI
 import fr.warzou.skyblock.utils.cuboid.Cuboid
 import fr.warzou.skyblock.utils.server.Spigot
@@ -14,11 +14,11 @@ class SkyBlock extends JavaPlugin {
     val loc0 = adapter.createLocation(0, 100, 0)
     val loc1 = adapter.createLocation(10, 107, 10)
     val cuboid = Cuboid(loc0, loc1)
-    val island = Island.createOrGet(adapter, "faut_un_nom", cuboid)
+    val island = RawIsland.createOrGet(adapter, "faut_un_nom", cuboid)
     place(island)
   }
 
-  def place(island: Island): Unit = {
+  def place(island: RawIsland): Unit = {
     val x = 0
     val y = 100
     val z = 20
