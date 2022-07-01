@@ -38,4 +38,6 @@ case class Cuboid(corner0: Location, corner1: Location) {
       }).flatten :: acc0
     }).flatten
   }
+
+  def applyWorld(world: String): Cuboid = Cuboid(corner0.withWorld(world), corner1.withWorld(world))
 }

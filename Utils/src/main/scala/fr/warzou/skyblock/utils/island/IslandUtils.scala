@@ -6,7 +6,7 @@ import java.io.File
 
 case object IslandUtils {
 
-  def storageFolder(plugin: MinecraftPlugin): File = new File(plugin.getDataFolder, "island")
+  def storageFolder(plugin: MinecraftPlugin): File = new File(plugin.getDataFolder, "islands")
 
   def allIslandName(plugin: MinecraftPlugin): Array[String] = {
     val folder = storageFolder(plugin)

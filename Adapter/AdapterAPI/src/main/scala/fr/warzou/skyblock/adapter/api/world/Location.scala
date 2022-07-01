@@ -20,4 +20,27 @@ trait Location {
   }
 
   def block(world: String): Block
+
+  def withWorld(_world: String): Location = {
+    val current = this
+    new Location {
+      override def world: Option[String] = Some(_world)
+
+      override def blockX: Int = current.blockX
+      override def blockY: Int = current.blockY
+      override def blockZ: Int = current.blockZ
+
+      override def x: Double = current.x
+      override def y: Double = current.y
+      override def z: Double = current.z
+
+      override def locationInWorld(world: String): Location = current.locationInWorld(world)
+
+      override def block(world: String): Block = current.block(world)
+
+      override def toString: String = s"Location{world=$world, x=$x, y=$y, z=$z}"
+    }
+  }
+
+  override def toString: String = s"Location{world=$world, x=$x, y=$y, z=$z}"
 }

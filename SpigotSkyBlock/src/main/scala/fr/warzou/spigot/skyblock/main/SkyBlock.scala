@@ -1,21 +1,31 @@
 package fr.warzou.spigot.skyblock.main
 
+import fr.il_totore.spigotmetadata.api.SpigotMetadataAPI
+import fr.il_totore.spigotmetadata.api.nbt.{NBTInputStream, NBTTagCompound}
 import fr.warzou.island.format.core.RawIsland
 import fr.warzou.skyblock.adapter.api.AdapterAPI
 import fr.warzou.skyblock.utils.cuboid.Cuboid
 import fr.warzou.skyblock.utils.server.Spigot
+import net.minecraft.server.v1_12_R1.Chunk
 import org.bukkit.plugin.java.JavaPlugin
-import org.bukkit.{Bukkit, Location, Material}
+import org.bukkit.scheduler.BukkitRunnable
+import org.bukkit.{Bukkit, Location, Material, NamespacedKey, scheduler}
+
+import java.io.ByteArrayInputStream
 
 class SkyBlock extends JavaPlugin {
 
   override def onEnable(): Unit = {
     val adapter = AdapterAPI.createAdapter(Spigot(), this)
-    val loc0 = adapter.createLocation(0, 100, 0)
-    val loc1 = adapter.createLocation(10, 107, 10)
+    val loc0 = adapter.createLocation(Bukkit.getWorlds.get(0).getName, 0, 100, 0)
+    val loc1 = adapter.createLocation(Bukkit.getWorlds.get(0).getName, 10, 107, 10)
     val cuboid = Cuboid(loc0, loc1)
     val island = RawIsland.createOrGet(adapter, "faut_un_nom", cuboid)
-    place(island)
+    new BukkitRunnable {
+      override def run(): Unit = {
+        place(island)
+      }
+    }.runTaskLater(this, 20 * 3)
   }
 
   def place(island: RawIsland): Unit = {
@@ -29,13 +39,16 @@ class SkyBlock extends JavaPlugin {
           val block = island.blocks(_z + _y * 11 + _x * 11 * 8)
           Bukkit.getWorlds.get(0).getBlockAt(location).setType(Material.valueOf(block.name.split(":")(1).toUpperCase))
           Bukkit.getWorlds.get(0).getBlockAt(location).setData(block.data.toByte)
-          /*if (block.isBlockEntity) {
-            println("after read -> " + block.nbt.get.mkString("Array(", ", ", ")") + " length : " + block.nbt.get.length)
+          if (block.isBlockEntity) {
             val byteArrayInputStream = new ByteArrayInputStream(block.nbt.get)
             val nbtManager = SpigotMetadataAPI.getAPI.getNBTManager
             val inputStream = new NBTInputStream(nbtManager, byteArrayInputStream)
-            nbtManager.setNBTTag(Bukkit.getWorlds.get(0).getBlockAt(location), inputStream.readTag(NBTTagType.COMPOUND))
-          }*/
+            val compound = inputStream.readTag().asInstanceOf[NBTTagCompound]
+            compound.setInt("x", location.getBlockX)
+            compound.setInt("y", location.getBlockY)
+            compound.setInt("z", location.getBlockZ)
+            nbtManager.setNBTTag(Bukkit.getWorlds.get(0).getBlockAt(location), compound)
+          }
         })
       })
     })

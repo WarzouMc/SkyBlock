@@ -18,6 +18,8 @@ class AdapterAPI(val adapterHandler: AdapterHandler) {
 
   def createLocation(x: Double, y: Double, z: Double): Location = createLocation(None, x, y, z)
 
+  def createLocation(world: String, x: Double, y: Double, z: Double): Location = adapterHandler.createLocation(Some(world), x, y, z)
+
   def createLocation(world: Option[String], x: Double, y: Double, z: Double): Location = adapterHandler.createLocation(world, x, y, z)
 
   def entitiesGetter: EntitiesGetter = adapterHandler.getEntitiesGetter

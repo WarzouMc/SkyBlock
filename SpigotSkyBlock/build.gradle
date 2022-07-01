@@ -8,6 +8,7 @@ dependencies {
     testImplementation librairies.scalaTest
     testImplementation librairies.junit
 
+    api project(':API')
     api project(':IslandFormat')
     api project(':Utils')
     api project(':Adapter:SpigotAdapter:V1_12_R1')
