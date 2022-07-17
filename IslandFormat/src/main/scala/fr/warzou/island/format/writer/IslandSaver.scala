@@ -1,4 +1,4 @@
-package fr.warzou.island.format.island.writer
+package fr.warzou.island.format.writer
 
 import fr.warzou.island.format.core.RawIsland
 

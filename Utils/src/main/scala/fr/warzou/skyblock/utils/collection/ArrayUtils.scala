@@ -1,7 +1,6 @@
-package fr.warzou.skyblock.utils
+package fr.warzou.skyblock.utils.collection
 
 import scala.annotation.tailrec
-import scala.collection.IterableFactory
 
 object ArrayUtils {
 
@@ -14,7 +13,7 @@ object ArrayUtils {
 
   /**
    * @param element element to reduce
-   * @param list any list
+   * @param list    any list
    * @tparam A list type
    * @return same list who contain only one <pre>element</pre>
    */
@@ -26,5 +25,9 @@ object ArrayUtils {
     ).reverse
 
   @tailrec
-  def contains[A](iterator: Iterator[A], element: A): Boolean = iterator.next() == element || contains(iterator, element)
+  def indexOf[A](iterator: Iterator[A], element: A, n: Int = 0): Int = {
+    if (!iterator.hasNext) -1
+    else if (iterator.next() == element) n
+    else indexOf(iterator, element, n + 1)
+  }
 }

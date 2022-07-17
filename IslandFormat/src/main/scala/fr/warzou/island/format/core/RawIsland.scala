@@ -1,7 +1,7 @@
 package fr.warzou.island.format.core
 
-import fr.warzou.island.format.island.reader.IslandFileReader
-import fr.warzou.island.format.island.writer.IslandSaver
+import fr.warzou.island.format.reader.IslandFileReader
+import fr.warzou.island.format.writer.IslandSaver
 import fr.warzou.skyblock.adapter.api.AdapterAPI
 import fr.warzou.skyblock.adapter.api.entity.Entity
 import fr.warzou.skyblock.adapter.api.plugin.MinecraftPlugin

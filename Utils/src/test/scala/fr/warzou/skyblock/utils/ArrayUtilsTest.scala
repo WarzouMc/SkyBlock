@@ -1,5 +1,6 @@
 package fr.warzou.skyblock.utils
 
+import fr.warzou.skyblock.utils.collection.ArrayUtils
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

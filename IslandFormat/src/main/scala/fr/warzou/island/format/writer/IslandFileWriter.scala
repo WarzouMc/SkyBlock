@@ -1,10 +1,11 @@
-package fr.warzou.island.format.island.writer
+package fr.warzou.island.format.writer
 
 import fr.warzou.island.format.core.io.Writer
 import fr.warzou.skyblock.adapter.api.entity.Entity
 import fr.warzou.skyblock.adapter.api.world._
 import fr.warzou.skyblock.utils.cuboid.Cuboid
-import fr.warzou.skyblock.utils.{ArrayUtils, Version}
+import fr.warzou.skyblock.utils.Version
+import fr.warzou.skyblock.utils.collection.ArrayUtils
 
 import java.io.OutputStream
 import java.nio.ByteBuffer

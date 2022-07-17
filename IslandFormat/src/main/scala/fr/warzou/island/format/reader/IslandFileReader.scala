@@ -1,4 +1,4 @@
-package fr.warzou.island.format.island.reader
+package fr.warzou.island.format.reader
 
 import fr.warzou.island.format.core.RawIsland
 import fr.warzou.island.format.core.io.Reader
