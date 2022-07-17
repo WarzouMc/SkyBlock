@@ -1,24 +1,36 @@
-package fr.warzou.island.format.writer
+package fr.warzou.island.format.island.writer
 
+import fr.warzou.island.format.core.io.Writer
 import fr.warzou.skyblock.adapter.api.entity.Entity
 import fr.warzou.skyblock.adapter.api.world._
 import fr.warzou.skyblock.utils.cuboid.Cuboid
-import fr.warzou.skyblock.utils.{ArrayUtils, IOUtils, Version}
+import fr.warzou.skyblock.utils.{ArrayUtils, Version}
 
 import java.io.OutputStream
 import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
+import java.util.UUID
 
-protected class Writer(outputStream: OutputStream, minecraftVersion: Version, cuboid: Cuboid, blocks: List[Block], entities: List[Entity]) {
+protected class IslandFileWriter(outputStream: OutputStream, version: Version, uuid: UUID, name: String, cuboid: Cuboid,
+                                 blocks: List[Block], entities: List[Entity]) extends Writer {
 
-  def write(): Unit = {
-    writeVersion(minecraftVersion)
+  override def write(): Unit = {
+    writeVersion()
+    writeInfo()
     val reducedBlocks = writeBlocks(blocks)
     writeCuboid(cuboid, reducedBlocks)
     writeEntities(entities, cuboid)
   }
 
-  private def writeVersion(version: Version): Unit = {
+  private def writeInfo(): Unit = {
+    val byteBuffer = ByteBuffer.allocate(16)
+    byteBuffer.putLong(uuid.getMostSignificantBits)
+    byteBuffer.putLong(uuid.getLeastSignificantBits)
+    write(byteBuffer.array())
+    writeString(name)
+  }
+
+  private def writeVersion(): Unit = {
     writeU1Int(version.major)
     writeU1Int(version.minor)
     writeU1Int(version.revision)

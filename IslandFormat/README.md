@@ -1,5 +1,9 @@
 # .island file format
 
+## Usage
+
+It used to create a save of a minecraft structure.
+
 ## File structure
 
 <table style="text-align:center">
@@ -23,6 +27,14 @@
   <tr>
     <td style="font-style:italic">revision</td>
     <td>u1</td>
+  </tr>
+  <tr>
+    <td>uuid</td>
+    <td colspan="3">u1[16]</td>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td colspan="3">string</td>
   </tr>
   <tr>
     <td>block_entity_count</td>
@@ -152,8 +164,8 @@ For location see protocol on [wiki.vg](https://wiki.vg/Protocol#Position)
 
 <table style="text-align:center">
 <thead>
-  <td>Name</td>
-  <td>Byte</td>
+  <th>Name</th>
+  <th>Byte</th>
 </thead>
 <tbody>
   <tr>

@@ -3,7 +3,7 @@ package fr.warzou.skyblock.utils.cuboid
 import fr.warzou.skyblock.adapter.api.AdapterAPI
 import fr.warzou.skyblock.adapter.api.world.{Block, Location}
 
-case class Cuboid(corner0: Location, corner1: Location) {
+case class Cuboid(corner0: Location, corner1: Location, blocks: Option[List[Block]] = None) {
 
   val xSize: Int = Math.abs(corner1.blockX - corner0.blockX) + 1
   val ySize: Int = Math.abs(corner1.blockY - corner0.blockY) + 1
@@ -32,12 +32,19 @@ case class Cuboid(corner0: Location, corner1: Location) {
   }
 
   def enumerateBlocks(adapter: AdapterAPI, world: String): List[Block] = {
-    (minX to maxX).foldRight(List[List[Block]]())((face, acc0) => {
-      (minY to maxY).foldRight(List[List[Block]]())((line, acc1) => {
-        (minZ to maxZ).map(adapter.createLocation(face, line, _).block(world)).toList :: acc1
-      }).flatten :: acc0
-    }).flatten
+    blocks.getOrElse(
+      (minX to maxX).foldRight(List[List[Block]]())((face, acc0) => {
+        (minY to maxY).foldRight(List[List[Block]]())((line, acc1) => {
+          (minZ to maxZ).map(adapter.createLocation(face, line, _).block(world)).toList :: acc1
+        }).flatten :: acc0
+      }).flatten
+    )
   }
 
   def applyWorld(world: String): Cuboid = Cuboid(corner0.withWorld(world), corner1.withWorld(world))
+
+  def normalize(adapter: AdapterAPI): Cuboid =
+    Cuboid(adapter.createLocation(0, 0, 0), adapter.createLocation(xSize, ySize, zSize))
+
+  def atLocation(location: Location): Cuboid = Cuboid(location, location.appendXYZ(xSize, ySize, zSize))
 }

@@ -1,5 +1,6 @@
 package fr.warzou.skyblock.utils
 
+import scala.annotation.tailrec
 import scala.collection.IterableFactory
 
 object ArrayUtils {
@@ -23,4 +24,7 @@ object ArrayUtils {
       else if (acc.contains(element)) acc
       else value :: acc
     ).reverse
+
+  @tailrec
+  def contains[A](iterator: Iterator[A], element: A): Boolean = iterator.next() == element || contains(iterator, element)
 }

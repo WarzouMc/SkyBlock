@@ -1,5 +1,7 @@
-package fr.warzou.island.format.reader
+package fr.warzou.island.format.island.reader
+
 import fr.warzou.island.format.core.RawIsland
+import fr.warzou.island.format.core.io.Reader
 import fr.warzou.skyblock.adapter.api.AdapterAPI
 import fr.warzou.skyblock.adapter.api.entity.Entity
 import fr.warzou.skyblock.adapter.api.world.{Block, Location}
@@ -9,15 +11,18 @@ import fr.warzou.skyblock.utils.{IOUtils, Version}
 import java.io.{File, FileReader}
 import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
+import java.util.UUID
 
-class IslandFileReader(val adapterAPI: AdapterAPI, val name: String) {
+class IslandFileReader(val adapterAPI: AdapterAPI, val fileName: String) extends Reader[RawIsland] {
 
   private val plugin = adapterAPI.plugin
-  private val root = new File(plugin.getDataFolder, "islands")
-  private val reader = new FileReader(new File(root, s"$name.island"))
+  private val root = new File(plugin.dataFolder, "islands")
+  private val reader = new FileReader(new File(root, s"$fileName.island"))
 
-  def read(): RawIsland = {
+  override def read: RawIsland = {
     val version = readVersion()
+    val uuid = readUUID()
+    val islandName = readString()
     val usedBlock = readBlocks()
     val cuboid = readCuboid()
 
@@ -25,10 +30,16 @@ class IslandFileReader(val adapterAPI: AdapterAPI, val name: String) {
     (0 until cuboid.blockCount).foreach(blocks(_) = usedBlock(IOUtils.readVarInt(reader)))
 
     val entities = readEntities()
-    RawIsland(adapterAPI, name, version, cuboid, blocks.toList, entities)
+    RawIsland(adapterAPI, uuid, islandName, version, cuboid, blocks.toList, entities)
   }
 
   private def readVersion(): Version = Version(readByte(), readByte(), readByte())
+
+  private def readUUID(): UUID = {
+    val array: Array[Byte] = readNByte(16).map(_.toByte)
+    val byteBuffer = ByteBuffer.wrap(array)
+    new UUID(byteBuffer.getLong, byteBuffer.getLong)
+  }
 
   private def readCuboid(): Cuboid = {
     val location0 = adapterAPI.createLocation(0, 0, 0)

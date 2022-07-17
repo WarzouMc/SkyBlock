@@ -6,16 +6,16 @@ import java.io.File
 
 case object IslandUtils {
 
-  def storageFolder(plugin: MinecraftPlugin): File = new File(plugin.getDataFolder, "islands")
+  def storageFolder(plugin: MinecraftPlugin): File = new File(plugin.dataFolder, "islands")
 
-  def allIslandName(plugin: MinecraftPlugin): Array[String] = {
+  def allIslandsName(plugin: MinecraftPlugin): Array[String] = {
     val folder = storageFolder(plugin)
     folder.listFiles().filter(_.isFile).map(_.getName).filter(_.split("\\.").length == 2)
       .filter(_.split("\\.")(1) == "island")
   }
 
-  def allIslandFile(plugin: MinecraftPlugin): Array[File] = {
+  def allIslandsFile(plugin: MinecraftPlugin): Array[File] = {
     val folder = storageFolder(plugin)
-    allIslandName(plugin).map(new File(folder, _))
+    allIslandsName(plugin).map(new File(folder, _))
   }
 }

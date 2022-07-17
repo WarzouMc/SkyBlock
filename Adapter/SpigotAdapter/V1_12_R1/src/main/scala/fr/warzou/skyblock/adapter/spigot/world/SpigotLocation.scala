@@ -21,6 +21,8 @@ case class SpigotLocation(_world: Option[String], _x: Double, _y: Double, _z: Do
   override def block(world: String): Block =
     new SpigotBlock(Bukkit.getWorld(world).getBlockAt(blockX, blockY, blockZ))
 
+  override def appendXYZ(x: Double, y: Double, z: Double): Location = SpigotLocation(_world, _x + x, _y + y, _z + z)
+
   def toBukkit: bukkit.Location = new bukkit.Location(Bukkit.getWorld(_world.getOrElse(Bukkit.getWorlds.get(0).getName)), _x, _y, _z)
 }
 

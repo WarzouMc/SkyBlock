@@ -24,5 +24,5 @@ case class SpigotPlugin(plugin: Plugin) extends MinecraftPlugin {
 
   override def api: ServerAPI = Spigot()
 
-  override def getDataFolder: File = plugin.getDataFolder
+  override def dataFolder: File = plugin.getDataFolder
 }

@@ -13,6 +13,8 @@ trait MinecraftPlugin {
 
   def api: ServerAPI
 
-  def getDataFolder: File
+  def dataFolder: File
+
+  val islandFolder: File = new File(dataFolder, "islands")
 
 }

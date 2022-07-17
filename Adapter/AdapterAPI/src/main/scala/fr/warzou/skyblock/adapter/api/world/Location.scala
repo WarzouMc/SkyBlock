@@ -38,9 +38,13 @@ trait Location {
 
       override def block(world: String): Block = current.block(world)
 
+      override def appendXYZ(x: Double, y: Double, z: Double): Location = current.appendXYZ(x, y, z)
+
       override def toString: String = s"Location{world=$world, x=$x, y=$y, z=$z}"
     }
   }
+
+  def appendXYZ(x: Double, y: Double, z: Double): Location
 
   override def toString: String = s"Location{world=$world, x=$x, y=$y, z=$z}"
 }
