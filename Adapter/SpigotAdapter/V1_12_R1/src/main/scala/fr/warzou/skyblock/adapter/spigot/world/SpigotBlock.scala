@@ -12,7 +12,7 @@ import org.bukkit.{Bukkit, NamespacedKey, block}
 import java.io.ByteArrayInputStream
 import java.util.UUID
 
-class SpigotBlock(_block: block.Block) extends Block {
+case class SpigotBlock(_block: block.Block) extends Block {
   override def name: String = NamespacedKey.minecraft(_block.getType.name().toLowerCase()).toString
 
   override def data: Int = _block.getData

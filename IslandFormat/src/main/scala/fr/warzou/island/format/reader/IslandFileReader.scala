@@ -6,7 +6,7 @@ import fr.warzou.skyblock.adapter.api.AdapterAPI
 import fr.warzou.skyblock.adapter.api.entity.Entity
 import fr.warzou.skyblock.adapter.api.world.{Block, Location}
 import fr.warzou.skyblock.utils.cuboid.Cuboid
-import fr.warzou.skyblock.utils.{IOUtils, Version}
+import fr.warzou.skyblock.utils.{IOUtils, ServerVersion}
 
 import java.io.{File, FileReader}
 import java.nio.ByteBuffer
@@ -33,7 +33,7 @@ class IslandFileReader(val adapterAPI: AdapterAPI, val fileName: String) extends
     RawIsland(adapterAPI, uuid, islandName, version, cuboid, blocks.toList, entities)
   }
 
-  private def readVersion(): Version = Version(readByte(), readByte(), readByte())
+  private def readVersion(): ServerVersion = ServerVersion(readByte(), readByte(), readByte())
 
   private def readUUID(): UUID = {
     val array: Array[Byte] = readNByte(16).map(_.toByte)
