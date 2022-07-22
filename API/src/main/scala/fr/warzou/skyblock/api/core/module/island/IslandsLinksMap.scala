@@ -15,5 +15,6 @@ final class IslandsLinksMap {
 
   def getFileName(uuid: UUID): Option[String] = map.get(uuid)
 
+  //todo ...
   def getUUID(fileName: String): Option[UUID] =
 }
