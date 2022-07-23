@@ -1,5 +1,8 @@
 package fr.warzou.skyblock.utils.collection.map.mutable
 
+import java.util.function.Predicate
+import java.util.stream.Collectors
+import scala.collection.mutable
 import scala.language.{existentials, postfixOps}
 
 //todo change name...
@@ -11,9 +14,9 @@ object BijectiveMap {
 
 trait BijectiveMap[K, V] extends Iterable[Entry[K, V]] {
 
-  def existKey(key: K): Boolean
+  def containKey(key: K): Boolean
 
-  def existValue(value: V): Boolean
+  def containValue(value: V): Boolean
 
   /**
    * Return optionally value associated with a key.
@@ -33,13 +36,13 @@ trait BijectiveMap[K, V] extends Iterable[Entry[K, V]] {
    * Collect all keys of this BijectiveMap
    * @return all keys of BiMap in a [[Set]]
    */
-  def keys: Set[K]
+  def keys: mutable.Set[K]
 
   /**
    * Collect all values of this BijectiveMap
    * @return all values of BiMap in a [[Set]]
    */
-  def values: Set[V]
+  def values: mutable.Set[V]
 
   /**
    * Inverse keys and values in this BijectiveMap
@@ -50,4 +53,22 @@ trait BijectiveMap[K, V] extends Iterable[Entry[K, V]] {
   def +(set: (K, V)): Unit = put(set._1, set._2)
 
   def put(key: K, value: V): Unit
+
+  def putAll(map: BijectiveMap[K, V]): Unit = putAll(map.map(entry => (entry.key, entry.value)).toSeq)
+
+  def putAll(seq: (K, V)*): Unit = putAll(seq)
+
+  def putAll(seq: Seq[(K, V)]): Unit
+
+  def clear(): Unit
+
+  def -(key: K): Unit = removeByKey(key)
+
+  def removeByKey(key: K): Boolean
+
+  def removeByValue(value: V): Boolean
+
+  def removeByKeyIf(predicate: Predicate[K]): Boolean
+
+  def removeByValueIf(predicate: Predicate[V]): Boolean
 }

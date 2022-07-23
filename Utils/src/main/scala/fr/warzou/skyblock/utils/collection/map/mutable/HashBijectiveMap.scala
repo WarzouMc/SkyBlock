@@ -4,6 +4,7 @@ import fr.warzou.skyblock.utils.collection.map.AlreadyPresentException
 import fr.warzou.skyblock.utils.collection.map.mutable.HashBijectiveMap._
 import org.jetbrains.annotations.Nullable
 
+import java.util.function.Predicate
 import scala.collection.mutable
 
 class HashBijectiveMap[K, V](private var capacity: Int, private val loadFactor: Double) extends BijectiveMap[K, V] {
@@ -11,20 +12,26 @@ class HashBijectiveMap[K, V](private var capacity: Int, private val loadFactor: 
   private var array: Array[Bucket[K, V]] = new Array[Bucket[K, V]](tableSizeFor(capacity))
   private def threshold: Int = (capacity * loadFactor).toInt
   private var contentSize = 0
+  private val keySet: mutable.Set[K] = new KeySet
+  private val valueSet: mutable.Set[V] = new ValueSet
 
   capacity = array.length
 
   def this() = this(defaultCapacity, defaultLoadFactor)
 
-  override def size: Int = contentSize
+  override def size: Int = contentSize / 2
 
-  override def existKey(key: K): Boolean = {
+  override def isEmpty: Boolean = contentSize == 0
+
+  override def knownSize: Int = contentSize / 2
+
+  override def containKey(key: K): Boolean = {
     val _hash = hash(key)
     val _index = index(_hash)
     array(_index) != null && array(_index).containKey(key)
   }
 
-  override def existValue(value: V): Boolean = {
+  override def containValue(value: V): Boolean = {
     val _hash = hash(value)
     val _index = index(_hash)
     array(_index) != null && array(_index).containValue(value)
@@ -42,64 +49,133 @@ class HashBijectiveMap[K, V](private var capacity: Int, private val loadFactor: 
     if (array(_index) == null) None else array(_index).getKey(value)
   }
 
-  override def keys: Set[K] = {
-    val set: mutable.Set[K] = new mutable.HashSet[K](capacity, mutable.HashSet.defaultLoadFactor)
-    for (bucket <- array) {
-      if (bucket.keyToValue) set += bucket.key
-      var _bucket = bucket
-      while (_bucket.hasDefinedNext) {
-        _bucket = _bucket.next
-        if (_bucket.keyToValue) set += _bucket.key
-      }
-    }
-    Set.from(set)
-  }
+  override def keys: mutable.Set[K] = keySet
 
-  override def values: Set[V] = {
-    val set: mutable.Set[V] = new mutable.HashSet[V](capacity, mutable.HashSet.defaultLoadFactor)
-    for (bucket <- array) {
-      if (!bucket.keyToValue) set += bucket.value
-      var _bucket = bucket
-      while (_bucket.hasDefinedNext) {
-        _bucket = _bucket.next
-        if (!_bucket.keyToValue) set += _bucket.value
-      }
-    }
-    Set.from(set)
-  }
+  override def values: mutable.Set[V] = valueSet
 
   override def iterator: Iterator[Entry[K, V]] = Itr(array)
 
   override def put(key: K, value: V): Unit = {
-    if (existKey(key)) throw new AlreadyPresentException("Key already existe in this map !")
-    if (existValue(value)) throw new AlreadyPresentException("Value already existe in this map !")
+    if (containKey(key)) throw new AlreadyPresentException("Key already existe in this map !")
+    if (containValue(value)) throw new AlreadyPresentException("Value already existe in this map !")
 
     resizeIfRequired()
     insertKey(key, value)
     insertValue(key, value)
+    contentSize += 2
   }
 
-  //todo optimize
+  override def putAll(seq: Seq[(K, V)]): Unit = {
+    if (contentSize + seq.size >= capacity && capacity < maxCapacity) resize(tableSizeFor(contentSize + seq.size))
+    seq.foreach(tuple => put(tuple._1, tuple._2))
+  }
+
+  override def clear(): Unit = {
+    contentSize = 0
+    array.indices.foreach(array(_) = null)
+  }
+
+  override def removeByKey(key: K): Boolean = {
+    if (!containKey(key)) return false
+    contentSize -= 2
+    simplyValueRemove(fromKey(key).get)
+    simplyKeyRemove(key)
+  }
+
+  override def removeByValue(value: V): Boolean = {
+    if (!containValue(value)) return false
+    contentSize -= 2
+    simplyKeyRemove(fromValue(value).get)
+    simplyValueRemove(value)
+  }
+
+  override def removeByKeyIf(predicate: Predicate[K]): Boolean = {
+    val filteredSet = keySet.filter(predicate.test)
+    if (filteredSet.isEmpty) return false
+
+    contentSize -= filteredSet.size * 2
+    filteredSet.foreach(key => {
+      simplyValueRemove(fromKey(key).get)
+      simplyKeyRemove(key)
+    })
+    true
+  }
+
+  override def removeByValueIf(predicate: Predicate[V]): Boolean = {
+    val filteredSet = valueSet.filter(predicate.test)
+    if (filteredSet.isEmpty) return false
+
+    contentSize -= filteredSet.size * 2
+    filteredSet.foreach(value => {
+      simplyKeyRemove(fromValue(value).get)
+      simplyValueRemove(value)
+    })
+    true
+  }
+
+  private def simplyKeyRemove(key: K): Boolean = {
+    val _hash = hash(key)
+    val _index = index(_hash)
+    val bucket = array(_index)
+    simplyValueRemove(fromKey(key).get)
+    if (!bucket.hasDefinedNext) {
+      array(_index) = null
+      return true
+    }
+
+    if (bucket.keyToValue && bucket.key == key) {
+      array(_index) = bucket.next
+      return true
+    }
+
+    bucket.removeKeyInNext(key)
+    true
+  }
+
+  private def simplyValueRemove(value: V): Boolean = {
+    val _hash = hash(value)
+    val _index = index(_hash)
+    val bucket = array(_index)
+
+    if (!bucket.hasDefinedNext) {
+      array(_index) = null
+      return true
+    }
+
+    if (!bucket.keyToValue && bucket.value == value) {
+      array(_index) = bucket.next
+      return true
+    }
+
+    bucket.removeValueInNext(value)
+    true
+  }
+
   override def invert: BijectiveMap[V, K] = {
-    val invert: BijectiveMap[V, K] = BijectiveMap.createHashBijectiveMap()
-    foreach(entry => invert.put(entry.value, entry.key))
+    val invert: HashBijectiveMap[V, K] = new HashBijectiveMap[V, K](capacity, defaultLoadFactor)
+    invert.contentSize = contentSize
+    foreach(entry => {
+      invert.insertKey(entry.value, entry.key)
+      invert.insertValue(entry.value, entry.key)
+    })
     invert
   }
 
   private def index(hash: Int): Int = hash & (capacity - 1)
 
   private def resizeIfRequired(): Unit = {
-    if (capacity >= maxCapacity || contentSize < threshold) return
+    if (capacity >= maxCapacity || contentSize / 2 < threshold) return
     resize()
   }
 
-  private def resize(): Unit = {
-    val oldThreshold = threshold
-    val oldCapacity = capacity
+  private def resize(): Unit = resize(capacity * 2)
+
+  private def resize(newCapacity: Int): Unit = {
     val oldArray = array
 
-    capacity = oldCapacity * 2
+    capacity = newCapacity
     array = new Array[Bucket[K, V]](capacity)
+
     for (oldBucket <- oldArray) {
       var _oldBucket = oldBucket
       var key = _oldBucket.key
@@ -181,6 +257,22 @@ class HashBijectiveMap[K, V](private var capacity: Int, private val loadFactor: 
 
     def insertVal(bucket: Bucket[K1, V1]): Unit = if (hasDefinedNext) next.insertVal(bucket) else next = bucket
 
+    def removeKeyInNext(_key: K1): Unit = {
+      if (next.keyToValue && next.key == _key) {
+        _next = next._next
+        return
+      }
+      next.removeKeyInNext(_key)
+    }
+
+    def removeValueInNext(_value: V1): Unit = {
+      if (!next.keyToValue && next.value == _value) {
+        _next = next._next
+        return
+      }
+      next.removeValueInNext(_value)
+    }
+
     def containKey(key: K1): Boolean = if (keyToValue && key == this.key) true else hasDefinedNext && next.containKey(key)
 
     def containValue(value: V1): Boolean = if (!keyToValue && value == this.value) true else hasDefinedNext && next.containValue(value)
@@ -252,6 +344,36 @@ class HashBijectiveMap[K, V](private var capacity: Int, private val loadFactor: 
     }
 
     private def bucketToEntry(bucket: Bucket[K, V]): Entry[K, V] = Entry(bucket.key, bucket.value)
+  }
+
+  private abstract class SelfSet[E] extends mutable.AbstractSet[E] with mutable.Set[E] {
+    override def size: Int = HashBijectiveMap.this.size
+
+    override def clear(): Unit = HashBijectiveMap.this.clear()
+
+    override def addOne(elem: E): SelfSet.this.type = throw new UnsupportedOperationException()
+  }
+
+  private class KeySet extends SelfSet[K] {
+    override def contains(elem: K): Boolean =  HashBijectiveMap.this.containKey(elem)
+
+    override def iterator: Iterator[K] = HashBijectiveMap.this.iterator.map(_.key)
+
+    override def subtractOne(elem: K): KeySet.this.type = {
+      HashBijectiveMap.this.removeByKey(elem)
+      this
+    }
+  }
+
+  private class ValueSet extends SelfSet[V] {
+    override def contains(elem: V): Boolean =  HashBijectiveMap.this.containValue(elem)
+
+    override def iterator: Iterator[V] = HashBijectiveMap.this.iterator.map(_.value)
+
+    override def subtractOne(elem: V): ValueSet.this.type = {
+      HashBijectiveMap.this.removeByValue(elem)
+      this
+    }
   }
 }
 
