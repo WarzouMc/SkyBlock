@@ -1,16 +1,33 @@
 package fr.warzou.skyblock.utils.collection.map.mutable
 
-import fr.warzou.skyblock.utils.collection.map.AlreadyPresentException
 import fr.warzou.skyblock.utils.collection.map.mutable.HashBijectiveMap._
 import org.jetbrains.annotations.Nullable
 
 import java.util.function.Predicate
 import scala.collection.mutable
 
+private object HashBijectiveMap {
+
+  private val defaultLoadFactor: Double = 0.75
+  private val defaultCapacity: Int = 32
+  private val maxCapacity: Int = 1 << 30
+
+  private def hash(key: Any): Int = if (key == null) 0 else key.## ^ (key.## >>> 16)
+
+  private def tableSizeFor(capacity: Int): Int = 8.max(Math.pow(2, (Math.log(capacity) / Math.log(2)).ceil).toInt).min(maxCapacity)
+}
+
+//todo little doc
+/**
+ * @param capacity
+ * @param loadFactor
+ * @tparam K keys type
+ * @tparam V values type
+ *
+ */
 class HashBijectiveMap[K, V](private var capacity: Int, private val loadFactor: Double) extends BijectiveMap[K, V] {
 
   private var array: Array[Bucket[K, V]] = new Array[Bucket[K, V]](tableSizeFor(capacity))
-  private def threshold: Int = (capacity * loadFactor).toInt
   private var contentSize = 0
   private val keySet: mutable.Set[K] = new KeySet
   private val valueSet: mutable.Set[V] = new ValueSet
@@ -18,6 +35,8 @@ class HashBijectiveMap[K, V](private var capacity: Int, private val loadFactor: 
   capacity = array.length
 
   def this() = this(defaultCapacity, defaultLoadFactor)
+
+  private def threshold: Int = (capacity * loadFactor).toInt
 
   override def size: Int = contentSize / 2
 
@@ -55,19 +74,19 @@ class HashBijectiveMap[K, V](private var capacity: Int, private val loadFactor: 
 
   override def iterator: Iterator[Entry[K, V]] = Itr(array)
 
-  override def put(key: K, value: V): Unit = {
-    if (containKey(key)) throw new AlreadyPresentException("Key already existe in this map !")
-    if (containValue(value)) throw new AlreadyPresentException("Value already existe in this map !")
+  override def put(key: K, value: V): Boolean = {
+    if (containKey(key) || containValue(value)) return false
 
     resizeIfRequired()
     insertKey(key, value)
     insertValue(key, value)
     contentSize += 2
+    true
   }
 
-  override def putAll(seq: Seq[(K, V)]): Unit = {
+  override def putAll(seq: Seq[(K, V)]): Boolean = {
     if (contentSize + seq.size >= capacity && capacity < maxCapacity) resize(tableSizeFor(contentSize + seq.size))
-    seq.foreach(tuple => put(tuple._1, tuple._2))
+    seq.foldRight(true)((tuple, acc) => acc && put(tuple._1, tuple._2))
   }
 
   override def clear(): Unit = {
@@ -180,6 +199,7 @@ class HashBijectiveMap[K, V](private var capacity: Int, private val loadFactor: 
       var _oldBucket = oldBucket
       var key = _oldBucket.key
       var value = _oldBucket.value
+
       insertKey(key, value)
       insertValue(key, value)
 
@@ -187,6 +207,7 @@ class HashBijectiveMap[K, V](private var capacity: Int, private val loadFactor: 
         _oldBucket = _oldBucket.next
         key = _oldBucket.key
         value = _oldBucket.value
+
         insertKey(key, value)
         insertValue(key, value)
       }
@@ -225,6 +246,7 @@ class HashBijectiveMap[K, V](private var capacity: Int, private val loadFactor: 
       val entry = iterator.next()
       val key: Any = entry.key
       val value: Any = entry.value
+
       if (key == this) builder.append("(this map)") else builder.append(entry.key)
       builder.append("=")
       if (value == this) builder.append("(this map)") else builder.append(entry.value)
@@ -375,15 +397,4 @@ class HashBijectiveMap[K, V](private var capacity: Int, private val loadFactor: 
       this
     }
   }
-}
-
-private object HashBijectiveMap {
-
-  private val defaultLoadFactor: Double = 0.75
-  private val defaultCapacity: Int = 16
-  private val maxCapacity: Int = 1 << 30
-
-  private def hash(key: Any): Int = if (key == null) 0 else key.## ^ (key.## >>> 16)
-
-  private def tableSizeFor(capacity: Int): Int = 4.max(Math.pow(2, (Math.log(capacity) / Math.log(2)).ceil).toInt).min(maxCapacity)
 }

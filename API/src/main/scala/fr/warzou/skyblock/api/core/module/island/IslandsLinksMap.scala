@@ -1,20 +1,16 @@
 package fr.warzou.skyblock.api.core.module.island
 
+import fr.warzou.skyblock.utils.collection.map.mutable.BijectiveMap
+
 import java.util.UUID
-import scala.collection.mutable
 
 final class IslandsLinksMap {
 
-  private val map = mutable.Map[UUID, String]()
+  private val map = BijectiveMap.createHashBijectiveMap[UUID, String]()
 
-  private[island] def put(uuid: UUID, fileName: String): Unit = {
-    if (map.keysIterator.contains(uuid)) throw new IllegalArgumentException("Given uuid already exist in links map")
-    if (map.valuesIterator.contains(fileName)) throw new IllegalArgumentException("Given file name already exist in links map")
-    map.put(uuid, fileName)
-  }
+  private[island] def put(uuid: UUID, fileName: String): Unit = map.put(uuid, fileName)
 
-  def getFileName(uuid: UUID): Option[String] = map.get(uuid)
+  def getFileName(uuid: UUID): Option[String] = map.fromKey(uuid)
 
-  //todo ...
-  def getUUID(fileName: String): Option[UUID] =
+  def getUUID(fileName: String): Option[UUID] = map.fromValue(fileName)
 }
