@@ -1,4 +1,4 @@
-package fr.warzou.skyblock.api.common
+package fr.warzou.skyblock.api.common.module
 
 import fr.warzou.skyblock.adapter.api.AdapterAPI
 import fr.warzou.skyblock.api.core.island.Island

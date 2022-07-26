@@ -3,6 +3,7 @@ package fr.warzou.island.format.reader
 import fr.warzou.island.format.core.RawIsland
 import fr.warzou.island.format.core.io.Reader
 import fr.warzou.skyblock.adapter.api.AdapterAPI
+import fr.warzou.skyblock.adapter.api.common.wrap.{Unwrapper, Wrapper}
 import fr.warzou.skyblock.adapter.api.entity.Entity
 import fr.warzou.skyblock.adapter.api.world.{Block, Location}
 import fr.warzou.skyblock.utils.cuboid.Cuboid
@@ -94,6 +95,11 @@ class IslandFileReader(val adapterAPI: AdapterAPI, val fileName: String) extends
         override def name: String = entityName
 
         override def nbt: Array[Byte] = _nbt
+
+        //todo
+        override def wrapper: Wrapper[_, Entity] = ???
+
+        override def unwrapper: Unwrapper[Entity, _] = ???
       }
     })
     entities.toList

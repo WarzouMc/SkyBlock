@@ -4,7 +4,7 @@ import fr.warzou.skyblock.utils.collection.map.mutable.BijectiveMap
 
 import java.util.UUID
 
-final class IslandsLinksMap {
+private[island] final class IslandsLinksMap {
 
   private val map = BijectiveMap.createHashBijectiveMap[UUID, String]()
 

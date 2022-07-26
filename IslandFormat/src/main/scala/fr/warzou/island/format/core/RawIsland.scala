@@ -33,6 +33,7 @@ case object RawIsland {
     RawIsland(adapter, UUID.randomUUID(), islandName, ServerVersion.from(adapter.plugin), cuboid, blocks, entities)
   }
 
+  //todo get by island name and by file name (currently only by file name but ambiguous)
   def createOrGet(adapter: AdapterAPI, islandName: String, cuboid: Cuboid): RawIsland = {
     if (IslandUtils.allIslandsName(adapter.plugin).contains(islandName)) fromFileName(adapter, islandName)
     else create(adapter, islandName, cuboid)

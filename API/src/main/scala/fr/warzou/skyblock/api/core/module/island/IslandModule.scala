@@ -1,7 +1,8 @@
 package fr.warzou.skyblock.api.core.module.island
 
+import fr.warzou.island.format.core.RawIsland
 import fr.warzou.skyblock.adapter.api.AdapterAPI
-import fr.warzou.skyblock.api.common.Module
+import fr.warzou.skyblock.api.common.module.Module
 import fr.warzou.skyblock.api.core.island.Island
 import fr.warzou.skyblock.utils.collection.map.mutable.BijectiveMap
 
@@ -18,7 +19,9 @@ abstract class IslandModule(private val adapter: AdapterAPI) extends Module {
     loadIslands()
   }
 
-  override def onDisable(): Unit = ???
+  override def onDisable(): Unit = {
+    islands.values.foreach(_.save())
+  }
 
   def islandByUUID(uuid: UUID): Option[Island] = islands.fromKey(uuid)
 
@@ -33,4 +36,8 @@ abstract class IslandModule(private val adapter: AdapterAPI) extends Module {
 
   protected def put(uuid: UUID, fileName: String): Unit = linksMap.put(uuid, fileName)
 
+  //todo
+  private def toRawIsland(island: Island): RawIsland = {
+    ???//RawIsland(adapter, island.uuid, island.name)
+  }
 }

@@ -3,7 +3,8 @@ package fr.warzou.skyblock.adapter.spigot.entity
 import fr.il_totore.spigotmetadata.api.SpigotMetadataAPI
 import fr.il_totore.spigotmetadata.api.nbt.NBTOutputStream
 import fr.warzou.skyblock.adapter.api.AdapterAPI
-import fr.warzou.skyblock.adapter.api.entity.{EntitiesGetter, Entity}
+import fr.warzou.skyblock.adapter.api.common.wrap.{Unwrapper, Wrappable, Wrapper}
+import fr.warzou.skyblock.adapter.api.entity.{EntitiesGetter, Entity, EntityWrapper}
 import fr.warzou.skyblock.adapter.api.world.Location
 import fr.warzou.skyblock.adapter.spigot.world.SpigotLocation
 import fr.warzou.skyblock.utils.cuboid.Cuboid
@@ -25,12 +26,27 @@ case class SpigotEntity(_entity: entity.Entity) extends Entity {
     nbtOutputStream.writeTag(SpigotEntity.nbtManager.getNBTTag(_entity))
     byteArrayOutputStream.toByteArray
   }
+
+  override def wrapper: Wrapper[entity.Entity, Entity] = SpigotEntity
+
+  override def unwrapper: Unwrapper[Entity, entity.Entity] = SpigotEntity
 }
 
-case object SpigotEntity {
+case object SpigotEntity extends EntityWrapper[entity.Entity] {
   private val nbtManager = SpigotMetadataAPI.getAPI.getNBTManager
 
-  def toCustom(_entity: entity.Entity): Entity = new SpigotEntity(_entity)
+  override def wrap(_entity: entity.Entity): Entity = new SpigotEntity(_entity)
+
+  override def unwrap(wrappedEntity: Entity): entity.Entity = wrappedEntity match {
+    case SpigotEntity(entity) => entity
+    case _ => {
+      val unknownResult = wrappedEntity.unwrapper.unwrap(wrappedEntity)
+      unknownResult match {
+        case entity: entity.Entity => entity
+        case _ => throw new IllegalArgumentException(s"No Unwrapper found to parse ${wrappedEntity.getClass} into a ${classOf[entity.Entity]} !")
+      }
+    }
+  }
 }
 
 

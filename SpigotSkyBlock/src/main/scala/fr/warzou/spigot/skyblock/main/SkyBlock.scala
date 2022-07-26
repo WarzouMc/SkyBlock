@@ -24,6 +24,7 @@ class SkyBlock extends JavaPlugin {
     val loc1 = api.adapter.createLocation(Bukkit.getWorlds.get(0).getName, 10, 107, 10)
     val cuboid = Cuboid(loc0, loc1)
     val island = RawIsland.createOrGet(api.adapter, "faut_un_nom", cuboid)
+    island.saveAs("faut_un_nom")
     new BukkitRunnable {
       override def run(): Unit = {
         place(island)

@@ -2,11 +2,13 @@ package fr.warzou.skyblock.api.core.island
 
 import fr.warzou.skyblock.adapter.api.entity.Entity
 import fr.warzou.skyblock.adapter.api.world.{Block, Location}
+import fr.warzou.skyblock.api.core.modifiable.Modifiable
+import fr.warzou.skyblock.api.core.saveable.Saveable
 import fr.warzou.skyblock.utils.cuboid.Cuboid
 
 import java.util.UUID
 
-trait Island {
+trait Island extends Saveable with Modifiable {
 
   def uuid: UUID
 
@@ -18,7 +20,11 @@ trait Island {
 
   def entityCount: Int
 
-  def getEntities: Array[Entity]
+  def entities: List[Entity]
+
+  def addEntity(entity: Entity): Unit
+
+  def removeEntity(entity: Entity): Unit
 
   def getBlockAt(location: Location): Block
 
@@ -27,8 +33,6 @@ trait Island {
   def blocks: List[Block]
 
   def place(location: Location): Unit
-
-  def save(): Unit
 
   override def equals(obj: Any): Boolean = {
     if (obj == null || !obj.isInstanceOf[Island]) return false

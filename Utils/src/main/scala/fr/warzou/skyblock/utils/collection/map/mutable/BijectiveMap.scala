@@ -92,7 +92,7 @@ trait BijectiveMap[K, V] extends Iterable[Entry[K, V]] {
    * @param seq a sequence of key value paires
    * @return if all elements of `seq` was correctly added
    */
-  def putAll(seq: (K, V)*): Boolean = putAll(seq)
+  //def putAll(seq: (K, V)*): Boolean = putAll(seq)
 
   /**
    * Put every elements of a [[Seq]] in this BijectiveMap

@@ -1,7 +1,7 @@
 package fr.warzou.spigot.skyblock.main.common.module
 
 import fr.warzou.skyblock.adapter.api.AdapterAPI
-import fr.warzou.skyblock.api.common.ModuleHandler
+import fr.warzou.skyblock.api.common.module.ModuleHandler
 import fr.warzou.skyblock.api.core.island.Island
 import fr.warzou.skyblock.utils.cuboid.Cuboid
 import fr.warzou.skyblock.utils.server
