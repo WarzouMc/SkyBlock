@@ -1,6 +1,6 @@
 package fr.warzou.skyblock.adapter.spigot.plugin
 
-import fr.warzou.skyblock.adapter.api.plugin.MinecraftPlugin
+import fr.warzou.skyblock.adapter.api.core.plugin.MinecraftPlugin
 import fr.warzou.skyblock.utils.server.Spigot
 import fr.warzou.skyblock.utils.server.ServerAPI
 import org.bukkit.plugin.Plugin

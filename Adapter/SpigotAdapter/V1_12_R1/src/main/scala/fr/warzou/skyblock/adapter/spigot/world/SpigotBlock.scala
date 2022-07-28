@@ -2,7 +2,7 @@ package fr.warzou.skyblock.adapter.spigot.world
 
 import fr.il_totore.spigotmetadata.api.SpigotMetadataAPI
 import fr.il_totore.spigotmetadata.api.nbt.{NBTInputStream, NBTManager, NBTOutputStream, NBTTagType, NamedNBT}
-import fr.warzou.skyblock.adapter.api.world.Block
+import fr.warzou.skyblock.adapter.api.core.world.Block
 import fr.warzou.skyblock.adapter.spigot.world.SpigotBlock.nbtManager
 import net.minecraft.server.v1_12_R1.BlockPosition
 import org.apache.commons.io.output.ByteArrayOutputStream

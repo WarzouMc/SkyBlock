@@ -3,9 +3,9 @@ package fr.warzou.island.format.core
 import fr.warzou.island.format.reader.IslandFileReader
 import fr.warzou.island.format.writer.IslandSaver
 import fr.warzou.skyblock.adapter.api.AdapterAPI
-import fr.warzou.skyblock.adapter.api.entity.Entity
-import fr.warzou.skyblock.adapter.api.plugin.MinecraftPlugin
-import fr.warzou.skyblock.adapter.api.world.Block
+import fr.warzou.skyblock.adapter.api.core.entity.Entity
+import fr.warzou.skyblock.adapter.api.core.plugin.MinecraftPlugin
+import fr.warzou.skyblock.adapter.api.core.world.Block
 import fr.warzou.skyblock.utils.ServerVersion
 import fr.warzou.skyblock.utils.cuboid.Cuboid
 import fr.warzou.skyblock.utils.island.IslandUtils
@@ -17,13 +17,13 @@ case class RawIsland(adapterAPI: AdapterAPI, uuid: UUID, name: String, originalV
   val version: ServerVersion = ServerVersion.from(plugin)
 
   def saveAs(fileName: String): Unit = {
-    val saver = new IslandSaver(this, fileName)
+    val saver = IslandSaver(this, fileName)
     saver.save()
   }
 }
 
 
-case object RawIsland {
+object RawIsland {
 
   def create(adapter: AdapterAPI, islandName: String, cuboid: Cuboid): RawIsland = {
     if (cuboid.world.isEmpty)
@@ -33,16 +33,15 @@ case object RawIsland {
     RawIsland(adapter, UUID.randomUUID(), islandName, ServerVersion.from(adapter.plugin), cuboid, blocks, entities)
   }
 
-  //todo get by island name and by file name (currently only by file name but ambiguous)
-  def createOrGet(adapter: AdapterAPI, islandName: String, cuboid: Cuboid): RawIsland = {
-    if (IslandUtils.allIslandsName(adapter.plugin).contains(islandName)) fromFileName(adapter, islandName)
-    else create(adapter, islandName, cuboid)
+  def createOrGet(adapter: AdapterAPI, fileName: String, cuboid: Cuboid): RawIsland = {
+    if (IslandUtils.allIslandsFileName(adapter.plugin).contains(fileName)) fromFileName(adapter, fileName)
+    else create(adapter, fileName, cuboid)
   }
 
   def fromFileName(adapter: AdapterAPI, name: String): RawIsland = {
-    if (!IslandUtils.allIslandsName(adapter.plugin).contains(name))
+    if (!IslandUtils.allIslandsFileName(adapter.plugin).contains(name))
       throw new IllegalArgumentException(s"Cannot found island with name '$name' !")
-    val reader = new IslandFileReader(adapter, name)
+    val reader = IslandFileReader(adapter, name)
     reader.read
   }
 }

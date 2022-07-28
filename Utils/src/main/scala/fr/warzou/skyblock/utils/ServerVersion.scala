@@ -1,6 +1,6 @@
 package fr.warzou.skyblock.utils
 
-import fr.warzou.skyblock.adapter.api.plugin.MinecraftPlugin
+import fr.warzou.skyblock.adapter.api.core.plugin.MinecraftPlugin
 
 case class ServerVersion(major: Int, minor: Int, revision: Int) {
 

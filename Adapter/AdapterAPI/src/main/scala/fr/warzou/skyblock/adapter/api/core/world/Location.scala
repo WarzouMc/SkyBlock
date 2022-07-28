@@ -1,4 +1,4 @@
-package fr.warzou.skyblock.adapter.api.world
+package fr.warzou.skyblock.adapter.api.core.world
 
 trait Location {
 

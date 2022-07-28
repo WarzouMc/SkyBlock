@@ -1,7 +1,7 @@
 package fr.warzou.skyblock.utils.cuboid
 
 import fr.warzou.skyblock.adapter.api.AdapterAPI
-import fr.warzou.skyblock.adapter.api.world.{Block, Location}
+import fr.warzou.skyblock.adapter.api.core.world.{Block, Location}
 
 case class Cuboid(corner0: Location, corner1: Location, blocks: Option[List[Block]] = None) {
 

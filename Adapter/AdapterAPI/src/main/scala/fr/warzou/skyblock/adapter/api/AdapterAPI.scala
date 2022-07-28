@@ -1,10 +1,10 @@
 package fr.warzou.skyblock.adapter.api
 
 import fr.warzou.skyblock.adapter.api.AdapterAPI.alreadyInitialized
-import fr.warzou.skyblock.adapter.api.entity.EntitiesGetter
-import fr.warzou.skyblock.adapter.api.handler.AdapterHandler
-import fr.warzou.skyblock.adapter.api.plugin.MinecraftPlugin
-import fr.warzou.skyblock.adapter.api.world.Location
+import fr.warzou.skyblock.adapter.api.common.handler.AdapterHandler
+import fr.warzou.skyblock.adapter.api.core.entity.EntitiesGetter
+import fr.warzou.skyblock.adapter.api.core.plugin.MinecraftPlugin
+import fr.warzou.skyblock.adapter.api.core.world.Location
 import fr.warzou.skyblock.utils.server.{ServerAPI, Spigot}
 
 class AdapterAPI(val adapterHandler: AdapterHandler) {

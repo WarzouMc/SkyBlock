@@ -1,8 +1,8 @@
-package fr.warzou.skyblock.adapter.api.entity
+package fr.warzou.skyblock.adapter.api.core.entity
 
 import fr.warzou.skyblock.adapter.api.AdapterAPI
 import fr.warzou.skyblock.adapter.api.common.wrap.{Unwrapper, Wrappable, Wrapper}
-import fr.warzou.skyblock.adapter.api.world.Location
+import fr.warzou.skyblock.adapter.api.core.world.Location
 import fr.warzou.skyblock.utils.cuboid.Cuboid
 
 trait Entity extends Wrappable[Entity] {

@@ -6,7 +6,7 @@ import java.io.{File, FileOutputStream}
 import java.util.UUID
 import scala.annotation.tailrec
 
-class IslandSaver(island: RawIsland, fileName: String) {
+case class IslandSaver(island: RawIsland, fileName: String) {
 
   private val adapter = island.adapterAPI
   private val plugin = adapter.plugin
@@ -15,7 +15,7 @@ class IslandSaver(island: RawIsland, fileName: String) {
   def save(): Unit = {
     val islandFile = createFile()
     val outputStream = new FileOutputStream(islandFile)
-    val writer = new IslandFileWriter(outputStream, island.version, UUID.randomUUID(), island.name, island.cuboid, island.blocks, island.entities)
+    val writer = IslandFileWriter(outputStream, island.version, UUID.randomUUID(), island.name, island.cuboid, island.blocks, island.entities)
     writer.write()
   }
 

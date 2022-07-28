@@ -4,8 +4,8 @@ import fr.warzou.island.format.core.RawIsland
 import fr.warzou.island.format.core.io.Reader
 import fr.warzou.skyblock.adapter.api.AdapterAPI
 import fr.warzou.skyblock.adapter.api.common.wrap.{Unwrapper, Wrapper}
-import fr.warzou.skyblock.adapter.api.entity.Entity
-import fr.warzou.skyblock.adapter.api.world.{Block, Location}
+import fr.warzou.skyblock.adapter.api.core.entity.Entity
+import fr.warzou.skyblock.adapter.api.core.world.{Block, Location}
 import fr.warzou.skyblock.utils.cuboid.Cuboid
 import fr.warzou.skyblock.utils.{IOUtils, ServerVersion}
 
@@ -14,7 +14,7 @@ import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
 import java.util.UUID
 
-class IslandFileReader(val adapterAPI: AdapterAPI, val fileName: String) extends Reader[RawIsland] {
+case class IslandFileReader(adapterAPI: AdapterAPI, fileName: String) extends Reader[RawIsland] {
 
   private val plugin = adapterAPI.plugin
   private val root = new File(plugin.dataFolder, "islands")

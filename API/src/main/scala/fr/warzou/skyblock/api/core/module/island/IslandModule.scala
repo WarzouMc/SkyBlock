@@ -36,8 +36,6 @@ abstract class IslandModule(private val adapter: AdapterAPI) extends Module {
 
   protected def put(uuid: UUID, fileName: String): Unit = linksMap.put(uuid, fileName)
 
-  //todo
-  private def toRawIsland(island: Island): RawIsland = {
-    ???//RawIsland(adapter, island.uuid, island.name)
-  }
+  private def toRawIsland(island: Island): RawIsland =
+    RawIsland(adapter, island.uuid, island.name, island.serverVersion, island.cuboid, island.blocks, island.entities)
 }

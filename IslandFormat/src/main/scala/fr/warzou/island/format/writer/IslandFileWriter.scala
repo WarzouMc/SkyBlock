@@ -1,19 +1,21 @@
 package fr.warzou.island.format.writer
 
 import fr.warzou.island.format.core.io.Writer
-import fr.warzou.skyblock.adapter.api.entity.Entity
-import fr.warzou.skyblock.adapter.api.world._
-import fr.warzou.skyblock.utils.cuboid.Cuboid
+import fr.warzou.skyblock.adapter.api.core.entity.Entity
+import fr.warzou.skyblock.adapter.api.core.world.{Block, Location}
 import fr.warzou.skyblock.utils.ServerVersion
 import fr.warzou.skyblock.utils.collection.ArrayUtils
+import fr.warzou.skyblock.utils.cuboid.Cuboid
 
 import java.io.OutputStream
 import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
 import java.util.UUID
 
-protected class IslandFileWriter(outputStream: OutputStream, version: ServerVersion, uuid: UUID, name: String, cuboid: Cuboid,
+protected case class IslandFileWriter(outputStream: OutputStream, version: ServerVersion, uuid: UUID, name: String, cuboid: Cuboid,
                                  blocks: List[Block], entities: List[Entity]) extends Writer {
+
+
 
   override def write(): Unit = {
     writeVersion()

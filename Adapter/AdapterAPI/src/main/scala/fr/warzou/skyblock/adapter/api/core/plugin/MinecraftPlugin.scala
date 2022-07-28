@@ -1,4 +1,4 @@
-package fr.warzou.skyblock.adapter.api.plugin
+package fr.warzou.skyblock.adapter.api.core.plugin
 
 import fr.warzou.skyblock.utils.server.ServerAPI
 
