@@ -7,7 +7,7 @@ import fr.warzou.skyblock.adapter.api.core.plugin.MinecraftPlugin
 import fr.warzou.skyblock.adapter.api.core.world.Location
 import fr.warzou.skyblock.utils.server.{ServerAPI, Spigot}
 
-class AdapterAPI(val adapterHandler: AdapterHandler) {
+case class AdapterAPI(adapterHandler: AdapterHandler) {
 
   {
     if (alreadyInitialized) throw new IllegalStateException("Adapter API has already been initialized !")

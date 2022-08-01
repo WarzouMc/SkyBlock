@@ -3,7 +3,7 @@ package fr.warzou.skyblock.utils
 import java.io.{FileReader, OutputStream}
 import scala.annotation.tailrec
 
-object IOUtils {
+case object IOUtils {
 
   /**
    * Write a variable length int

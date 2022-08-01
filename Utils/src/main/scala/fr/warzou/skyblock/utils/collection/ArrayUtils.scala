@@ -2,7 +2,7 @@ package fr.warzou.skyblock.utils.collection
 
 import scala.annotation.tailrec
 
-object ArrayUtils {
+case object ArrayUtils {
 
   /**
    * @param list any list

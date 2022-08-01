@@ -14,7 +14,7 @@ trait Entity extends Wrappable[Entity] {
   def nbt: Array[Byte]
 }
 
-abstract class EntityWrapper[A] extends Wrapper[A, Entity] with Unwrapper[Entity, A] {
+abstract case class EntityWrapper[A]() extends Wrapper[A, Entity] with Unwrapper[Entity, A] {
   override def wrap(a: A): Entity
 
   override def unwrap(a: Entity): A

@@ -4,7 +4,7 @@ import fr.warzou.skyblock.adapter.api.AdapterAPI
 import fr.warzou.skyblock.api.core.island.Island
 import fr.warzou.skyblock.utils.cuboid.Cuboid
 
-abstract class ModuleHandler {
+abstract case class ModuleHandler() {
 
   def adapter: AdapterAPI
 

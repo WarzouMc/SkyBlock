@@ -4,7 +4,7 @@ import java.util.function.Predicate
 import scala.collection.mutable
 import scala.language.{existentials, postfixOps}
 
-object BijectiveMap {
+case object BijectiveMap {
   def createHashBijectiveMap[K, V](): BijectiveMap[K, V] = new HashBijectiveMap[K, V]()
 }
 

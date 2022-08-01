@@ -1,4 +1,4 @@
-package fr.warzou.skyblock.api.core.module.island
+package fr.warzou.skyblock.api.core.modules.island
 
 import fr.warzou.island.format.core.RawIsland
 import fr.warzou.skyblock.adapter.api.AdapterAPI
@@ -7,9 +7,8 @@ import fr.warzou.skyblock.api.core.island.Island
 import fr.warzou.skyblock.utils.collection.map.mutable.BijectiveMap
 
 import java.util.UUID
-import scala.collection.mutable
 
-abstract class IslandModule(private val adapter: AdapterAPI) extends Module {
+abstract case class IslandModule(private val adapter: AdapterAPI) extends Module {
 
   protected val linksMap = new IslandsLinksMap
   protected val islands: BijectiveMap[UUID, Island] = BijectiveMap.createHashBijectiveMap()

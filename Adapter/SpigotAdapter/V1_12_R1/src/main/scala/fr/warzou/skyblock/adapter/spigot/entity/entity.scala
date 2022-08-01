@@ -3,13 +3,16 @@ package fr.warzou.skyblock.adapter.spigot.entity
 import fr.il_totore.spigotmetadata.api.SpigotMetadataAPI
 import fr.il_totore.spigotmetadata.api.nbt.NBTOutputStream
 import fr.warzou.skyblock.adapter.api.AdapterAPI
-import fr.warzou.skyblock.adapter.api.common.wrap.{Unwrapper, Wrappable, Wrapper}
+import fr.warzou.skyblock.adapter.api.common.wrap.{Unwrapper, Wrapper}
 import fr.warzou.skyblock.adapter.api.core.entity.{EntitiesGetter, Entity, EntityWrapper}
 import fr.warzou.skyblock.adapter.api.core.world.Location
 import fr.warzou.skyblock.adapter.spigot.world.SpigotLocation
 import fr.warzou.skyblock.utils.cuboid.Cuboid
-import net.minecraft.server.v1_12_R1.AxisAlignedBB
+import net.minecraft.server.v1_12_R1.{AxisAlignedBB, ItemStack, NBTCompressedStreamTools}
+import org.apache.commons.codec.binary.Hex
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftItem
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack
 import org.bukkit.{Bukkit, NamespacedKey, entity}
 
 import java.io.ByteArrayOutputStream

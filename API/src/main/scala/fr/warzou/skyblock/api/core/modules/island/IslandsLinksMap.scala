@@ -1,10 +1,10 @@
-package fr.warzou.skyblock.api.core.module.island
+package fr.warzou.skyblock.api.core.modules.island
 
 import fr.warzou.skyblock.utils.collection.map.mutable.BijectiveMap
 
 import java.util.UUID
 
-private[island] final class IslandsLinksMap {
+private[island] class IslandsLinksMap {
 
   private val map = BijectiveMap.createHashBijectiveMap[UUID, String]()
 

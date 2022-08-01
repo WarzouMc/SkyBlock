@@ -7,7 +7,7 @@ import fr.warzou.skyblock.utils.cuboid.Cuboid
 import fr.warzou.skyblock.utils.server
 import org.bukkit.plugin.Plugin
 
-class SpigotModuleHandler(plugin: Plugin) extends ModuleHandler {
+case class SpigotModuleHandler(plugin: Plugin) extends ModuleHandler {
 
   private val adapterAPI = AdapterAPI.createAdapter(server.Spigot(), plugin)
 
