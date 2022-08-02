@@ -4,7 +4,7 @@ trait Modification[A] {
 
   def modificationType: Type[A]
 
-  def restore: Boolean
+  def restore(): Unit
 
   /**
    * Save this modification in island file.
@@ -14,5 +14,5 @@ trait Modification[A] {
    *
    * @return an optionally [[SavedModification]], None if save fail
    */
-  def save: Option[SavedModification[A]]
+  def save(): SavedModification[A]
 }

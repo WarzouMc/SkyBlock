@@ -1,9 +1,18 @@
 package fr.warzou.skyblock.api.common.modification
 
-trait SavedModification[A] extends Modification[A] {
+final case class SavedModification[A](private val _type: Type[A]) extends Modification[A] {
 
-  override def restore: Boolean = throw new UnsupportedOperationException()
+  private val when = System.currentTimeMillis()
 
-  override def save: Option[SavedModification[A]] = throw new UnsupportedOperationException()
+  def whenSaved: Long = when
 
+  override def restore(): Unit = throw new UnsupportedOperationException()
+
+  override def save(): SavedModification[A] = throw new UnsupportedOperationException()
+
+  override def modificationType: Type[A] = _type
+}
+
+case object SavedModification {
+  def fromModification[A](modification: Modification[A]): SavedModification[A] = SavedModification(modification.modificationType)
 }
