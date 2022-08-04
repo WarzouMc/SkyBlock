@@ -6,7 +6,7 @@ import java.util.UUID
 
 private[island] class IslandsLinksMap {
 
-  private val map = BijectiveMap.createHashBijectiveMap[UUID, String]()
+  private[island] val map = BijectiveMap.createHashBijectiveMap[UUID, String]()
 
   private[island] def put(uuid: UUID, fileName: String): Unit = map.put(uuid, fileName)
 

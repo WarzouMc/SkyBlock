@@ -4,7 +4,6 @@ import fr.warzou.island.format.core.RawIsland
 
 import java.io.{File, FileOutputStream}
 import java.util.UUID
-import scala.annotation.tailrec
 
 case class IslandSaver(island: RawIsland, fileName: String) {
 

@@ -14,8 +14,8 @@ class HashBijectiveMapTest {
     val bijectiveMap: BijectiveMap[String, Any] = BijectiveMap.createHashBijectiveMap()
     bijectiveMap.put("A owo file", new File("owo/test"))
 
-    assertTrue(bijectiveMap.containKey("A owo file"))
-    assertTrue(bijectiveMap.containValue(new File("owo/test")))
+    assertTrue(bijectiveMap.containsKey("A owo file"))
+    assertTrue(bijectiveMap.containsValue(new File("owo/test")))
   }
 
   @Test

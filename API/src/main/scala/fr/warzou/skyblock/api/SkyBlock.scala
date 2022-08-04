@@ -1,7 +1,7 @@
 package fr.warzou.skyblock.api
 
 import fr.warzou.skyblock.adapter.api.AdapterAPI
-import fr.warzou.skyblock.api.common.module.ModuleHandler
+import fr.warzou.skyblock.api.common.module.{Module, ModuleHandler}
 import fr.warzou.skyblock.api.core.island.Island
 import fr.warzou.skyblock.utils.cuboid.Cuboid
 
@@ -12,8 +12,13 @@ case class SkyBlock(handler: ModuleHandler) {
   val islandsFolder: File = new File(adapter.plugin.dataFolder, "islands")
 
   //todo
-  def onEnable(): Unit = {
+  def enableAPI(): Unit = {
     createMainFiles()
+    handler.enableAllModules()
+  }
+
+  def disableAPI(): Unit = {
+    handler.disableAllModules()
   }
 
   def adapter: AdapterAPI = handler.adapter
@@ -29,6 +34,6 @@ case class SkyBlock(handler: ModuleHandler) {
 
     // create islands folder
     val islands = new File(folder, "islands")
-    folder.mkdir()
+    islands.mkdir()
   }
 }

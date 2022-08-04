@@ -3,33 +3,30 @@ package fr.warzou.spigot.skyblock.main
 import fr.il_totore.spigotmetadata.api.SpigotMetadataAPI
 import fr.il_totore.spigotmetadata.api.nbt.{NBTInputStream, NBTTagCompound}
 import fr.warzou.island.format.core.RawIsland
-import fr.warzou.skyblock.adapter.api.AdapterAPI
-import fr.warzou.skyblock.api.SkyBlock
 import fr.warzou.skyblock.utils.cuboid.Cuboid
-import fr.warzou.skyblock.utils.server.Spigot
 import fr.warzou.spigot.skyblock.main.common.module.SpigotModuleHandler
 import org.bukkit.plugin.java.JavaPlugin
-import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.{Bukkit, Location, Material}
 
 import java.io.ByteArrayInputStream
 
-class SkyBlock extends JavaPlugin {
+class SpigotSkyBlock extends JavaPlugin {
 
-  private val handler = new SpigotModuleHandler(this)
+  private val handler = SpigotModuleHandler(this)
   private val api = fr.warzou.skyblock.api.SkyBlock(handler)
 
   override def onEnable(): Unit = {
+    api.enableAPI()
+
     val loc0 = api.adapter.createLocation(Bukkit.getWorlds.get(0).getName, 0, 100, 0)
     val loc1 = api.adapter.createLocation(Bukkit.getWorlds.get(0).getName, 10, 107, 10)
     val cuboid = Cuboid(loc0, loc1)
-    val island = RawIsland.createOrGet(api.adapter, "faut_un_nom", cuboid)
-    island.saveAs("faut_un_nom")
-    new BukkitRunnable {
-      override def run(): Unit = {
-        place(island)
-      }
-    }.runTaskLater(this, 20 * 3)
+    val island = api.createIsland("An island", cuboid)
+
+    island.withFileName("faut_un_nom")
+    island.save()
+
+    island.place(api.adapter.createLocation(20, 110, 20))
   }
 
   def place(island: RawIsland): Unit = {

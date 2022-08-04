@@ -6,21 +6,31 @@ import fr.warzou.skyblock.api.common.module.Module
 import fr.warzou.skyblock.api.core.island.Island
 import fr.warzou.skyblock.utils.collection.map.mutable.BijectiveMap
 
+import java.io.File
 import java.util.UUID
 
-abstract case class IslandModule(private val adapter: AdapterAPI) extends Module {
+abstract class IslandModule(private val adapter: AdapterAPI) extends Module {
 
   protected val linksMap = new IslandsLinksMap
   protected val islands: BijectiveMap[UUID, Island] = BijectiveMap.createHashBijectiveMap()
+  private val root = new File(adapter.plugin.dataFolder, "islands")
 
-  override def onEnable(): Unit = {
+  override def enable(): Unit = {
     val folder = adapter.plugin.islandFolder
     loadIslands()
   }
 
-  override def onDisable(): Unit = {
+  override def disable(): Unit = {
     islands.values.foreach(_.save())
   }
+
+  def addIsland(island: Island): Unit = {
+    if (islands.containsKey(island.uuid)) throw new IllegalArgumentException("Already register island !")
+    islands.put(island.uuid, island)
+    put(island.uuid, island.fileName)
+  }
+
+  def setFile(target: Island, newFileName: String): Unit = linksMap.map.setValue(target.uuid, newFileName)
 
   def islandByUUID(uuid: UUID): Option[Island] = islands.fromKey(uuid)
 
@@ -37,4 +47,6 @@ abstract case class IslandModule(private val adapter: AdapterAPI) extends Module
 
   private def toRawIsland(island: Island): RawIsland =
     RawIsland(adapter, island.uuid, island.name, island.serverVersion, island.cuboid, island.blocks, island.entities)
+
+  protected def asIslandFile(fileName: String): File = new File(root, s"$fileName.island")
 }

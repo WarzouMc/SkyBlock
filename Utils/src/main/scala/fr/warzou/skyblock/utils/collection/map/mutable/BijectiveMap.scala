@@ -31,14 +31,16 @@ trait BijectiveMap[K, V] extends Iterable[Entry[K, V]] {
    * @param key a object `K`
    * @return this BijectiveMap contain `key`
    */
-  def containKey(key: K): Boolean
+  def containsKey(key: K): Boolean
 
   /**
    * Check if BijectiveMap contain `value`
    * @param value a object `V`
    * @return this BijectiveMap contain `value`
    */
-  def containValue(value: V): Boolean
+  def containsValue(value: V): Boolean
+
+  def contains(pair: (K, V)): Boolean = containsKey(pair._1) && containsValue(pair._2) && fromKey(pair._1).get == pair._2
 
   /**
    * Return optionally value associated with a key.
@@ -92,14 +94,11 @@ trait BijectiveMap[K, V] extends Iterable[Entry[K, V]] {
    * @param seq a sequence of key value paires
    * @return if all elements of `seq` was correctly added
    */
-  //def putAll(seq: (K, V)*): Boolean = putAll(seq)
-
-  /**
-   * Put every elements of a [[Seq]] in this BijectiveMap
-   * @param seq a sequence of key value paires
-   * @return if all elements of `seq` was correctly added
-   */
   def putAll(seq: Seq[(K, V)]): Boolean
+
+  def setValue(target: K, newValue: V): Unit
+
+  def setKey(target: V, newKey: K): Unit
 
   /**
    * Make this BijectiveMap empty

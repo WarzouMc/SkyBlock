@@ -44,13 +44,13 @@ class HashBijectiveMap[K, V](private var capacity: Int, private val loadFactor: 
 
   override def knownSize: Int = contentSize / 2
 
-  override def containKey(key: K): Boolean = {
+  override def containsKey(key: K): Boolean = {
     val _hash = hash(key)
     val _index = index(_hash)
     array(_index) != null && array(_index).containKey(key)
   }
 
-  override def containValue(value: V): Boolean = {
+  override def containsValue(value: V): Boolean = {
     val _hash = hash(value)
     val _index = index(_hash)
     array(_index) != null && array(_index).containValue(value)
@@ -75,7 +75,7 @@ class HashBijectiveMap[K, V](private var capacity: Int, private val loadFactor: 
   override def iterator: Iterator[Entry[K, V]] = Itr(array)
 
   override def put(key: K, value: V): Boolean = {
-    if (containKey(key) || containValue(value)) return false
+    if (containsKey(key) || containsValue(value)) return false
 
     resizeIfRequired()
     insertKey(key, value)
@@ -89,20 +89,55 @@ class HashBijectiveMap[K, V](private var capacity: Int, private val loadFactor: 
     seq.foldRight(true)((tuple, acc) => acc && put(tuple._1, tuple._2))
   }
 
+  override def setValue(target: K, newValue: V): Unit = {
+    if (!containsKey(target)) throw new NoSuchElementException()
+    val oldValue = fromKey(target).get
+    if (oldValue == newValue) return
+
+    if (containsValue(newValue)) throw new IllegalArgumentException("Target value is already in map !")
+
+    val keyHash = hash(target)
+    val keyIndex = index(keyHash)
+    val _keyBucket = array(keyIndex).bucketWithKey(target)
+    _keyBucket.value = newValue
+
+    val valueHash = hash(oldValue)
+    val valueIndex = index(keyHash)
+    simplyValueRemove(oldValue)
+
+    insertValue(target, newValue)
+  }
+
+  override def setKey(target: V, newKey: K): Unit = {
+    if (!containsValue(target)) throw new NoSuchElementException
+    val oldKey = fromValue(target).get
+    if (oldKey == newKey) return
+
+    if (containsKey(newKey)) throw new IllegalArgumentException("Target key is already in map !")
+
+    val valueHash = hash(target)
+    val valueIndex = index(valueHash)
+    val _keyBucket = array(valueIndex).bucketWithValue(target)
+    _keyBucket.key = newKey
+
+    simplyKeyRemove(oldKey)
+    insertKey(newKey, target)
+  }
+
   override def clear(): Unit = {
     contentSize = 0
     array.indices.foreach(array(_) = null)
   }
 
   override def removeByKey(key: K): Boolean = {
-    if (!containKey(key)) return false
+    if (!containsKey(key)) return false
     contentSize -= 2
     simplyValueRemove(fromKey(key).get)
     simplyKeyRemove(key)
   }
 
   override def removeByValue(value: V): Boolean = {
-    if (!containValue(value)) return false
+    if (!containsValue(value)) return false
     contentSize -= 2
     simplyKeyRemove(fromValue(value).get)
     simplyValueRemove(value)
@@ -136,7 +171,7 @@ class HashBijectiveMap[K, V](private var capacity: Int, private val loadFactor: 
     val _hash = hash(key)
     val _index = index(_hash)
     val bucket = array(_index)
-    simplyValueRemove(fromKey(key).get)
+
     if (!bucket.hasDefinedNext) {
       array(_index) = null
       return true
@@ -263,12 +298,12 @@ class HashBijectiveMap[K, V](private var capacity: Int, private val loadFactor: 
     array.indices.foldRight(true)((i, acc) => acc && map.array(i) == array(i))
   }
 
-  private case class Bucket[K1, V1](keyToValue: Boolean)(val hash: Int, val key: K1, val value: V1, private var _next: Option[Bucket[K1, V1]]) {
+  private case class Bucket[K1, V1](keyToValue: Boolean)(val hash: Int, var key: K1, var value: V1, private var _next: Option[Bucket[K1, V1]]) {
 
     def hasDefinedNext: Boolean = _next.isDefined
 
     def next: Bucket[K1, V1] = {
-      if (!hasDefinedNext) throw new NoSuchElementException()
+      if (!hasDefinedNext) throw new NoSuchElementException
       else _next.get
     }
 
@@ -294,6 +329,16 @@ class HashBijectiveMap[K, V](private var capacity: Int, private val loadFactor: 
       }
       next.removeValueInNext(_value)
     }
+
+    def bucketWithKey(_key: K1): Bucket[K1, V1] =
+      if (keyToValue && key == _key) this
+      else if (hasDefinedNext) next.bucketWithKey(_key)
+      else null
+
+    def bucketWithValue(_value: V1): Bucket[K1, V1] =
+      if (!keyToValue && value == _value) this
+      else if (hasDefinedNext) next.bucketWithValue(_value)
+      else null
 
     def containKey(key: K1): Boolean = if (keyToValue && key == this.key) true else hasDefinedNext && next.containKey(key)
 
@@ -377,7 +422,7 @@ class HashBijectiveMap[K, V](private var capacity: Int, private val loadFactor: 
   }
 
   private class KeySet extends SelfSet[K] {
-    override def contains(elem: K): Boolean =  HashBijectiveMap.this.containKey(elem)
+    override def contains(elem: K): Boolean =  HashBijectiveMap.this.containsKey(elem)
 
     override def iterator: Iterator[K] = HashBijectiveMap.this.iterator.map(_.key)
 
@@ -388,7 +433,7 @@ class HashBijectiveMap[K, V](private var capacity: Int, private val loadFactor: 
   }
 
   private class ValueSet extends SelfSet[V] {
-    override def contains(elem: V): Boolean =  HashBijectiveMap.this.containValue(elem)
+    override def contains(elem: V): Boolean =  HashBijectiveMap.this.containsValue(elem)
 
     override def iterator: Iterator[V] = HashBijectiveMap.this.iterator.map(_.value)
 

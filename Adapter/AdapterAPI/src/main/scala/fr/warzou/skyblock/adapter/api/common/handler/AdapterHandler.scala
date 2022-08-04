@@ -4,7 +4,7 @@ import fr.warzou.skyblock.adapter.api.core.entity.EntitiesGetter
 import fr.warzou.skyblock.adapter.api.core.plugin.MinecraftPlugin
 import fr.warzou.skyblock.adapter.api.core.world.Location
 
-abstract case class AdapterHandler() {
+abstract class AdapterHandler {
 
   def minecraftPlugin(): MinecraftPlugin
 

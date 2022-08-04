@@ -4,7 +4,9 @@ import fr.warzou.island.format.core.RawIsland
 import fr.warzou.skyblock.adapter.api.AdapterAPI
 import fr.warzou.skyblock.adapter.api.core.entity.Entity
 import fr.warzou.skyblock.adapter.api.core.world.{Block, Location}
+import fr.warzou.skyblock.api.common.module.ModuleHandler
 import fr.warzou.skyblock.api.core.island.Island
+import fr.warzou.skyblock.api.core.modules.island.IslandModule
 import fr.warzou.skyblock.utils.ServerVersion
 import fr.warzou.skyblock.utils.cuboid.Cuboid
 import fr.warzou.spigot.skyblock.main.core.island.SpigotIsland.{locationToInt, xyzToInt}
@@ -17,12 +19,14 @@ import java.io.{ByteArrayInputStream, File}
 import java.util.UUID
 import scala.collection.mutable.ListBuffer
 
-case class SpigotIsland(rawIsland: RawIsland, _file: File) extends Island {
+case class SpigotIsland(private val moduleHandler: ModuleHandler, private val rawIsland: RawIsland, private val optionFile: Option[File]) extends Island {
 
+  private val root = new File(rawIsland.adapterAPI.plugin.dataFolder, "islands")
   private val currentVersion = ServerVersion.from(rawIsland.adapterAPI.plugin)
   private var version = rawIsland.version
   private val _blocks = ListBuffer.from(rawIsland.blocks)
   private val _entities = ListBuffer.from(rawIsland.entities)
+  private var _file = optionFile.getOrElse(asFile(rawIsland.name))
 
   override def serverVersion: ServerVersion = version
 
@@ -54,6 +58,7 @@ case class SpigotIsland(rawIsland: RawIsland, _file: File) extends Island {
 
   override def blocks: List[Block] = _blocks.toList
 
+  //todo place entity
   override def place(location: Location): Unit = {
     (0 until cuboid.xSize).foreach(x => {
       (0 until cuboid.ySize).foreach(y => {
@@ -66,6 +71,17 @@ case class SpigotIsland(rawIsland: RawIsland, _file: File) extends Island {
       })
     })
   }
+
+  override def withFileName(name: String): Unit = {
+    val islandModule = moduleHandler.getModule[IslandModule](classOf[IslandModule]).get
+    if (islandModule.islandByFileName(name).isDefined)
+      throw new IllegalArgumentException(s"Already took file name for $name!")
+    _file = asFile(name)
+    islandModule.setFile(this, name)
+  }
+
+  //todo delete old
+  override def fileName: String = _file.getName
 
   override def file: File = _file
 
@@ -90,7 +106,6 @@ case class SpigotIsland(rawIsland: RawIsland, _file: File) extends Island {
   }
 
   private def applyTagToBlock(block: Block, blockLocation: bukkit.Location): Unit = {
-    val bukkitBlock = blockLocation.getWorld.getBlockAt(blockLocation)
     val nbt = block.nbt.get
     val inputStream = new ByteArrayInputStream(nbt)
     val nbtTagCompound = NBTCompressedStreamTools.a(inputStream)
@@ -101,6 +116,8 @@ case class SpigotIsland(rawIsland: RawIsland, _file: File) extends Island {
   }
 
   private def updateVersion(): Unit = if (version < currentVersion) version = currentVersion
+
+  private def asFile(name: String): File = new File(root, s"$name.island")
 }
 
 private case object SpigotIsland {
