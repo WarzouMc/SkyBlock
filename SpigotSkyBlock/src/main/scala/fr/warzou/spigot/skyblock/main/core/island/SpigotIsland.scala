@@ -4,23 +4,23 @@ import fr.warzou.island.format.core.RawIsland
 import fr.warzou.skyblock.adapter.api.AdapterAPI
 import fr.warzou.skyblock.adapter.api.core.entity.Entity
 import fr.warzou.skyblock.adapter.api.core.world.{Block, Location}
-import fr.warzou.skyblock.api.common.modification
-import fr.warzou.skyblock.api.common.modification.{Modification, SavedModification, Type}
 import fr.warzou.skyblock.api.core.island.Island
 import fr.warzou.skyblock.utils.ServerVersion
 import fr.warzou.skyblock.utils.cuboid.Cuboid
-import fr.warzou.spigot.skyblock.main.core.island.SpigotIsland.locationToInt
+import fr.warzou.spigot.skyblock.main.core.island.SpigotIsland.{locationToInt, xyzToInt}
+import net.minecraft.server.v1_12_R1.{BlockPosition, NBTCompressedStreamTools}
+import org.bukkit
+import org.bukkit.craftbukkit.v1_12_R1.CraftWorld
+import org.bukkit.{Bukkit, Material}
 
-import java.io.File
+import java.io.{ByteArrayInputStream, File}
 import java.util.UUID
-import scala.collection.immutable.Queue
 import scala.collection.mutable.ListBuffer
 
-case class SpigotIsland(rawIsland: RawIsland) extends Island {
+case class SpigotIsland(rawIsland: RawIsland, _file: File) extends Island {
 
+  private val currentVersion = ServerVersion.from(rawIsland.adapterAPI.plugin)
   private var version = rawIsland.version
-  private var modificationQueue = Queue.empty[Modification[_]]
-  private var savedModificationList = ListBuffer.empty[SavedModification[_]]
   private val _blocks = ListBuffer.from(rawIsland.blocks)
   private val _entities = ListBuffer.from(rawIsland.entities)
 
@@ -38,55 +38,69 @@ case class SpigotIsland(rawIsland: RawIsland) extends Island {
 
   override def entities: List[Entity] = _entities.toList
 
-  override def addEntity(entity: Entity): Unit = ???
+  override def addEntity(entity: Entity): Unit = {
+    updateVersion()
+    _entities.addOne(entity)
+  }
 
-  override def removeEntity(entity: Entity): Unit = ???
+  override def removeEntity(entity: Entity): Unit = _entities.remove(_entities.indexOf(entity))
 
   override def getBlockAt(location: Location): Block = _blocks(locationToInt(location, cuboid))
 
   override def setBlockAt(location: Location, block: Block): Unit = {
-    modificationQueue = modificationQueue.enqueue(new Modification[Block] {
+    updateVersion()
+    _blocks.update(locationToInt(location, cuboid), block)
+  }
 
-      private val index = locationToInt(location, cuboid)
-      private val set = modification.Set(_blocks(index), block)
+  override def blocks: List[Block] = _blocks.toList
 
-      override def modificationType: Type[Block] = set
-
-      override def restore(): Unit =
-        modificationQueue = modificationQueue.filterNot(_ == this)
-
-      override def save(): SavedModification[Block] = {
-        version = ServerVersion.from(rawIsland.adapterAPI.plugin)
-        _blocks.update(index, block)
-
-        restore()
-
-        val save = SavedModification.fromModification(this)
-        savedModificationList.addOne(save)
-        save
-      }
+  override def place(location: Location): Unit = {
+    (0 until cuboid.xSize).foreach(x => {
+      (0 until cuboid.ySize).foreach(y => {
+        (0 until cuboid.zSize).foreach(z => {
+          val index = xyzToInt(x, y, z, cuboid)
+          val blockLocation = new bukkit.Location(Bukkit.getWorld(location.world.getOrElse(Bukkit.getWorlds.get(0).getName)),
+            location.blockX + x, location.blockY + y, location.blockZ + z)
+          placeBlock(index, blockLocation)
+        })
+      })
     })
   }
 
-  override def blocks: List[Block] = rawIsland.blocks
+  override def file: File = _file
 
-  override def place(location: Location): Unit = ???
+  override def save(): Boolean = {
+    if (_blocks.equals(rawIsland.blocks) && _entities.equals(rawIsland.entities)) return false
 
-  override def modify[A](oldValue: A, newValue: A, modificationType: Type[A]): Modification[A] = ???
+    val newRawIsland = RawIsland(rawIsland.adapterAPI, uuid, name, serverVersion, cuboid, blocks, entities)
+    newRawIsland.saveAs(_file.getName)
+    true
+  }
 
-  override def modifications: Queue[Modification[_]] = modificationQueue
+  private def placeBlock(index: Int, blockLocation: bukkit.Location): Unit = {
+    val world = blockLocation.getWorld
+    val block = _blocks(index)
+    val material = Material.valueOf(block.name.split(":")(1))
 
-  override def savedModifications: List[SavedModification[_]] = savedModificationList.toList
+    world.getBlockAt(blockLocation).setType(material)
+    world.getBlockAt(blockLocation).setData(block.data.toByte)
 
-  override def restoreLast(): Unit = ???
+    if (!block.isBlockEntity) return
+    applyTagToBlock(block, blockLocation)
+  }
 
-  override def restoreLast(modificationType: Type[_]): Unit = ???
+  private def applyTagToBlock(block: Block, blockLocation: bukkit.Location): Unit = {
+    val bukkitBlock = blockLocation.getWorld.getBlockAt(blockLocation)
+    val nbt = block.nbt.get
+    val inputStream = new ByteArrayInputStream(nbt)
+    val nbtTagCompound = NBTCompressedStreamTools.a(inputStream)
+    val worldServer = blockLocation.getWorld.asInstanceOf[CraftWorld].getHandle
+    val tileEntity = worldServer.getTileEntity(new BlockPosition(blockLocation.getBlockX, blockLocation.getBlockY, blockLocation.getBlockZ))
 
-  override def restoreAll(): Boolean = ???
+    tileEntity.load(nbtTagCompound)
+  }
 
-  override def file(): File = ???
-
-  override def save(): Boolean = ???
+  private def updateVersion(): Unit = if (version < currentVersion) version = currentVersion
 }
 
 private case object SpigotIsland {

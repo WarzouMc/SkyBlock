@@ -1,18 +1,15 @@
 package fr.warzou.skyblock.adapter.spigot.entity
 
-import fr.il_totore.spigotmetadata.api.SpigotMetadataAPI
-import fr.il_totore.spigotmetadata.api.nbt.NBTOutputStream
 import fr.warzou.skyblock.adapter.api.AdapterAPI
 import fr.warzou.skyblock.adapter.api.common.wrap.{Unwrapper, Wrapper}
 import fr.warzou.skyblock.adapter.api.core.entity.{EntitiesGetter, Entity, EntityWrapper}
 import fr.warzou.skyblock.adapter.api.core.world.Location
 import fr.warzou.skyblock.adapter.spigot.world.SpigotLocation
 import fr.warzou.skyblock.utils.cuboid.Cuboid
-import net.minecraft.server.v1_12_R1.{AxisAlignedBB, ItemStack, NBTCompressedStreamTools}
-import org.apache.commons.codec.binary.Hex
+import net.minecraft.server.v1_12_R1.{AxisAlignedBB, NBTCompressedStreamTools, NBTTagCompound}
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftItem
-import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity
+import org.bukkit.entity.EntityType
 import org.bukkit.{Bukkit, NamespacedKey, entity}
 
 import java.io.ByteArrayOutputStream
@@ -24,9 +21,15 @@ case class SpigotEntity(_entity: entity.Entity) extends Entity {
   override def name: String = NamespacedKey.minecraft(_entity.getType.name().toLowerCase).toString
 
   override def nbt: Array[Byte] = {
+    val nmsEntity = _entity.asInstanceOf[CraftEntity].getHandle
+    val nbtTagCompound = new NBTTagCompound
     val byteArrayOutputStream = new ByteArrayOutputStream()
-    val nbtOutputStream = new NBTOutputStream(SpigotEntity.nbtManager, byteArrayOutputStream)
-    nbtOutputStream.writeTag(SpigotEntity.nbtManager.getNBTTag(_entity))
+
+    if (_entity.getType == EntityType.PLAYER) {
+      nmsEntity.save(nbtTagCompound)
+    } else nmsEntity.c(nbtTagCompound)
+
+    NBTCompressedStreamTools.a(nbtTagCompound, byteArrayOutputStream)
     byteArrayOutputStream.toByteArray
   }
 
@@ -36,8 +39,6 @@ case class SpigotEntity(_entity: entity.Entity) extends Entity {
 }
 
 case object SpigotEntity extends EntityWrapper[entity.Entity] {
-  private val nbtManager = SpigotMetadataAPI.getAPI.getNBTManager
-
   override def wrap(_entity: entity.Entity): Entity = new SpigotEntity(_entity)
 
   override def unwrap(wrappedEntity: Entity): entity.Entity = wrappedEntity match {

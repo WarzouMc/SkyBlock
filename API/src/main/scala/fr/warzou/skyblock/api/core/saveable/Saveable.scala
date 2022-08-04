@@ -4,7 +4,7 @@ import java.io.File
 
 trait Saveable {
 
-  def file(): File
+  def file: File
 
   def save(): Boolean
 

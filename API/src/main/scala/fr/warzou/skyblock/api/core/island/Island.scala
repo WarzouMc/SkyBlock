@@ -9,7 +9,7 @@ import fr.warzou.skyblock.utils.cuboid.Cuboid
 
 import java.util.UUID
 
-trait Island extends Saveable with Modifiable {
+trait Island extends Saveable {
 
   def serverVersion: ServerVersion
 
