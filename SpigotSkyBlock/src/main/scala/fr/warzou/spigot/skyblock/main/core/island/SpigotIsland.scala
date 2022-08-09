@@ -4,22 +4,31 @@ import fr.warzou.island.format.core.RawIsland
 import fr.warzou.skyblock.adapter.api.AdapterAPI
 import fr.warzou.skyblock.adapter.api.core.entity.Entity
 import fr.warzou.skyblock.adapter.api.core.world.{Block, Location}
+import fr.warzou.skyblock.adapter.spigot.entity.SpigotEntity
+import fr.warzou.skyblock.adapter.spigot.world.SpigotLocation
 import fr.warzou.skyblock.api.common.module.ModuleHandler
 import fr.warzou.skyblock.api.core.island.Island
 import fr.warzou.skyblock.api.core.modules.island.IslandModule
 import fr.warzou.skyblock.utils.ServerVersion
 import fr.warzou.skyblock.utils.cuboid.Cuboid
-import fr.warzou.spigot.skyblock.main.core.island.SpigotIsland.{locationToInt, xyzToInt}
-import net.minecraft.server.v1_12_R1.{BlockPosition, NBTCompressedStreamTools}
+import fr.warzou.spigot.skyblock.main.common.module.SpigotModuleHandler
+import fr.warzou.spigot.skyblock.main.core.island.SpigotIsland.{defaultEntitySpawnLocation, locationToInt, xyzToInt}
+import net.minecraft.server.v1_12_R1.{BlockPosition, NBTBase, NBTCompressedStreamTools, NBTTagDouble, NBTTagInt}
 import org.bukkit
+import org.bukkit.block.Container
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld
-import org.bukkit.{Bukkit, Material}
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity
+import org.bukkit.entity.EntityType
+import org.bukkit.inventory.ItemStack
+import org.bukkit.scheduler.BukkitRunnable
+import org.bukkit.{Bukkit, Material, NamespacedKey}
 
-import java.io.{ByteArrayInputStream, File}
+import java.io.{ByteArrayInputStream, DataInput, DataInputStream, File}
 import java.util.UUID
 import scala.collection.mutable.ListBuffer
 
-case class SpigotIsland(private val moduleHandler: ModuleHandler, private val rawIsland: RawIsland, private val optionFile: Option[File]) extends Island {
+case class SpigotIsland(private val moduleHandler: ModuleHandler, private val rawIsland: RawIsland,
+                        private val optionFile: Option[File]) extends Island {
 
   private val root = new File(rawIsland.adapterAPI.plugin.dataFolder, "islands")
   private val currentVersion = ServerVersion.from(rawIsland.adapterAPI.plugin)
@@ -58,8 +67,8 @@ case class SpigotIsland(private val moduleHandler: ModuleHandler, private val ra
 
   override def blocks: List[Block] = _blocks.toList
 
-  //todo place entity
   override def place(location: Location): Unit = {
+    clearCuboidAt(location)
     (0 until cuboid.xSize).foreach(x => {
       (0 until cuboid.ySize).foreach(y => {
         (0 until cuboid.zSize).foreach(z => {
@@ -70,33 +79,55 @@ case class SpigotIsland(private val moduleHandler: ModuleHandler, private val ra
         })
       })
     })
+    entities.foreach(placeEntity(_, location))
   }
 
-  override def withFileName(name: String): Unit = {
+  override def withFileName(name: String, deleteOld: Boolean): Unit = {
     val islandModule = moduleHandler.getModule[IslandModule](classOf[IslandModule]).get
     if (islandModule.islandByFileName(name).isDefined)
-      throw new IllegalArgumentException(s"Already took file name for $name!")
+      throw new IllegalArgumentException(s"Already took file name for $name !")
+
+    if (deleteOld) _file.delete()
     _file = asFile(name)
     islandModule.setFile(this, name)
   }
 
-  //todo delete old
   override def fileName: String = _file.getName
 
   override def file: File = _file
 
-  override def save(): Boolean = {
-    if (_blocks.equals(rawIsland.blocks) && _entities.equals(rawIsland.entities)) return false
+  override def save(force: Boolean): Boolean = {
+    if (!force && _blocks.equals(rawIsland.blocks) && _entities.equals(rawIsland.entities) && _file.exists()) return false
 
+    println("saved")
     val newRawIsland = RawIsland(rawIsland.adapterAPI, uuid, name, serverVersion, cuboid, blocks, entities)
-    newRawIsland.saveAs(_file.getName)
+    newRawIsland.saveAs(_file.getName.replace(".island", ""))
     true
+  }
+
+  private def clearCuboidAt(location: Location): Unit = {
+    (0 until cuboid.xSize).foreach(x => {
+      (0 until cuboid.ySize).foreach(y => {
+        (0 until cuboid.zSize).foreach(z => {
+          val blockLocation = new bukkit.Location(Bukkit.getWorld(location.world.getOrElse(Bukkit.getWorlds.get(0).getName)),
+            location.blockX + x, location.blockY + y, location.blockZ + z)
+          val block = blockLocation.getWorld.getBlockAt(blockLocation)
+          block match {
+            case container: Container => container.getInventory.clear()
+            case _ =>
+          }
+          block.setType(Material.AIR)
+        })
+      })
+    })
+    rawIsland.adapterAPI.entitiesGetter().enumerateEntity(rawIsland.adapterAPI, cuboid.normalize(rawIsland.adapterAPI).applyLocation(location))
+      .filter(_.name != NamespacedKey.minecraft(EntityType.PLAYER.name().toLowerCase).toString).foreach(SpigotEntity.unwrap(_).remove())
   }
 
   private def placeBlock(index: Int, blockLocation: bukkit.Location): Unit = {
     val world = blockLocation.getWorld
     val block = _blocks(index)
-    val material = Material.valueOf(block.name.split(":")(1))
+    val material = Material.valueOf(block.name.split(":")(1).toUpperCase)
 
     world.getBlockAt(blockLocation).setType(material)
     world.getBlockAt(blockLocation).setData(block.data.toByte)
@@ -112,7 +143,28 @@ case class SpigotIsland(private val moduleHandler: ModuleHandler, private val ra
     val worldServer = blockLocation.getWorld.asInstanceOf[CraftWorld].getHandle
     val tileEntity = worldServer.getTileEntity(new BlockPosition(blockLocation.getBlockX, blockLocation.getBlockY, blockLocation.getBlockZ))
 
+    nbtTagCompound.set("x", new NBTTagInt(blockLocation.getBlockX))
+    nbtTagCompound.set("y", new NBTTagInt(blockLocation.getBlockY))
+    nbtTagCompound.set("z", new NBTTagInt(blockLocation.getBlockZ))
     tileEntity.load(nbtTagCompound)
+  }
+
+  private def placeEntity(entity: Entity, islandLocation: Location): Unit = {
+    val world = Bukkit.getWorlds.get(0)
+    val location = if (cuboid.isNormalized) islandLocation else islandLocation.appendXYZ(-cuboid.minX, -cuboid.minY, -cuboid.minZ)
+    val entityLocation = SpigotLocation.unwrap(entity.location.appendXYZ(location.blockX + 0.5, location.blockY + 0.5, location.blockZ + 0.5)
+      .withWorld(location.world.getOrElse(world.getName)))
+    val entityType = EntityType.valueOf(entity.name.split(':')(1).toUpperCase)
+    val bukkitEntity = entityType match {
+      case EntityType.DROPPED_ITEM => world.dropItem(entityLocation, new ItemStack(Material.STONE))
+      case _ => world.spawnEntity(entityLocation, entityType)
+    }
+    val craftEntity = bukkitEntity.asInstanceOf[CraftEntity]
+    val inputStream = new ByteArrayInputStream(entity.nbt)
+    val nbtTagCompound = NBTCompressedStreamTools.a(inputStream)
+
+    craftEntity.getHandle.f(nbtTagCompound)
+    bukkitEntity.teleport(entityLocation)
   }
 
   private def updateVersion(): Unit = if (version < currentVersion) version = currentVersion
@@ -121,6 +173,8 @@ case class SpigotIsland(private val moduleHandler: ModuleHandler, private val ra
 }
 
 private case object SpigotIsland {
+
+  val defaultEntitySpawnLocation: bukkit.Location = new bukkit.Location(Bukkit.getWorlds.get(0), 0, 0, 0)
 
   def locationToInt(location: Location, cuboid: Cuboid): Int = xyzToInt(location.blockX, location.blockY, location.blockZ, cuboid)
 

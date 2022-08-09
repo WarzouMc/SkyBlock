@@ -10,7 +10,6 @@ import fr.warzou.spigot.skyblock.main.core.island.SpigotIsland
 
 case class SpigotIslandModule(private val handler: ModuleHandler, private val adapter: AdapterAPI) extends IslandModule(adapter) {
 
-  //todo
   override protected def loadIslands(): Unit = {
     val files = IslandUtils.allIslandsFileName(adapter.plugin)
     val rawIslandByFile: List[(RawIsland, String)] = files.map(file => (IslandFileReader(adapter, file).read, file)).toList

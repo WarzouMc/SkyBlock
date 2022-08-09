@@ -30,5 +30,6 @@ abstract class ModuleHandler {
     module.disable()
   }
 
-  def getModule[A <: Module](clazz: Class[A]): Option[A]
+  def getModule[A <: Module](clazz: Class[_ <: A]): Option[A] =
+    _modules.find(module => clazz.isAssignableFrom(module.getClass)).map(_.asInstanceOf[A])
 }

@@ -9,7 +9,7 @@ import fr.warzou.skyblock.adapter.api.core.world.{Block, Location}
 import fr.warzou.skyblock.utils.cuboid.Cuboid
 import fr.warzou.skyblock.utils.{IOUtils, ServerVersion}
 
-import java.io.{File, FileReader}
+import java.io.{File, FileInputStream, FileReader}
 import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
 import java.util.UUID
@@ -18,7 +18,7 @@ case class IslandFileReader(adapterAPI: AdapterAPI, fileName: String) extends Re
 
   private val plugin = adapterAPI.plugin
   private val root = new File(plugin.dataFolder, "islands")
-  private val reader = new FileReader(new File(root, s"$fileName.island"))
+  private val reader = new FileInputStream(new File(root, s"$fileName"))
 
   override def read: RawIsland = {
     val version = readVersion()
@@ -31,6 +31,7 @@ case class IslandFileReader(adapterAPI: AdapterAPI, fileName: String) extends Re
     (0 until cuboid.blockCount).foreach(blocks(_) = usedBlock(IOUtils.readVarInt(reader)))
 
     val entities = readEntities()
+    reader.close()
     RawIsland(adapterAPI, uuid, islandName, version, cuboid, blocks.toList, entities)
   }
 
@@ -71,6 +72,10 @@ case class IslandFileReader(adapterAPI: AdapterAPI, fileName: String) extends Re
         override def isBlockEntity: Boolean = nbtIndex != blockEntityCount
 
         override def nbt: Option[Array[Byte]] = if (isBlockEntity) Some(blockEntities(nbtIndex)) else None
+
+        override def wrapper(): Wrapper[_, Block] = adapterAPI.wrapperOf(this)
+
+        override def unwrapper(): Unwrapper[Block, _] = adapterAPI.unwrapperOf(this)
       }
     )
     usedBlocks
@@ -80,10 +85,9 @@ case class IslandFileReader(adapterAPI: AdapterAPI, fileName: String) extends Re
     val count = readByte()
     val entities = new Array[Entity](count)
     (0 until count).foreach(i => {
-      val long = readU8Long()
-      val x = long >> 38
-      val y = long & 0xFFF
-      val z = (long >> 12) & 0x3FFFFFF
+      val x = readByte()
+      val y = readByte()
+      val z = readByte()
 
       entities(i) = new Entity {
         private val _location = adapterAPI.createLocation(x.toDouble, y.toDouble, z.toDouble)
@@ -96,10 +100,9 @@ case class IslandFileReader(adapterAPI: AdapterAPI, fileName: String) extends Re
 
         override def nbt: Array[Byte] = _nbt
 
-        //todo
-        override def wrapper: Wrapper[_, Entity] = ???
+        override def wrapper(): Wrapper[_, Entity] = adapterAPI.wrapperOf(this)
 
-        override def unwrapper: Unwrapper[Entity, _] = ???
+        override def unwrapper(): Unwrapper[Entity, _] = adapterAPI.unwrapperOf(this)
       }
     })
     entities.toList
@@ -122,7 +125,10 @@ case class IslandFileReader(adapterAPI: AdapterAPI, fileName: String) extends Re
     new String(readNByte(length).map(_.toByte), StandardCharsets.UTF_8)
   }
 
-  private def readU2Short(): Short = ByteBuffer.wrap(readNByte( 2).map(_.toByte)).getShort
+  private def readU2Short(): Short = {
+    val array = readNByte(2)
+    ByteBuffer.wrap(array.map(_.toByte)).getShort
+  }
 
-  private def readU8Long(): Long = ByteBuffer.wrap(readNByte( 8).map(_.toByte)).getLong
+  private def readU8Long(): Long = ByteBuffer.wrap(readNByte(8).map(_.toByte)).getLong
 }

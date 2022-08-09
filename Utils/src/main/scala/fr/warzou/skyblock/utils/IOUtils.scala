@@ -1,6 +1,6 @@
 package fr.warzou.skyblock.utils
 
-import java.io.{FileReader, OutputStream}
+import java.io.{FileInputStream, FileReader, OutputStream}
 import scala.annotation.tailrec
 
 case object IOUtils {
@@ -26,10 +26,10 @@ case object IOUtils {
    * @param reader where value will be read
    * @return read value
    */
-  def readVarInt(reader: FileReader): Int = readVarInt(reader, 0, 0)
+  def readVarInt(reader: FileInputStream): Int = readVarInt(reader, 0, 0)
 
   @tailrec
-  private def readVarInt(reader: FileReader, value: Int, position: Int): Int = {
+  private def readVarInt(reader: FileInputStream, value: Int, position: Int): Int = {
     val currentByte = reader.read.toByte
     val newValue = value | ((currentByte & 0x7f) << position)
     if ((currentByte & 0x80) == 0) newValue

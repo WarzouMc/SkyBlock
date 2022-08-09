@@ -12,7 +12,8 @@ import fr.warzou.skyblock.utils.island.IslandUtils
 
 import java.util.UUID
 
-case class RawIsland(adapterAPI: AdapterAPI, uuid: UUID, name: String, originalVersion: ServerVersion, cuboid: Cuboid, blocks: List[Block], entities: List[Entity]) {
+case class RawIsland(adapterAPI: AdapterAPI, uuid: UUID, name: String, originalVersion: ServerVersion, cuboid: Cuboid,
+                     blocks: List[Block], entities: List[Entity]) {
   val plugin: MinecraftPlugin = adapterAPI.plugin
   val version: ServerVersion = ServerVersion.from(plugin)
 
@@ -29,7 +30,7 @@ object RawIsland {
     if (cuboid.world.isEmpty)
       throw new IllegalStateException("Cannot find an unique world in cuboid !")
     val blocks = cuboid.enumerateBlocks(adapter, cuboid.world.get)
-    val entities = adapter.entitiesGetter.enumerateEntity(adapter, cuboid)
+    val entities = adapter.entitiesGetter().enumerateEntity(adapter, cuboid)
     RawIsland(adapter, UUID.randomUUID(), islandName, ServerVersion.from(adapter.plugin), cuboid, blocks, entities)
   }
 

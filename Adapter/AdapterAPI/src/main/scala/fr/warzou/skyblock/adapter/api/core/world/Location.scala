@@ -1,6 +1,9 @@
 package fr.warzou.skyblock.adapter.api.core.world
 
-trait Location {
+import fr.warzou.skyblock.adapter.api.common.wrap.{Unwrapper, Wrappable, Wrapper}
+import fr.warzou.skyblock.utils.cuboid.Cuboid
+
+trait Location extends Wrappable[Location] {
 
   def world: Option[String]
 
@@ -41,8 +44,14 @@ trait Location {
       override def appendXYZ(x: Double, y: Double, z: Double): Location = current.appendXYZ(x, y, z)
 
       override def toString: String = s"Location{world=$world, x=$x, y=$y, z=$z}"
+
+      override def wrapper(): Wrapper[_, Location] = current.wrapper()
+
+      override def unwrapper(): Unwrapper[Location, _] = current.unwrapper()
     }
   }
+
+  def appendLocation(location: Location): Location = appendXYZ(location.x, location.y, location.z)
 
   def appendXYZ(x: Double, y: Double, z: Double): Location
 

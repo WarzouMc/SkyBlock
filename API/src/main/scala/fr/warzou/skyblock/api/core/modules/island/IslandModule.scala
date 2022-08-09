@@ -16,12 +16,11 @@ abstract class IslandModule(private val adapter: AdapterAPI) extends Module {
   private val root = new File(adapter.plugin.dataFolder, "islands")
 
   override def enable(): Unit = {
-    val folder = adapter.plugin.islandFolder
     loadIslands()
   }
 
   override def disable(): Unit = {
-    islands.values.foreach(_.save())
+    islands.values.foreach(_.save(false))
   }
 
   def addIsland(island: Island): Unit = {

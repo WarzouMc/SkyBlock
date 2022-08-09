@@ -1,6 +1,8 @@
 package fr.warzou.skyblock.adapter.spigot.world
 
+import fr.warzou.skyblock.adapter.api.common.wrap.{Unwrapper, Wrapper}
 import fr.warzou.skyblock.adapter.api.core.world.{Block, Location}
+import fr.warzou.skyblock.utils.cuboid.Cuboid
 import org.bukkit
 import org.bukkit.Bukkit
 
@@ -24,11 +26,19 @@ case class SpigotLocation(_world: Option[String], _x: Double, _y: Double, _z: Do
   override def appendXYZ(x: Double, y: Double, z: Double): Location = SpigotLocation(_world, _x + x, _y + y, _z + z)
 
   def toBukkit: bukkit.Location = new bukkit.Location(Bukkit.getWorld(_world.getOrElse(Bukkit.getWorlds.get(0).getName)), _x, _y, _z)
+
+  override def wrapper(): Wrapper[_, Location] = SpigotLocation
+
+  override def unwrapper(): Unwrapper[Location, _] = SpigotLocation
 }
 
-case object SpigotLocation {
+case object SpigotLocation extends Wrapper[bukkit.Location, Location] with Unwrapper[Location, bukkit.Location] {
 
-  def toCustom(location: bukkit.Location): Location = SpigotLocation(Some(location.getWorld.getName), location.getX, location.getY, location.getZ)
+  override def wrap(bukkitLocation: bukkit.Location): SpigotLocation = SpigotLocation(Some(bukkitLocation.getWorld.getName), bukkitLocation.getX, bukkitLocation.getY, bukkitLocation.getZ)
 
-  def toBukkit(location: Location): bukkit.Location = location.asInstanceOf[SpigotLocation].toBukkit
+  override def unwrap(wrappedLocation: Location): bukkit.Location = wrappedLocation match {
+    case location: SpigotLocation => location.toBukkit
+    case _ => new bukkit.Location(Bukkit.getWorld(wrappedLocation.world.getOrElse(Bukkit.getWorlds.get(0).getName)),
+      wrappedLocation.x, wrappedLocation.y, wrappedLocation.z)
+  }
 }

@@ -43,8 +43,12 @@ case class Cuboid(corner0: Location, corner1: Location, blocks: Option[List[Bloc
 
   def applyWorld(world: String): Cuboid = Cuboid(corner0.withWorld(world), corner1.withWorld(world))
 
+  def applyLocation(location: Location): Cuboid = Cuboid(corner0.appendLocation(location), corner1.appendLocation(location), blocks)
+
   def normalize(adapter: AdapterAPI): Cuboid =
     Cuboid(adapter.createLocation(0, 0, 0), adapter.createLocation(xSize, ySize, zSize))
+
+  def isNormalized: Boolean = minX == 0 && minY == 0 && minZ == 0
 
   def atLocation(location: Location): Cuboid = Cuboid(location, location.appendXYZ(xSize, ySize, zSize))
 }

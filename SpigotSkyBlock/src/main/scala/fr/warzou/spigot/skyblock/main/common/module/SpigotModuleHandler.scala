@@ -33,12 +33,10 @@ case class SpigotModuleHandler(plugin: Plugin) extends ModuleHandler {
     val islandModule = getModule(classOf[IslandModule]).get
     val rawIsland = new RawIsland(adapterAPI, UUID.randomUUID(), name, serverVersion, cuboid,
       cuboid.enumerateBlocks(adapter, cuboid.world.getOrElse(Bukkit.getWorlds.get(0).getName)),
-      adapterAPI.entitiesGetter.enumerateEntity(adapter, cuboid))
+      adapterAPI.entitiesGetter().enumerateEntity(adapter, cuboid))
     val island = new SpigotIsland(this, rawIsland, None)
 
     islandModule.addIsland(island)
     island
   }
-
-  def getModule[A <: Module](clazz: Class[A]): Option[A] = _modules.find(_.getClass.isAssignableFrom(clazz)).map(_.asInstanceOf[A])
 }

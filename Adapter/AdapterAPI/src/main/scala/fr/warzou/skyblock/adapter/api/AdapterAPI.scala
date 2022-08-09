@@ -2,6 +2,7 @@ package fr.warzou.skyblock.adapter.api
 
 import fr.warzou.skyblock.adapter.api.AdapterAPI.alreadyInitialized
 import fr.warzou.skyblock.adapter.api.common.handler.AdapterHandler
+import fr.warzou.skyblock.adapter.api.common.wrap.{Unwrapper, Wrappable, Wrapper}
 import fr.warzou.skyblock.adapter.api.core.entity.EntitiesGetter
 import fr.warzou.skyblock.adapter.api.core.plugin.MinecraftPlugin
 import fr.warzou.skyblock.adapter.api.core.world.Location
@@ -22,7 +23,11 @@ case class AdapterAPI(adapterHandler: AdapterHandler) {
 
   def createLocation(world: Option[String], x: Double, y: Double, z: Double): Location = adapterHandler.createLocation(world, x, y, z)
 
-  def entitiesGetter: EntitiesGetter = adapterHandler.getEntitiesGetter
+  def entitiesGetter(): EntitiesGetter = adapterHandler.getEntitiesGetter
+
+  def wrapperOf[A](wrappable: Wrappable[A]): Wrapper[_, A] = adapterHandler.wrapperOf(wrappable)
+
+  def unwrapperOf[A](wrappable: Wrappable[A]): Unwrapper[A, _] = adapterHandler.unwrapperOf(wrappable)
 }
 
 case object AdapterAPI {

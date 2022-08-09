@@ -144,21 +144,29 @@ It used to create a save of a minecraft structure.
 </thead>
 <tbody>
   <tr>
-    <td>location</td>
-    <td>u8</td>
+    <td rowspan="3">location</td>
+    <td rowspan="3">u3</td>
+    <td style="font-style:italic">x</td>
+    <td>u1</td>
+  </tr>
+  <tr>
+    <td style="font-style:italic">y</td>
+    <td>u1</td>
+  </tr>
+  <tr>
+    <td style="font-style:italic">z</td>
+    <td>u1</td>
   </tr>
   <tr>
     <td>type_name</td>
-    <td>string</td>
+    <td colspan="3">string</td>
   </tr>
   <tr>
     <td>nbt_tag</td>
-    <td>nbt</td>
+    <td colspan="3">nbt</td>
   </tr>
 </tbody>
 </table>
-
-For location see protocol on [wiki.vg](https://wiki.vg/Protocol#Position)
 
 ## Nbt structure
 

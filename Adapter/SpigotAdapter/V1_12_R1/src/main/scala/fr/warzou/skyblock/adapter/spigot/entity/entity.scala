@@ -16,7 +16,7 @@ import java.io.ByteArrayOutputStream
 import scala.jdk.CollectionConverters.CollectionHasAsScala
 
 case class SpigotEntity(_entity: entity.Entity) extends Entity {
-  override def location: Location = SpigotLocation.toCustom(_entity.getLocation)
+  override def location: Location = SpigotLocation.wrap(_entity.getLocation)
 
   override def name: String = NamespacedKey.minecraft(_entity.getType.name().toLowerCase).toString
 
@@ -33,9 +33,24 @@ case class SpigotEntity(_entity: entity.Entity) extends Entity {
     byteArrayOutputStream.toByteArray
   }
 
-  override def wrapper: Wrapper[entity.Entity, Entity] = SpigotEntity
+  def withLocation(_location: Location): Entity = {
+    val old = this
+    new Entity {
+      override def location: Location = _location
 
-  override def unwrapper: Unwrapper[Entity, entity.Entity] = SpigotEntity
+      override def name: String = old.name
+
+      override def nbt: Array[Byte] = old.nbt
+
+      override def wrapper(): Wrapper[_, Entity] = old.wrapper()
+
+      override def unwrapper(): Unwrapper[Entity, _] = old.unwrapper()
+    }
+  }
+
+  override def wrapper(): Wrapper[entity.Entity, Entity] = SpigotEntity
+
+  override def unwrapper(): Unwrapper[Entity, entity.Entity] = SpigotEntity
 }
 
 case object SpigotEntity extends EntityWrapper[entity.Entity] {
@@ -44,7 +59,7 @@ case object SpigotEntity extends EntityWrapper[entity.Entity] {
   override def unwrap(wrappedEntity: Entity): entity.Entity = wrappedEntity match {
     case SpigotEntity(entity) => entity
     case _ =>
-      val unknownResult = wrappedEntity.unwrapper.unwrap(wrappedEntity)
+      val unknownResult = wrappedEntity.unwrapper().unwrap(wrappedEntity)
       unknownResult match {
         case entity: entity.Entity => entity
         case _ => throw new IllegalArgumentException(s"No Unwrapper found to parse ${wrappedEntity.getClass} into a ${classOf[entity.Entity]} !")

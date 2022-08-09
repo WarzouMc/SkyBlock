@@ -15,10 +15,6 @@ trait Entity extends Wrappable[Entity] {
 }
 
 abstract class EntityWrapper[A]() extends Wrapper[A, Entity] with Unwrapper[Entity, A] {
-  override def wrap(a: A): Entity
-
-  override def unwrap(a: Entity): A
-
   def toCustom(entity: A): Entity = wrap(entity)
 
   def fromCustom(entity: Entity): A = unwrap(entity)
