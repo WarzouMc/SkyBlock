@@ -1,0 +1,16 @@
+dependencies {
+    compileOnly librairies.spigot112
+
+    api project(":NMSVersioning:NMSVersioningAPI")
+    implementation project(version("Spigot", "1_12_2"))
+    implementation librairies.scala
+
+    testImplementation librairies.scalaTest
+    testImplementation librairies.junit
+
+    api project(':Utils')
+}
+
+static String version(String api, String version) {
+    return """:NMSVersioning:NMSVersioningVersion:NMSVersioning$api$version"""
+}

@@ -1,15 +1,13 @@
 dependencies {
-    compileOnly librairies.spigot
-    compileOnly librairies.spigotAPI
+    compileOnly librairies.spigot112
 
     implementation librairies.scala
-    implementation librairies.spigotMetadataAPI
 
     testImplementation librairies.scalaTest
     testImplementation librairies.junit
 
-    api project(':API')
+    api project(':SkyBlockAPI')
     api project(':IslandFormat')
     api project(':Utils')
-    api project(':Adapter:SpigotAdapter:V1_12_R1')
+    api project(':Adapter:SpigotAdapter')
 }

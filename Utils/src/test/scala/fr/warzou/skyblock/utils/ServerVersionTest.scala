@@ -6,8 +6,9 @@ import org.junit.Test
 class ServerVersionTest {
 
   @Test
-  def fromTest(): Unit = {
-    assertEquals("1.16.5", ServerVersion.from("1.16.5_R0.1-SNAPSHOT").toString)
+  def fromRawStringTest(): Unit = {
+    assertEquals("1.16.5", ServerVersion.fromRawString("1.16.5_R0.1-SNAPSHOT").toString)
+    assertEquals("1.12.2", ServerVersion.fromRawString("spongevanilla-1.12.2-7.1.5").toString)
   }
 
   @Test

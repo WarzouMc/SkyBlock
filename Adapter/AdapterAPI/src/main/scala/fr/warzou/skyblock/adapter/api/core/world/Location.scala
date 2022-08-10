@@ -1,7 +1,6 @@
 package fr.warzou.skyblock.adapter.api.core.world
 
 import fr.warzou.skyblock.adapter.api.common.wrap.{Unwrapper, Wrappable, Wrapper}
-import fr.warzou.skyblock.utils.cuboid.Cuboid
 
 trait Location extends Wrappable[Location] {
 

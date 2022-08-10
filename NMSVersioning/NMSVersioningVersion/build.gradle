@@ -1,0 +1,10 @@
+subprojects {
+    dependencies {
+        implementation librairies.scala
+
+        testImplementation librairies.scalaTest
+        testImplementation librairies.junit
+
+        compileOnly project(':NMSVersioning:NMSVersioningAPI')
+    }
+}

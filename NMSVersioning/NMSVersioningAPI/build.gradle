@@ -1,12 +1,9 @@
 dependencies {
     compileOnly librairies.spigot112
-
-    implementation librairies.annotations
     implementation librairies.scala
 
     testImplementation librairies.scalaTest
     testImplementation librairies.junit
 
-    api project(":NMSVersioning")
-    api project(":Adapter:AdapterAPI")
+    api project(':Utils')
 }

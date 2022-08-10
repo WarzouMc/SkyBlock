@@ -2,6 +2,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
     id 'com.github.johnrengelman.shadow' version '7.0.0'
+    id 'fr.il_totore.manadrop' version '0.4.2'
 }
 
 allprojects {
@@ -45,7 +46,22 @@ ext {
 librairies.scala = 'org.scala-lang:scala-library:2.13.8'
 librairies.scalaTest = 'org.scalatest:scalatest_2.11:3.2.11'
 librairies.junit = 'junit:junit:4.13.2'
-librairies.spigot = 'org.spigotmc:spigot:1.12.2-R0.1-SNAPSHOT'
-librairies.spigotAPI = 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
+addSpigotVersion(librairies, 'spigot112', '1.12.2')
+addSpigotVersion(librairies, 'spigot113', '1.13.2')
+addSpigotVersion(librairies, 'spigot114', '1.14.4')
+addSpigotVersion(librairies, 'spigot115', '1.15.2')
+addSpigotVersion(librairies, 'spigot116', '1.16.5')
+addSpigotVersion(librairies, 'spigot117', '1.17.1')
+addSpigotVersion(librairies, 'spigot118', '1.18.2')
+addSpigotVersion(librairies, 'spigot119', '1.19.2')
 librairies.annotations = 'org.jetbrains:annotations:21.0.1'
-librairies.spigotMetadataAPI = 'fr.il_totore:spigotmetadataapi:4.2.0-SNAPSHOT'
+
+static void addSpigotVersion(LinkedHashMap map, String name, String version) {
+    map.put(name, 'org.spigotmc:spigot:' + version + '-R0.1-SNAPSHOT')
+    map.put(name + 'API', 'org.spigotmc:spigot-api:' + version + '-R0.1-SNAPSHOT')
+}
+
+buildTools {
+    versions '1.12.2', '1.14.4', '1.15.2'
+    workDir = file("work/")
+}
