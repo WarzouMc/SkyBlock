@@ -23,8 +23,9 @@ case class RawIsland(adapterAPI: AdapterAPI, uuid: UUID, name: String, originalV
 
   def saveAs(fileName: String): Unit = {
     val file = createFile(fileName)
-    val writer = IslandFileWriter(new FileOutputStream(file), version, UUID.randomUUID(), name, cuboid, blocks, entities)
+    val writer = IslandFileWriter(new FileOutputStream(file), plugin, version, UUID.randomUUID(), name, cuboid, blocks, entities)
     save(writer)
+    plugin.logger.save(s"Save island '$name' with uuid '$uuid' as file '$fileName'.")
   }
 
   def save(writer: Writer): Unit = writer.write()

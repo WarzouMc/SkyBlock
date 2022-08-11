@@ -1,5 +1,6 @@
 package fr.warzou.skyblock.nms.versioning.api
 
+import fr.warzou.skyblock.adapter.api.common.logger.Logger
 import fr.warzou.skyblock.adapter.api.core.plugin.MinecraftPlugin
 import fr.warzou.skyblock.utils.ServerVersion
 import fr.warzou.skyblock.utils.server.{ServerAPI, Spigot}
@@ -10,12 +11,14 @@ case object NMSVersioningAPI {
 
   private val loadedVersion = new mutable.HashMap[ServerVersion, NMSVersion]()
 
-  def getVersionAPI(plugin: MinecraftPlugin): NMSVersion = getVersionAPI(plugin.api, ServerVersion.from(plugin))
+  def getVersionAPI(plugin: MinecraftPlugin): NMSVersion = getVersionAPI(Some(plugin.logger), plugin.api, ServerVersion.from(plugin))
 
-  def getVersionAPI(api: ServerAPI, version: ServerVersion): NMSVersion =
-    loadedVersion.getOrElse(version, createNMSVersion(api, version))
+  def getVersionAPI(logger: Option[Logger] = None, api: ServerAPI, version: ServerVersion): NMSVersion =
+    loadedVersion.getOrElse(version, createNMSVersion(logger, api, version))
 
-  private def createNMSVersion(api: ServerAPI, version: ServerVersion): NMSVersion = {
+  private def createNMSVersion(logger: Option[Logger], api: ServerAPI, version: ServerVersion): NMSVersion = {
+    if (logger.isDefined) logger.get.log(api = false, s"NMS versioning load version $version.")
+    else System.out.println(s"[${api.getClass.getSimpleName}SkyBlock] Info : NMS versioning load version $version.")
     val nmsVersion = buildNMSVersion(api, version)
     loadedVersion.put(version, nmsVersion)
     nmsVersion

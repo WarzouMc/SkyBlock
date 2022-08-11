@@ -15,7 +15,6 @@ import fr.warzou.skyblock.nms.versioning.api.entity.EntityWrap
 import fr.warzou.skyblock.spigot.main.core.island.SpigotIsland.{locationToInt, xyzToInt}
 import fr.warzou.skyblock.utils.ServerVersion
 import fr.warzou.skyblock.utils.cuboid.Cuboid
-import org.apache.logging.log4j
 import org.bukkit
 import org.bukkit.block.Container
 import org.bukkit.entity.EntityType
@@ -124,7 +123,6 @@ case class SpigotIsland(private val moduleHandler: ModuleHandler, private val ra
   }
 
   private def placeBlock(index: Int, blockLocation: bukkit.Location): Unit = {
-    val world = blockLocation.getWorld
     val block = _blocks(index)
     val material = Material.valueOf(block.name.split(":")(1).toUpperCase)
 
@@ -145,7 +143,7 @@ case class SpigotIsland(private val moduleHandler: ModuleHandler, private val ra
       case EntityType.DROPPED_ITEM => world.dropItem(entityLocation, new ItemStack(Material.STONE))
       case _ => world.spawnEntity(entityLocation, entityType)
     }
-
+    
     NMSVersioningAPI.getVersionAPI(rawIsland.adapterAPI.plugin).getNBTTools.applyNBT(EntityWrap.of(bukkitEntity), entity.nbt)
     bukkitEntity.teleport(entityLocation)
   }

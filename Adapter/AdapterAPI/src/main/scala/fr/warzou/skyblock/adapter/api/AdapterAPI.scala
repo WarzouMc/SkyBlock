@@ -2,6 +2,7 @@ package fr.warzou.skyblock.adapter.api
 
 import fr.warzou.skyblock.adapter.api.AdapterAPI.alreadyInitialized
 import fr.warzou.skyblock.adapter.api.common.handler.AdapterHandler
+import fr.warzou.skyblock.adapter.api.common.logger.Logger
 import fr.warzou.skyblock.adapter.api.common.wrap.{Unwrapper, Wrappable, Wrapper}
 import fr.warzou.skyblock.adapter.api.core.entity.EntitiesGetter
 import fr.warzou.skyblock.adapter.api.core.plugin.MinecraftPlugin
@@ -16,6 +17,8 @@ case class AdapterAPI(adapterHandler: AdapterHandler) {
   }
 
   def plugin: MinecraftPlugin = adapterHandler.minecraftPlugin()
+
+  def logger: Logger = plugin.logger
 
   def createLocation(x: Double, y: Double, z: Double): Location = createLocation(None, x, y, z)
 

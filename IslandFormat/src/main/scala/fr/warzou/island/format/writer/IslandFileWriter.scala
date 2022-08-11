@@ -2,6 +2,7 @@ package fr.warzou.island.format.writer
 
 import fr.warzou.island.format.core.io.Writer
 import fr.warzou.skyblock.adapter.api.core.entity.Entity
+import fr.warzou.skyblock.adapter.api.core.plugin.MinecraftPlugin
 import fr.warzou.skyblock.adapter.api.core.world.{Block, Location}
 import fr.warzou.skyblock.utils.ServerVersion
 import fr.warzou.skyblock.utils.collection.ArrayUtils
@@ -12,8 +13,8 @@ import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
 import java.util.UUID
 
-case class IslandFileWriter(outputStream: OutputStream, version: ServerVersion, uuid: UUID, name: String, cuboid: Cuboid,
-                                      blocks: List[Block], entities: List[Entity]) extends Writer {
+case class IslandFileWriter(outputStream: OutputStream, plugin: MinecraftPlugin, version: ServerVersion, uuid: UUID,
+                            name: String, cuboid: Cuboid, blocks: List[Block], entities: List[Entity]) extends Writer {
 
   override def write(): Unit = {
     writeVersion()
