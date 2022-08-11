@@ -14,7 +14,7 @@ import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
 import java.util.UUID
 
-case class IslandFileReader(adapterAPI: AdapterAPI, fileName: String) extends Reader[RawIsland] {
+case class IslandFileReader(adapterAPI: AdapterAPI, fileName: String) extends Reader {
 
   private val plugin = adapterAPI.plugin
   private val root = new File(plugin.dataFolder, "islands")

@@ -1,5 +1,7 @@
 package fr.warzou.island.format.core.io
 
-trait Reader[A] {
-  def read: A
+import fr.warzou.island.format.core.RawIsland
+
+trait Reader {
+  def read: RawIsland
 }

@@ -12,10 +12,8 @@ import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
 import java.util.UUID
 
-protected case class IslandFileWriter(outputStream: OutputStream, version: ServerVersion, uuid: UUID, name: String, cuboid: Cuboid,
+case class IslandFileWriter(outputStream: OutputStream, version: ServerVersion, uuid: UUID, name: String, cuboid: Cuboid,
                                       blocks: List[Block], entities: List[Entity]) extends Writer {
-
-
 
   override def write(): Unit = {
     writeVersion()

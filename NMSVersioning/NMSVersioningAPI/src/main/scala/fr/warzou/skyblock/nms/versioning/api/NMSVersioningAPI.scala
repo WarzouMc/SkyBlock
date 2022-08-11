@@ -4,11 +4,22 @@ import fr.warzou.skyblock.adapter.api.core.plugin.MinecraftPlugin
 import fr.warzou.skyblock.utils.ServerVersion
 import fr.warzou.skyblock.utils.server.{ServerAPI, Spigot}
 
+import scala.collection.mutable
+
 case object NMSVersioningAPI {
+
+  private val loadedVersion = new mutable.HashMap[ServerVersion, NMSVersion]()
 
   def getVersionAPI(plugin: MinecraftPlugin): NMSVersion = getVersionAPI(plugin.api, ServerVersion.from(plugin))
 
-  def getVersionAPI(api: ServerAPI, version: ServerVersion): NMSVersion = buildNMSVersion(api, version)
+  def getVersionAPI(api: ServerAPI, version: ServerVersion): NMSVersion =
+    loadedVersion.getOrElse(version, createNMSVersion(api, version))
+
+  private def createNMSVersion(api: ServerAPI, version: ServerVersion): NMSVersion = {
+    val nmsVersion = buildNMSVersion(api, version)
+    loadedVersion.put(version, nmsVersion)
+    nmsVersion
+  }
 
   private def buildNMSVersion(api: ServerAPI, version: ServerVersion): NMSVersion = {
     val classPath = buildClassPath(api, version)
