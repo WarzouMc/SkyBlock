@@ -13,7 +13,9 @@ case object NMSVersioningAPI {
 
   def getVersionAPI(plugin: MinecraftPlugin): NMSVersion = getVersionAPI(Some(plugin.logger), plugin.api, ServerVersion.from(plugin))
 
-  def getVersionAPI(logger: Option[Logger] = None, api: ServerAPI, version: ServerVersion): NMSVersion =
+  def getVersionAPI(api: ServerAPI, version: ServerVersion): NMSVersion = getVersionAPI(None, api, version)
+
+  def getVersionAPI(logger: Option[Logger], api: ServerAPI, version: ServerVersion): NMSVersion =
     loadedVersion.getOrElse(version, createNMSVersion(logger, api, version))
 
   private def createNMSVersion(logger: Option[Logger], api: ServerAPI, version: ServerVersion): NMSVersion = {

@@ -1,7 +1,7 @@
 name: SpigotSkyBlock
 version: 0.0.1
 author: Warzou
-main: fr.warzou.spigot.skyblock.main.SpigotSkyBlock
+main: fr.warzou.skyblock.spigot.main.SpigotSkyBlock
 commands:
   place:
     description: place an island...

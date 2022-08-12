@@ -20,12 +20,12 @@ class NMSVersion extends api.NMSVersion {
   override def getNBTTools: NBTTools = nbtTools
 
   override def blockWrap[A](_block: A): BlockWrap[A] = {
-    if (_block.isInstanceOf[Block]) throw new IllegalArgumentException("Cannot wrap a non-spigot block !")
+    if (!_block.isInstanceOf[Block]) throw new IllegalArgumentException("Cannot wrap a non-spigot block !")
     block.BlockWrap(_block.asInstanceOf[Block]).asInstanceOf[BlockWrap[A]]
   }
 
   override def entityWrap[A](_entity: A): EntityWrap[A] = {
-    if (_entity.isInstanceOf[Entity]) throw new IllegalArgumentException("Cannot wrap a non-spigot entity !")
+    if (!_entity.isInstanceOf[Entity]) throw new IllegalArgumentException("Cannot wrap a non-spigot entity !")
     EntityWrap(_entity)
   }
 

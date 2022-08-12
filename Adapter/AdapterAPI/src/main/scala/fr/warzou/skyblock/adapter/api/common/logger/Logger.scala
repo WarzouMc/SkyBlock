@@ -6,7 +6,7 @@ trait Logger {
 
   def error(message: String): Unit = log(api = true, Error(), message)
 
-  def save(message: String): Unit = log(api = true, Save(), message)
+  def io(message: String): Unit = log(api = true, IO(), message)
 
   def log(message: String): Unit = log(api = true, Info(), message)
 
@@ -14,7 +14,7 @@ trait Logger {
 
   def error(api: Boolean, message: String): Unit = log(api, Error(), message)
 
-  def save(api: Boolean, message: String): Unit = log(api, Save(), message)
+  def io(api: Boolean, message: String): Unit = log(api, IO(), message)
 
   def log(api: Boolean, message: String): Unit = log(api, Info(), message)
 

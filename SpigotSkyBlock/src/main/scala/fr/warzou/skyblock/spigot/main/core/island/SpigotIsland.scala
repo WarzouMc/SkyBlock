@@ -97,7 +97,6 @@ case class SpigotIsland(private val moduleHandler: ModuleHandler, private val ra
   override def save(force: Boolean): Boolean = {
     if (!force && _blocks.equals(rawIsland.blocks) && _entities.equals(rawIsland.entities) && _file.exists()) return false
 
-    println("saved")
     val newRawIsland = RawIsland(rawIsland.adapterAPI, uuid, name, serverVersion, cuboid, blocks, entities)
     newRawIsland.saveAs(_file.getName.replace(".island", ""))
     true

@@ -4,4 +4,4 @@ sealed trait LogType
 final case class Info() extends LogType
 final case class Warning() extends LogType
 final case class Error() extends LogType
-final case class Save() extends LogType
+final case class IO() extends LogType

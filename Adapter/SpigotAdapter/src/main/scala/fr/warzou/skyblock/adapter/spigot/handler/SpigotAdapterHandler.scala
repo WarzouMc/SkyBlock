@@ -21,17 +21,17 @@ case class SpigotAdapterHandler(plugin: Plugin) extends AdapterHandler {
 
   override def getEntitiesGetter: EntitiesGetter = entitiesGetter
 
-  override def wrapperOf[A](wrappable: Wrappable[A]): Wrapper[_, A] = {
-    (if (wrappable.getClass.isAssignableFrom(classOf[Entity])) SpigotEntity
-    else if (wrappable.getClass.isAssignableFrom(classOf[Block])) SpigotBlock
-    else if (wrappable.getClass.isAssignableFrom(classOf[Location])) SpigotLocation
-    else throw new UnsupportedOperationException("Unsupported class !")).asInstanceOf[Wrapper[_, A]]
+  override def wrapperOf[A](clazz: Class[_ <: Wrappable[A]]): Wrapper[_ >: Any, A] = {
+    (if (clazz.isAssignableFrom(classOf[Entity])) SpigotEntity
+    else if (clazz.isAssignableFrom(classOf[Block])) SpigotBlock
+    else if (clazz.isAssignableFrom(classOf[Location])) SpigotLocation
+    else throw new UnsupportedOperationException("Unsupported class !")).asInstanceOf[Wrapper[_ >: Any, A]]
   }
 
-  override def unwrapperOf[A](wrappable: Wrappable[A]): Unwrapper[A, _] = {
-    (if (wrappable.getClass.isAssignableFrom(classOf[Entity])) SpigotEntity
-    else if (wrappable.getClass.isAssignableFrom(classOf[Block])) SpigotBlock
-    else if (wrappable.getClass.isAssignableFrom(classOf[Location])) SpigotLocation
-    else throw new UnsupportedOperationException("Unsupported class !")).asInstanceOf[Unwrapper[A, _]]
+  override def unwrapperOf[A](clazz: Class[_ <: Wrappable[A]]): Unwrapper[A, _ >: Any] = {
+    (if (clazz.isAssignableFrom(classOf[Entity])) SpigotEntity
+    else if (clazz.isAssignableFrom(classOf[Block])) SpigotBlock
+    else if (clazz.isAssignableFrom(classOf[Location])) SpigotLocation
+    else throw new UnsupportedOperationException("Unsupported class !")).asInstanceOf[Unwrapper[A, _ >: Any]]
   }
 }

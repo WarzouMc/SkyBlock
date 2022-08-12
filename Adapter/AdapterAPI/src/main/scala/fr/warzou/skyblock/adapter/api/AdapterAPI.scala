@@ -4,7 +4,7 @@ import fr.warzou.skyblock.adapter.api.AdapterAPI.alreadyInitialized
 import fr.warzou.skyblock.adapter.api.common.handler.AdapterHandler
 import fr.warzou.skyblock.adapter.api.common.logger.Logger
 import fr.warzou.skyblock.adapter.api.common.wrap.{Unwrapper, Wrappable, Wrapper}
-import fr.warzou.skyblock.adapter.api.core.entity.EntitiesGetter
+import fr.warzou.skyblock.adapter.api.core.entity.{EntitiesGetter, Entity}
 import fr.warzou.skyblock.adapter.api.core.plugin.MinecraftPlugin
 import fr.warzou.skyblock.adapter.api.core.world.Location
 import fr.warzou.skyblock.utils.server.{ServerAPI, Spigot}
@@ -28,9 +28,13 @@ case class AdapterAPI(adapterHandler: AdapterHandler) {
 
   def entitiesGetter(): EntitiesGetter = adapterHandler.getEntitiesGetter
 
-  def wrapperOf[A](wrappable: Wrappable[A]): Wrapper[_, A] = adapterHandler.wrapperOf(wrappable)
+  def wrapperOf[A](wrappable: Wrappable[A]): Wrapper[_, A] = wrapperOf[A](wrappable.getClass)
 
-  def unwrapperOf[A](wrappable: Wrappable[A]): Unwrapper[A, _] = adapterHandler.unwrapperOf(wrappable)
+  def wrapperOf[A](clazz: Class[_ <: Wrappable[A]]): Wrapper[_ >: Any, A] = adapterHandler.wrapperOf(clazz)
+
+  def unwrapperOf[A](wrappable: Wrappable[A]): Unwrapper[A, _] = unwrapperOf[A](wrappable.getClass)
+
+  def unwrapperOf[A](clazz: Class[_ <: Wrappable[A]]): Unwrapper[A, _ >: Any] = adapterHandler.unwrapperOf(clazz)
 }
 
 case object AdapterAPI {

@@ -1,7 +1,7 @@
 package fr.warzou.skyblock.adapter.spigot.entity
 
 import fr.warzou.skyblock.adapter.api.AdapterAPI
-import fr.warzou.skyblock.adapter.api.common.wrap.{Unwrapper, Wrapper}
+import fr.warzou.skyblock.adapter.api.common.wrap.{Unwrapper, Wrappable, Wrapper}
 import fr.warzou.skyblock.adapter.api.core.entity.{EntitiesGetter, Entity, EntityWrapper}
 import fr.warzou.skyblock.adapter.api.core.world.Location
 import fr.warzou.skyblock.adapter.spigot.world.SpigotLocation
@@ -56,5 +56,5 @@ case object SpigotEntity extends EntityWrapper[entity.Entity] {
 
 case object SpigotEntitiesGetter extends EntitiesGetter {
   override def enumerateEntity(adapter: AdapterAPI, cuboid: Cuboid): List[Entity] =
-    NMSVersioningAPI.getVersionAPI(adapter.plugin).enumerateEntities(adapter, cuboid).map(_.asInstanceOf[Entity])
+    NMSVersioningAPI.getVersionAPI(adapter.plugin).enumerateEntities(adapter, cuboid).map(adapter.wrapperOf[Entity](classOf[Entity]).wrap(_))
 }

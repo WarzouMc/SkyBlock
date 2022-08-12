@@ -23,6 +23,7 @@ case class IslandFileWriter(outputStream: OutputStream, plugin: MinecraftPlugin,
     writeCuboid(cuboid, reducedBlocks)
     writeEntities(entities, cuboid)
     outputStream.close()
+    plugin.logger.io(s"Success save of island '$uuid'.")
   }
 
   private def writeInfo(): Unit = {
