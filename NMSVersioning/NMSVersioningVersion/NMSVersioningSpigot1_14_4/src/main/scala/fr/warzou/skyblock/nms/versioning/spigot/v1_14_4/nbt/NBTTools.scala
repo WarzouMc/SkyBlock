@@ -38,7 +38,7 @@ class NBTTools extends nbt.NBTTools {
 
   override def applyNBT[A](entityWrap: EntityWrap[A], bytes: Array[Byte]): Unit = {
     if (!entityWrap.entity.isInstanceOf[Entity]) throw new IllegalArgumentException("Not spigot entity !")
-    val entity = entityWrap.entity.asInstanceOf[Block]
+    val entity = entityWrap.entity.asInstanceOf[Entity]
     val nbtTagCompound = toNBTTagCompound(bytes)
     val craftEntity = entity.asInstanceOf[CraftEntity]
 
