@@ -3,6 +3,8 @@ dependencies {
 
     api project(":NMSVersioning:NMSVersioningAPI")
     implementation project(version("Spigot", "1_12_2"))
+    implementation project(version("Spigot", "1_13_2"))
+    implementation project(version("Spigot", "1_14_4"))
     implementation librairies.scala
 
     testImplementation librairies.scalaTest

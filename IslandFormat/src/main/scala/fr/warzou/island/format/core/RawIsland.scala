@@ -33,7 +33,7 @@ case class RawIsland(adapterAPI: AdapterAPI, uuid: UUID, name: String, originalV
   private def createFile(fileName: String): File = {
     createIslandsRoot()
     val islandFile = new File(root, s"$fileName.island")
-    if  (!islandFile.exists()) islandFile.createNewFile()
+    if (!islandFile.exists()) islandFile.createNewFile()
     islandFile
   }
 

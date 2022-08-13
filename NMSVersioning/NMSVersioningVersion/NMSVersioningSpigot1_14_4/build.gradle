@@ -1,0 +1,4 @@
+dependencies {
+    compileOnly librairies.spigot114
+    implementation librairies.spigot114API
+}

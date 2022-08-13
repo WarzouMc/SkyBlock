@@ -1,12 +1,12 @@
-package fr.warzou.skyblock.nms.versioning.spigot.v1_12_2.nbt
+package fr.warzou.skyblock.nms.versioning.spigot.v1_14_4.nbt
 
 import fr.warzou.skyblock.nms.versioning.api.block.BlockWrap
 import fr.warzou.skyblock.nms.versioning.api.nbt
 import fr.warzou.skyblock.nms.versioning.api.entity.EntityWrap
-import net.minecraft.server.v1_12_R1.{BlockPosition, NBTCompressedStreamTools, NBTTagCompound, NBTTagInt}
+import net.minecraft.server.v1_14_R1.{BlockPosition, NBTCompressedStreamTools, NBTTagCompound, NBTTagInt}
 import org.bukkit.block.Block
-import org.bukkit.craftbukkit.v1_12_R1.CraftWorld
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity
+import org.bukkit.craftbukkit.v1_14_R1.CraftWorld
+import org.bukkit.craftbukkit.v1_14_R1.entity.CraftEntity
 import org.bukkit.entity.{Entity, EntityType}
 
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream}

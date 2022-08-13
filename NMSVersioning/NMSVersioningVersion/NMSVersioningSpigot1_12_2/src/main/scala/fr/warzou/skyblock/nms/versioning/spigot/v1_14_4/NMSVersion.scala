@@ -1,4 +1,4 @@
-package fr.warzou.skyblock.nms.versioning.spigot.v1_12_2
+package fr.warzou.skyblock.nms.versioning.spigot.v1_14_4
 
 import fr.warzou.skyblock.adapter.api.AdapterAPI
 import fr.warzou.skyblock.nms.versioning.api

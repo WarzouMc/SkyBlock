@@ -15,4 +15,8 @@ include 'NMSVersioning:NMSVersioningVersion:NMSVersioningSpigot1_12_2'
 findProject(':NMSVersioning:NMSVersioningVersion:NMSVersioningSpigot1_12_2')?.name = 'NMSVersioningSpigot1_12_2'
 include 'NMSVersioning:NMSVersioningAPI'
 findProject(':NMSVersioning:NMSVersioningAPI')?.name = 'NMSVersioningAPI'
+include 'NMSVersioning:NMSVersioningVersion:NMSVersioningSpigot1_13_2'
+findProject(':NMSVersioning:NMSVersioningVersion:NMSVersioningSpigot1_13_2')?.name = 'NMSVersioningSpigot1_13_2'
+include 'NMSVersioning:NMSVersioningVersion:NMSVersioningSpigot1_14_4'
+findProject(':NMSVersioning:NMSVersioningVersion:NMSVersioningSpigot1_14_4')?.name = 'NMSVersioningSpigot1_14_4'
 
