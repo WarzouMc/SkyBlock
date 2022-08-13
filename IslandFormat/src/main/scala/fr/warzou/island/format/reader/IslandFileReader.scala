@@ -21,7 +21,7 @@ case class IslandFileReader(adapterAPI: AdapterAPI, fileName: String) extends Re
   private val reader = new FileInputStream(new File(root, s"$fileName"))
 
   override def read: RawIsland = {
-    plugin.logger.io(s"Read island file '$fileName'.")
+    plugin.logger.log(s"Read island file '$fileName'.")
     val version = readVersion()
     val uuid = readUUID()
     val islandName = readString()
@@ -34,7 +34,7 @@ case class IslandFileReader(adapterAPI: AdapterAPI, fileName: String) extends Re
     val entities = readEntities()
     reader.close()
 
-    plugin.logger.io(s"Island '$uuid' with name '$islandName' was successfully read from file '$fileName'.")
+    plugin.logger.log(s"Island '$uuid' with name '$islandName' was successfully read from file '$fileName'.")
     RawIsland(adapterAPI, uuid, islandName, version, cuboid, blocks.toList, entities)
   }
 
