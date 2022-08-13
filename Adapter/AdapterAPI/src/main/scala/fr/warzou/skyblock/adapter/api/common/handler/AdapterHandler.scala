@@ -13,7 +13,7 @@ abstract class AdapterHandler {
 
   def getEntitiesGetter(adapter: AdapterAPI): EntitiesGetter
 
-  def wrapperOf[A](clazz: Class[_ <: Wrappable[A]]): Wrapper[_ >: Any, A]
+  def wrapperOf[A <: Wrappable[A]](clazz: Class[_ <: Wrappable[A]]): Wrapper[_ >: Any, A]
 
-  def unwrapperOf[A](clazz: Class[_ <: Wrappable[A]]): Unwrapper[A, _ >: Any]
+  def unwrapperOf[A <: Wrappable[A]](clazz: Class[_ <: Wrappable[A]]): Unwrapper[A, _ >: Any]
 }

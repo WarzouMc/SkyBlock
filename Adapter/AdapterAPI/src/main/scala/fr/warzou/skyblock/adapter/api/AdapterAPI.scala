@@ -79,7 +79,7 @@ case class AdapterAPI(adapterHandler: AdapterHandler) {
    * @tparam A to type
    * @return a wrapper to A type
    */
-  def wrapperOf[A](wrappable: Wrappable[A]): Wrapper[_ >: Any, A] = wrapperOf[A](wrappable.getClass)
+  def wrapperOf[A <: Wrappable[A]](wrappable: Wrappable[A]): Wrapper[_ >: Any, A] = wrapperOf[A](wrappable.getClass)
 
   /**
    * Get the wrapper to the type A.
@@ -87,7 +87,7 @@ case class AdapterAPI(adapterHandler: AdapterHandler) {
    * @tparam A to type
    * @return a wrapper to type A
    */
-  def wrapperOf[A](clazz: Class[_ <: Wrappable[A]]): Wrapper[_ >: Any, A] = adapterHandler.wrapperOf(clazz)
+  def wrapperOf[A <: Wrappable[A]](clazz: Class[_ <: Wrappable[A]]): Wrapper[_ >: Any, A] = adapterHandler.wrapperOf(clazz)
 
   /**
    * Get the unwrapper from the type A.
@@ -95,7 +95,7 @@ case class AdapterAPI(adapterHandler: AdapterHandler) {
    * @tparam A from type
    * @return a unwrapper from type A
    */
-  def unwrapperOf[A](wrappable: Wrappable[A]): Unwrapper[A, _ >: Any] = unwrapperOf[A](wrappable.getClass)
+  def unwrapperOf[A <: Wrappable[A]](wrappable: Wrappable[A]): Unwrapper[A, _ >: Any] = unwrapperOf[A](wrappable.getClass)
 
   /**
    * Get the unwrapper from the type A.
@@ -103,7 +103,7 @@ case class AdapterAPI(adapterHandler: AdapterHandler) {
    * @tparam A from type
    * @return a unwrapper from type A
    */
-  def unwrapperOf[A](clazz: Class[_ <: Wrappable[A]]): Unwrapper[A, _ >: Any] = adapterHandler.unwrapperOf(clazz)
+  def unwrapperOf[A <: Wrappable[A]](clazz: Class[_ <: Wrappable[A]]): Unwrapper[A, _ >: Any] = adapterHandler.unwrapperOf(clazz)
 }
 
 case object AdapterAPI {

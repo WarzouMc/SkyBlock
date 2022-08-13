@@ -24,14 +24,14 @@ case class SpigotAdapterHandler(plugin: Plugin) extends AdapterHandler {
     NMSVersioningAPI.getVersionAPI(adapter.plugin).enumerateEntities(adapter, _)
       .map(adapter.wrapperOf[Entity](classOf[Entity]).wrap(_))
 
-  override def wrapperOf[A](clazz: Class[_ <: Wrappable[A]]): Wrapper[_ >: Any, A] = {
+  override def wrapperOf[A <: Wrappable[A]](clazz: Class[_ <: Wrappable[A]]): Wrapper[_ >: Any, A] = {
     (if (clazz.isAssignableFrom(classOf[Entity])) SpigotEntity
     else if (clazz.isAssignableFrom(classOf[Block])) SpigotBlock
     else if (clazz.isAssignableFrom(classOf[Location])) SpigotLocation
     else throw new UnsupportedOperationException("Unsupported class !")).asInstanceOf[Wrapper[_ >: Any, A]]
   }
 
-  override def unwrapperOf[A](clazz: Class[_ <: Wrappable[A]]): Unwrapper[A, _ >: Any] = {
+  override def unwrapperOf[A <: Wrappable[A]](clazz: Class[_ <: Wrappable[A]]): Unwrapper[A, _ >: Any] = {
     (if (clazz.isAssignableFrom(classOf[Entity])) SpigotEntity
     else if (clazz.isAssignableFrom(classOf[Block])) SpigotBlock
     else if (clazz.isAssignableFrom(classOf[Location])) SpigotLocation
