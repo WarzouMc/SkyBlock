@@ -117,7 +117,7 @@ case class SpigotIsland(private val moduleHandler: ModuleHandler, private val ra
         })
       })
     })
-    rawIsland.adapterAPI.entitiesGetter().enumerateEntity(rawIsland.adapterAPI, cuboid.normalize(rawIsland.adapterAPI).appendLocation(location))
+    rawIsland.adapterAPI.entitiesGetter.enumerateEntity(cuboid.normalize(rawIsland.adapterAPI).appendLocation(location))
       .filter(_.name != NamespacedKey.minecraft(EntityType.PLAYER.name().toLowerCase).toString).foreach(SpigotEntity.unwrap(_).remove())
   }
 

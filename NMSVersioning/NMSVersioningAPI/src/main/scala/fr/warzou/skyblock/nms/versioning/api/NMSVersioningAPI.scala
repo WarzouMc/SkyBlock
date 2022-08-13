@@ -20,7 +20,7 @@ case object NMSVersioningAPI {
 
   private def createNMSVersion(logger: Option[Logger], api: ServerAPI, version: ServerVersion): NMSVersion = {
     if (logger.isDefined) logger.get.log(api = false, s"NMS versioning load version $version.")
-    else System.out.println(s"[${api.getClass.getSimpleName}SkyBlock] Info : NMS versioning load version $version.")
+    else System.out.print(s"[${api.getClass.getSimpleName}SkyBlock] NMS versioning load version $version.")
     val nmsVersion = buildNMSVersion(api, version)
     loadedVersion.put(version, nmsVersion)
     nmsVersion

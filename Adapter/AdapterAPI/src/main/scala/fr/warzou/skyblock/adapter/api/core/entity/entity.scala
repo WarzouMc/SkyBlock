@@ -21,5 +21,5 @@ abstract class EntityWrapper[A]() extends Wrapper[A, Entity] with Unwrapper[Enti
 }
 
 trait EntitiesGetter {
-  def enumerateEntity(adapter: AdapterAPI, cuboid: Cuboid): List[Entity]
+  def enumerateEntity(cuboid: Cuboid): List[Entity]
 }

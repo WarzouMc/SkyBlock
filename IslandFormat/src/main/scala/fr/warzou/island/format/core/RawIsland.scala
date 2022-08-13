@@ -52,7 +52,7 @@ object RawIsland {
     if (cuboid.world.isEmpty)
       throw new IllegalStateException("Cannot find an unique world in cuboid !")
     val blocks = cuboid.enumerateBlocks(adapter, cuboid.world.get)
-    val entities = adapter.entitiesGetter().enumerateEntity(adapter, cuboid)
+    val entities = adapter.entitiesGetter.enumerateEntity(cuboid)
     RawIsland(adapter, UUID.randomUUID(), islandName, ServerVersion.from(adapter.plugin), cuboid, blocks, entities)
   }
 

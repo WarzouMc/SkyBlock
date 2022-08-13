@@ -9,6 +9,9 @@ import fr.warzou.skyblock.adapter.api.core.world.{Block, Location}
  * @param corner0 first corner who represent this cuboid
  * @param corner1 second corner who represent this cuboid
  * @param blocks Optionally a list of block for this cuboid
+ *
+ * @version 0.0.1
+ * @author Warzou
  */
 case class Cuboid(corner0: Location, corner1: Location, blocks: Option[List[Block]] = None) {
 
