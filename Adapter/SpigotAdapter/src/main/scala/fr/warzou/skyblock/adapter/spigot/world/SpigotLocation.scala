@@ -17,7 +17,7 @@ case class SpigotLocation(_world: Option[String], _x: Double, _y: Double, _z: Do
   override def y: Double = _y
   override def z: Double = _z
 
-  override def locationInWorld(name: String): Location = new SpigotLocation(Some(name), _x, _y, _z)
+  override def withWorld(name: String): Location = new SpigotLocation(Some(name), _x, _y, _z)
 
   override def block(world: String): Block =
     new SpigotBlock(Bukkit.getWorld(world).getBlockAt(blockX, blockY, blockZ))
