@@ -33,7 +33,7 @@ trait Block extends Wrappable[Block] {
 
 /**
  * Wrapper for minecraft block to [[Block]] and [[Block]] to minecraft block.
-
+ *
  * @tparam A minecraft block type
  * @version 0.0.1
  * @author Warzou
