@@ -1,11 +1,11 @@
-package fr.warzou.island.format.reader
+package fr.warzou.skyblock.format.island.reader
 
-import fr.warzou.island.format.core.RawIsland
-import fr.warzou.island.format.core.io.Reader
 import fr.warzou.skyblock.adapter.api.AdapterAPI
 import fr.warzou.skyblock.adapter.api.common.wrap.{Unwrapper, Wrapper}
 import fr.warzou.skyblock.adapter.api.core.entity.Entity
 import fr.warzou.skyblock.adapter.api.core.world.{Block, Location}
+import fr.warzou.skyblock.format.island.core.RawIsland
+import fr.warzou.skyblock.format.island.core.io.Reader
 import fr.warzou.skyblock.utils.cuboid.Cuboid
 import fr.warzou.skyblock.utils.{IOUtils, ServerVersion}
 

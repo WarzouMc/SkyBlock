@@ -1,10 +1,10 @@
 package fr.warzou.skyblock.spigot.main.common.module
 
-import fr.warzou.island.format.core.RawIsland
 import fr.warzou.skyblock.adapter.api.AdapterAPI
 import fr.warzou.skyblock.api.common.module.{Module, ModuleHandler}
 import fr.warzou.skyblock.api.core.island.Island
 import fr.warzou.skyblock.api.core.modules.island.IslandModule
+import fr.warzou.skyblock.format.island.core.RawIsland
 import fr.warzou.skyblock.spigot.main.core.island.SpigotIsland
 import fr.warzou.skyblock.spigot.main.core.module.SpigotIslandModule
 import fr.warzou.skyblock.utils.cuboid.Cuboid

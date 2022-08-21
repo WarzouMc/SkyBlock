@@ -1,9 +1,9 @@
 package fr.warzou.skyblock.api.core.modules.island
 
-import fr.warzou.island.format.core.RawIsland
 import fr.warzou.skyblock.adapter.api.AdapterAPI
 import fr.warzou.skyblock.api.common.module.Module
 import fr.warzou.skyblock.api.core.island.Island
+import fr.warzou.skyblock.format.island.core.RawIsland
 import fr.warzou.skyblock.utils.collection.map.mutable.BijectiveMap
 
 import java.io.File

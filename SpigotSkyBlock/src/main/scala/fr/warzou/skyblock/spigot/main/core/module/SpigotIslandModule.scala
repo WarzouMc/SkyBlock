@@ -1,10 +1,10 @@
 package fr.warzou.skyblock.spigot.main.core.module
 
-import fr.warzou.island.format.core.RawIsland
-import fr.warzou.island.format.reader.IslandFileReader
 import fr.warzou.skyblock.adapter.api.AdapterAPI
 import fr.warzou.skyblock.api.common.module.ModuleHandler
 import fr.warzou.skyblock.api.core.modules.island.IslandModule
+import fr.warzou.skyblock.format.island.core.RawIsland
+import fr.warzou.skyblock.format.island.reader.IslandFileReader
 import fr.warzou.skyblock.spigot.main.core.island.SpigotIsland
 import fr.warzou.skyblock.utils.island.IslandUtils
 

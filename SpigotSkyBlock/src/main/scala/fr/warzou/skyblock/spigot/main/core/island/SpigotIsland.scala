@@ -1,6 +1,5 @@
 package fr.warzou.skyblock.spigot.main.core.island
 
-import fr.warzou.island.format.core.RawIsland
 import fr.warzou.skyblock.adapter.api.AdapterAPI
 import fr.warzou.skyblock.adapter.api.core.entity.Entity
 import fr.warzou.skyblock.adapter.api.core.world.{Block, Location}
@@ -9,6 +8,7 @@ import fr.warzou.skyblock.adapter.spigot.world.SpigotLocation
 import fr.warzou.skyblock.api.common.module.ModuleHandler
 import fr.warzou.skyblock.api.core.island.Island
 import fr.warzou.skyblock.api.core.modules.island.IslandModule
+import fr.warzou.skyblock.format.island.core.RawIsland
 import fr.warzou.skyblock.nms.versioning.api.NMSVersioningAPI
 import fr.warzou.skyblock.nms.versioning.api.block.BlockWrap
 import fr.warzou.skyblock.nms.versioning.api.entity.EntityWrap

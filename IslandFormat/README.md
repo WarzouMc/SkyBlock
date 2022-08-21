@@ -5,6 +5,8 @@
 It used to create a save of a minecraft structure.
 
 ## File structure
+`ux` represent unsigned `x` byte.  
+`sx` represent signed `x` byte.
 
 <table style="text-align:center">
 <thead>
@@ -30,7 +32,7 @@ It used to create a save of a minecraft structure.
   </tr>
   <tr>
     <td>uuid</td>
-    <td colspan="3">u1[16]</td>
+    <td colspan="3">u16</td>
   </tr>
   <tr>
     <td>name</td>
@@ -147,15 +149,15 @@ It used to create a save of a minecraft structure.
     <td rowspan="3">location</td>
     <td rowspan="3">u3</td>
     <td style="font-style:italic">x</td>
-    <td>u1</td>
+    <td>s1</td>
   </tr>
   <tr>
     <td style="font-style:italic">y</td>
-    <td>u1</td>
+    <td>s1</td>
   </tr>
   <tr>
     <td style="font-style:italic">z</td>
-    <td>u1</td>
+    <td>s1</td>
   </tr>
   <tr>
     <td>type_name</td>

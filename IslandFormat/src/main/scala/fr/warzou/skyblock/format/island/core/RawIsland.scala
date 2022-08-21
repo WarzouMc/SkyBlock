@@ -1,12 +1,12 @@
-package fr.warzou.island.format.core
+package fr.warzou.skyblock.format.island.core
 
-import fr.warzou.island.format.core.io.{Reader, Writer}
-import fr.warzou.island.format.reader.IslandFileReader
-import fr.warzou.island.format.writer.IslandFileWriter
 import fr.warzou.skyblock.adapter.api.AdapterAPI
 import fr.warzou.skyblock.adapter.api.core.entity.Entity
 import fr.warzou.skyblock.adapter.api.core.plugin.MinecraftPlugin
 import fr.warzou.skyblock.adapter.api.core.world.Block
+import fr.warzou.skyblock.format.island.core.io.{Reader, Writer}
+import fr.warzou.skyblock.format.island.reader.IslandFileReader
+import fr.warzou.skyblock.format.island.writer.IslandFileWriter
 import fr.warzou.skyblock.utils.ServerVersion
 import fr.warzou.skyblock.utils.cuboid.Cuboid
 import fr.warzou.skyblock.utils.island.IslandUtils
