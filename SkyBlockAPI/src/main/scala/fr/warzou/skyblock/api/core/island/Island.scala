@@ -1,7 +1,8 @@
 package fr.warzou.skyblock.api.core.island
 
 import fr.warzou.skyblock.adapter.api.core.entity.Entity
-import fr.warzou.skyblock.adapter.api.core.world.{Block, Location}
+import fr.warzou.skyblock.adapter.api.core.world.block.Block
+import fr.warzou.skyblock.adapter.api.core.world.location.Location
 import fr.warzou.skyblock.api.core.saveable.Saveable
 import fr.warzou.skyblock.utils.ServerVersion
 import fr.warzou.skyblock.utils.cuboid.Cuboid

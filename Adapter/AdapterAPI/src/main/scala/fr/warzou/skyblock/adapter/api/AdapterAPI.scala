@@ -6,7 +6,7 @@ import fr.warzou.skyblock.adapter.api.common.logger.Logger
 import fr.warzou.skyblock.adapter.api.common.wrap.{Unwrapper, Wrappable, Wrapper}
 import fr.warzou.skyblock.adapter.api.core.entity.{EntitiesGetter, Entity}
 import fr.warzou.skyblock.adapter.api.core.plugin.MinecraftPlugin
-import fr.warzou.skyblock.adapter.api.core.world.Location
+import fr.warzou.skyblock.adapter.api.core.world.location.Location
 import fr.warzou.skyblock.utils.cuboid.Cuboid
 import fr.warzou.skyblock.utils.server.{ServerAPI, Spigot}
 

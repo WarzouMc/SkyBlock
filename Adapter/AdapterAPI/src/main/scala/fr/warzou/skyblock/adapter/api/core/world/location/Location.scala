@@ -1,6 +1,7 @@
-package fr.warzou.skyblock.adapter.api.core.world
+package fr.warzou.skyblock.adapter.api.core.world.location
 
-import fr.warzou.skyblock.adapter.api.common.wrap.{Unwrapper, Wrappable, Wrapper}
+import fr.warzou.skyblock.adapter.api.common.wrap.Wrappable
+import fr.warzou.skyblock.adapter.api.core.world.block.Block
 
 /**
  * A wrap of minecraft location.
@@ -12,6 +13,7 @@ trait Location extends Wrappable[Location] {
 
   /**
    * Returns an optionally world if is defined.
+   *
    * @return Optionally world if is defined
    */
   def world: Option[String]
@@ -32,11 +34,14 @@ trait Location extends Wrappable[Location] {
   def blockZ: Int
 
   def x: Double
+
   def y: Double
+
   def z: Double
 
   /**
    * Returns a new location with same coordinate and a different world.
+   *
    * @param world new world name
    * @return a new location with same coordinate and a different world
    */
@@ -44,12 +49,14 @@ trait Location extends Wrappable[Location] {
 
   /**
    * Return the block at this location.
+   *
    * @return optionally block if world is defined
    */
   def block: Option[Block] = world.map(block)
 
   /**
    * Returns the block at this location coordinate in a target world.
+   *
    * @param world a world name
    * @return the block at this location coordinate in a target world
    */
@@ -57,6 +64,7 @@ trait Location extends Wrappable[Location] {
 
   /**
    * Returns a new location with coordinate of this was add with another location
+   *
    * @param location a location
    * @return new location with coordinate of this was add with another location
    */
@@ -64,6 +72,7 @@ trait Location extends Wrappable[Location] {
 
   /**
    * Create a new location by adding the coordinates with x, y, z.
+   *
    * @param x append to x
    * @param y append to y
    * @param z append to z

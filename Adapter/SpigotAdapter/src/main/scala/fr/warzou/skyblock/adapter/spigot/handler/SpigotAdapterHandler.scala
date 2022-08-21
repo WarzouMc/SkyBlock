@@ -5,7 +5,8 @@ import fr.warzou.skyblock.adapter.api.common.handler.AdapterHandler
 import fr.warzou.skyblock.adapter.api.common.wrap.{Unwrapper, Wrappable, Wrapper}
 import fr.warzou.skyblock.adapter.api.core.entity.{EntitiesGetter, Entity}
 import fr.warzou.skyblock.adapter.api.core.plugin.MinecraftPlugin
-import fr.warzou.skyblock.adapter.api.core.world.{Block, Location}
+import fr.warzou.skyblock.adapter.api.core.world.block.Block
+import fr.warzou.skyblock.adapter.api.core.world.location.Location
 import fr.warzou.skyblock.adapter.spigot.entity.SpigotEntity
 import fr.warzou.skyblock.adapter.spigot.plugin.SpigotPlugin
 import fr.warzou.skyblock.adapter.spigot.world.{SpigotBlock, SpigotLocation}

@@ -2,7 +2,8 @@ package fr.warzou.skyblock.format.island.writer
 
 import fr.warzou.skyblock.adapter.api.core.entity.Entity
 import fr.warzou.skyblock.adapter.api.core.plugin.MinecraftPlugin
-import fr.warzou.skyblock.adapter.api.core.world.{Block, Location}
+import fr.warzou.skyblock.adapter.api.core.world.block.Block
+import fr.warzou.skyblock.adapter.api.core.world.location.Location
 import fr.warzou.skyblock.format.island.core.io.Writer
 import fr.warzou.skyblock.utils.ServerVersion
 import fr.warzou.skyblock.utils.collection.ArrayUtils

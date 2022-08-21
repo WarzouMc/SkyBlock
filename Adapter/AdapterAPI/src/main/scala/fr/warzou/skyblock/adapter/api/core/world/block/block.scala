@@ -1,4 +1,4 @@
-package fr.warzou.skyblock.adapter.api.core.world
+package fr.warzou.skyblock.adapter.api.core.world.block
 
 import fr.warzou.skyblock.adapter.api.common.wrap.{Unwrapper, Wrappable, Wrapper}
 

@@ -2,7 +2,8 @@ package fr.warzou.skyblock.spigot.main.core.island
 
 import fr.warzou.skyblock.adapter.api.AdapterAPI
 import fr.warzou.skyblock.adapter.api.core.entity.Entity
-import fr.warzou.skyblock.adapter.api.core.world.{Block, Location}
+import fr.warzou.skyblock.adapter.api.core.world.block.Block
+import fr.warzou.skyblock.adapter.api.core.world.location.Location
 import fr.warzou.skyblock.adapter.spigot.entity.SpigotEntity
 import fr.warzou.skyblock.adapter.spigot.world.SpigotLocation
 import fr.warzou.skyblock.api.common.module.ModuleHandler

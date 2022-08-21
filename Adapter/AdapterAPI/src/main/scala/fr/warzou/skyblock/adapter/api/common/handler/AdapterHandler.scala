@@ -4,7 +4,7 @@ import fr.warzou.skyblock.adapter.api.AdapterAPI
 import fr.warzou.skyblock.adapter.api.common.wrap.{Unwrapper, Wrappable, Wrapper}
 import fr.warzou.skyblock.adapter.api.core.entity.EntitiesGetter
 import fr.warzou.skyblock.adapter.api.core.plugin.MinecraftPlugin
-import fr.warzou.skyblock.adapter.api.core.world.Location
+import fr.warzou.skyblock.adapter.api.core.world.location.Location
 
 abstract class AdapterHandler {
 

@@ -1,7 +1,8 @@
 package fr.warzou.skyblock.utils.cuboid
 
 import fr.warzou.skyblock.adapter.api.AdapterAPI
-import fr.warzou.skyblock.adapter.api.core.world.{Block, Location}
+import fr.warzou.skyblock.adapter.api.core.world.block.Block
+import fr.warzou.skyblock.adapter.api.core.world.location.Location
 
 /**
  * Representation of cuboid mathematical object.
@@ -9,7 +10,6 @@ import fr.warzou.skyblock.adapter.api.core.world.{Block, Location}
  * @param corner0 first corner who represent this cuboid
  * @param corner1 second corner who represent this cuboid
  * @param blocks Optionally a list of block for this cuboid
- *
  * @version 0.0.1
  * @author Warzou
  */

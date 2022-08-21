@@ -43,20 +43,24 @@ The main goal of this file structure is to store a world into a single file.
     <td colspan="3">u8</td>
   </tr>
   <tr>
+    <td>last_save</td>
+    <td colspan="3">u8</td>
+  </tr>
+  <tr>
+    <td>uuid</td>
+    <td colspan="3">u16</td>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td colspan="3"><a href="#String-structure">string</a></td>
+  </tr>
+  <tr>
     <td>island_statistics</td>
     <td colspan="3"><a href="#Stats-structure">stats</a></td>
   </tr>
   <tr>
     <td>island</td>
     <td colspan="3"><a href="#World-structure">world</a>/<a href="#Sector-structure">sector</a> (map_type=0/1)</td>
-  </tr>
-  <tr>
-    <td>dim_count</td>
-    <td colspan="3">u1</td>
-  </tr>
-  <tr>
-    <td>dims</td>
-    <td colspan="3"><a href="#Dim-structure">dim</a>[dim_count]</td>
   </tr>
 </tbody>
 </table>
@@ -72,6 +76,10 @@ The main goal of this file structure is to store a world into a single file.
   </tr>
 </thead>
 <tbody>
+  <tr>
+    <td>start_island_uuid</td>
+    <td>u16</td>
+  </tr>
   <tr>
     <td>spawn_location</td>
     <td><a href="#Location-structure">location</a></td>
@@ -89,25 +97,6 @@ The main goal of this file structure is to store a world into a single file.
     <td><a href="#Player-structure">player</a>[players_count]</td>
   </tr>
 </tbody>
-</table>
-
-# Dim structure
-
-<table style="text-align:center">
-<thead>
-  <tr>
-    <th>Name</th>
-    <th>Byte</th>
-  </tr>
-</thead>
-  <tr>
-    <td>region_count</td>
-    <td>u1</td>
-  </tr>
-  <tr>
-    <td>regions</td>
-    <td><a href="#Region-structure">region</a>[region_count]</td>
-  </tr>
 </table>
 
 ## Player structure
@@ -191,6 +180,52 @@ The main goal of this file structure is to store a world into a single file.
 </tbody>
 </table>
 
+# World structure
+
+<table style="text-align:center">
+<thead>
+  <tr>
+    <th>Name</th>
+    <th>Byte</th>
+  </tr>
+</thead>
+  <tr>
+    <td>level_name</td>
+    <td><a href="#String-structure">string</a></td>
+  </tr>
+  <tr>
+    <td>dim_count</td>
+    <td>u1</td>
+  </tr>
+  <tr>
+    <td>dims</td>
+    <td><a href="#Dim-structure">dim</a>[dim_count]</td>
+  </tr>
+</table>
+
+# Dim structure
+
+<table style="text-align:center">
+<thead>
+  <tr>
+    <th>Name</th>
+    <th>Byte</th>
+  </tr>
+</thead>
+  <tr>
+    <td>dim_id</td>
+    <td>u1</td>
+  </tr>
+  <tr>
+    <td>region_count</td>
+    <td>u1</td>
+  </tr>
+  <tr>
+    <td>regions</td>
+    <td><a href="#Region-structure">region</a>[region_count]</td>
+  </tr>
+</table>
+
 ## Region structure
 
 <table style="text-align:center">
@@ -210,8 +245,12 @@ The main goal of this file structure is to store a world into a single file.
     <td>s4</td>
   </tr>
   <tr>
+    <td>mca_file_length</td>
+    <td>u4</td>
+  </tr>
+  <tr>
     <td>region</td>
-    <td><a href="https://minecraft.fandom.com/wiki/Anvil_file_format">.mca</a> file</td>
+    <td><a href="https://minecraft.fandom.com/wiki/Anvil_file_format" target="_blank">.mca</a> file</td>
   </tr>
 </tbody>
 </table>
@@ -280,6 +319,27 @@ The main goal of this file structure is to store a world into a single file.
   </tr>
   <tr>
     <td>bytes</td>
+    <td>byte[length]</td>
+  </tr>
+</tbody>
+</table>
+
+## String structure
+
+<table style="text-align:center">
+<thread>
+  <tr>
+    <th>Name</th>
+    <th colspan="3">Byte</th>
+  </tr>
+</thread>
+<tbody>
+  <tr>
+    <td>length</td>
+    <td>u1</td>
+  </tr>
+  <tr>
+    <td>chars</td>
     <td>byte[length]</td>
   </tr>
 </tbody>

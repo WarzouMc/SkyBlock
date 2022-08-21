@@ -1,8 +1,10 @@
 package fr.warzou.skyblock.adapter.api.core.entity
 
 import fr.warzou.skyblock.adapter.api.common.wrap.{Unwrapper, Wrappable, Wrapper}
-import fr.warzou.skyblock.adapter.api.core.world.Location
+import fr.warzou.skyblock.adapter.api.core.world.location.Location
 import fr.warzou.skyblock.utils.cuboid.Cuboid
+
+import java.util.UUID
 
 /**
  * A wrap of minecraft entity.

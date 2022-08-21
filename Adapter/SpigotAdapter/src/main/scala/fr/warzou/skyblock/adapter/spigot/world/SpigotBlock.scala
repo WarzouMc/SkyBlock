@@ -1,7 +1,7 @@
 package fr.warzou.skyblock.adapter.spigot.world
 
 import fr.warzou.skyblock.adapter.api.common.wrap.{Unwrapper, Wrapper}
-import fr.warzou.skyblock.adapter.api.core.world.{Block, BlockWrapper}
+import fr.warzou.skyblock.adapter.api.core.world.block.{Block, BlockWrapper}
 import fr.warzou.skyblock.nms.versioning.api.NMSVersioningAPI
 import fr.warzou.skyblock.utils.ServerVersion
 import fr.warzou.skyblock.utils.server.Spigot
