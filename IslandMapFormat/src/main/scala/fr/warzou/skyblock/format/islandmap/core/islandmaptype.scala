@@ -29,10 +29,11 @@ sealed trait IslandMap {
 
 // map_type 1
 case class SectorMap(version: ServerVersion, uuid: UUID, name: String, startIsland: UUID, creation: Long,
-                     spawnLocation: Option[Location], memberSpawnLocation: Option[Location], sector: Sector, players: List[Player])
+                     spawnLocation: Option[Location], memberSpawnLocation: Option[Location], sectors: List[Sector],
+                     players: List[Player])
   extends IslandMap
 // map_type 0
 case class IndividualWorld(version: ServerVersion, uuid: UUID, name: String, startIsland: UUID, creation: Long,
-                           spawnLocation: Option[Location], memberSpawnLocation: Option[Location], world: World,
+                           spawnLocation: Option[Location], memberSpawnLocation: Option[Location], worlds: List[World],
                            players: List[Player])
   extends IslandMap

@@ -7,9 +7,12 @@ import fr.warzou.skyblock.adapter.api.core.entity.{EntitiesGetter, Entity}
 import fr.warzou.skyblock.adapter.api.core.plugin.MinecraftPlugin
 import fr.warzou.skyblock.adapter.api.core.world.block.Block
 import fr.warzou.skyblock.adapter.api.core.world.location.Location
+import fr.warzou.skyblock.adapter.api.core.world.world.World
 import fr.warzou.skyblock.adapter.spigot.entity.SpigotEntity
 import fr.warzou.skyblock.adapter.spigot.plugin.SpigotPlugin
-import fr.warzou.skyblock.adapter.spigot.world.{SpigotBlock, SpigotLocation}
+import fr.warzou.skyblock.adapter.spigot.world.block.SpigotBlock
+import fr.warzou.skyblock.adapter.spigot.world.location.SpigotLocation
+import fr.warzou.skyblock.adapter.spigot.world.world.SpigotWorld
 import fr.warzou.skyblock.nms.versioning.api.NMSVersioningAPI
 import org.bukkit.plugin.Plugin
 

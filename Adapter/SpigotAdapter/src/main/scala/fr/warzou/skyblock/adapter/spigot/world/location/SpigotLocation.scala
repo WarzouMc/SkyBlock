@@ -1,8 +1,9 @@
-package fr.warzou.skyblock.adapter.spigot.world
+package fr.warzou.skyblock.adapter.spigot.world.location
 
 import fr.warzou.skyblock.adapter.api.common.wrap.{Unwrapper, Wrapper}
 import fr.warzou.skyblock.adapter.api.core.world.block.Block
 import fr.warzou.skyblock.adapter.api.core.world.location.Location
+import fr.warzou.skyblock.adapter.spigot.world.block.SpigotBlock
 import org.bukkit
 import org.bukkit.Bukkit
 

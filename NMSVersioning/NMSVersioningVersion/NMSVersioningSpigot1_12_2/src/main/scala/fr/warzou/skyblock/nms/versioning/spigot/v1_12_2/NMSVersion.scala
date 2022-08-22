@@ -5,9 +5,11 @@ import fr.warzou.skyblock.nms.versioning.api
 import fr.warzou.skyblock.nms.versioning.api.block.BlockWrap
 import fr.warzou.skyblock.nms.versioning.api.entity.EntityWrap
 import fr.warzou.skyblock.nms.versioning.api.nbt.NBTTools
+import fr.warzou.skyblock.nms.versioning.api.world.NMSWorld
+import fr.warzou.skyblock.nms.versioning.spigot.v1_12_2.world.NMSWorld
 import fr.warzou.skyblock.utils.cuboid.Cuboid
 import net.minecraft.server.v1_12_R1.AxisAlignedBB
-import org.bukkit.Bukkit
+import org.bukkit.{Bukkit, World}
 import org.bukkit.block.Block
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld
 import org.bukkit.entity.{Entity, EntityType}
@@ -28,6 +30,8 @@ class NMSVersion extends api.NMSVersion {
     if (!_entity.isInstanceOf[Entity]) throw new IllegalArgumentException("Cannot wrap a non-spigot entity !")
     EntityWrap(_entity)
   }
+
+  override def getNMSWorld(world: World): NMSWorld = NMSWorld(world)
 
   override def enumerateEntities(adapter: AdapterAPI, cuboid: Cuboid): List[_] = {
     val bb: AxisAlignedBB = new AxisAlignedBB(cuboid.minX, cuboid.minY, cuboid.minZ, cuboid.maxX, cuboid.maxY, cuboid.maxZ)

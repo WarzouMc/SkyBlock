@@ -59,8 +59,12 @@ The main goal of this file structure is to store a world into a single file.
     <td colspan="3"><a href="#Stats-structure">stats</a></td>
   </tr>
   <tr>
+    <td>world/sector_count</td>
+    <td colspan="3">u1</td>
+  </tr>
+  <tr>
     <td>island</td>
-    <td colspan="3"><a href="#World-structure">world</a>/<a href="#Sector-structure">sector</a> (map_type=0/1)</td>
+    <td colspan="3"><a href="#World-structure">world</a>/<a href="#Sector-structure">sector</a>[world/sector_count] (map_type=0/1)</td>
   </tr>
 </tbody>
 </table>
@@ -180,7 +184,7 @@ The main goal of this file structure is to store a world into a single file.
 </tbody>
 </table>
 
-# World structure
+## World structure
 
 <table style="text-align:center">
 <thead>
@@ -190,30 +194,11 @@ The main goal of this file structure is to store a world into a single file.
   </tr>
 </thead>
   <tr>
-    <td>level_name</td>
-    <td><a href="#String-structure">string</a></td>
-  </tr>
-  <tr>
-    <td>dim_count</td>
+    <td>id</td>
     <td>u1</td>
   </tr>
   <tr>
-    <td>dims</td>
-    <td><a href="#Dim-structure">dim</a>[dim_count]</td>
-  </tr>
-</table>
-
-# Dim structure
-
-<table style="text-align:center">
-<thead>
-  <tr>
-    <th>Name</th>
-    <th>Byte</th>
-  </tr>
-</thead>
-  <tr>
-    <td>dim_id</td>
+    <td>type_id</td>
     <td>u1</td>
   </tr>
   <tr>

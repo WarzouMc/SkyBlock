@@ -1,6 +1,6 @@
 package fr.warzou.skyblock.spigot.main
 
-import fr.warzou.skyblock.adapter.spigot.world.SpigotLocation
+import fr.warzou.skyblock.adapter.spigot.world.location.SpigotLocation
 import fr.warzou.skyblock.spigot.main.common.module.SpigotModuleHandler
 import fr.warzou.skyblock.utils.cuboid.Cuboid
 import org.bukkit.Bukkit

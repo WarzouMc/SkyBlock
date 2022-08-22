@@ -1,4 +1,4 @@
-package fr.warzou.skyblock.adapter.spigot.world
+package fr.warzou.skyblock.adapter.spigot.world.block
 
 import fr.warzou.skyblock.adapter.api.common.wrap.{Unwrapper, Wrapper}
 import fr.warzou.skyblock.adapter.api.core.world.block.{Block, BlockWrapper}
@@ -34,7 +34,7 @@ case class SpigotBlock(_block: block.Block) extends Block {
 }
 
 case object SpigotBlock extends BlockWrapper[block.Block] {
-  override def wrap(bukkitBlock: block.Block): Block = new SpigotBlock(bukkitBlock)
+  override def wrap(bukkitBlock: block.Block): Block = SpigotBlock(bukkitBlock)
 
   override def unwrap(wrappedBlock: Block): block.Block = wrappedBlock match {
     case SpigotBlock(_block) => _block

@@ -3,7 +3,8 @@ package fr.warzou.skyblock.format.islandmap.io.v0.writer
 import fr.warzou.skyblock.adapter.api.AdapterAPI
 import fr.warzou.skyblock.adapter.api.core.entity.Player
 import fr.warzou.skyblock.adapter.api.core.world.location.Location
-import fr.warzou.skyblock.adapter.api.core.world.world.{Dimension, Region}
+import fr.warzou.skyblock.adapter.api.core.world.sector.Sector
+import fr.warzou.skyblock.adapter.api.core.world.world.{Region, World}
 import fr.warzou.skyblock.format.islandmap.core.{IndividualWorld, IslandMap, SectorMap}
 import fr.warzou.skyblock.format.islandmap.core.io.Writer
 import fr.warzou.skyblock.utils.{ServerVersion, Tick}
@@ -25,6 +26,7 @@ class WriterV0(adapter: AdapterAPI) extends Writer {
 
     writeCommonInfo()
     writeStatistics()
+    if (mapType() == 0) writeWorlds() else writeSectors()
   }
 
   private def writeCommonInfo(): Unit = {
@@ -81,24 +83,21 @@ class WriterV0(adapter: AdapterAPI) extends Writer {
     writeInt(player.xpTotal)
   }
 
-  private def writeWorld(): Unit = {
-    val world = islandMap.asInstanceOf[IndividualWorld].world
-    writeString(world.levelName)
-    write(world.dimCount)
-    world.dimensions.foreach(writeDimension)
+  private def writeWorlds(): Unit = islandMap.asInstanceOf[IndividualWorld].worlds.foreach(writeWorld)
+
+  private def writeWorld(world: World): Unit = {
+    write(world.id)
+    write(world.worldEnvironmentId)
+    write(world.regionCount)
+    world.regions.foreach(writeRegion)
   }
 
-  private def writeSector(): Unit = {
-    val sector = islandMap.asInstanceOf[SectorMap].sector
+  private def writeSectors(): Unit = islandMap.asInstanceOf[SectorMap].sectors.foreach(writeSector)
+
+  private def writeSector(sector: Sector): Unit = {
     writeLocation(sector.location)
     writeShort(sector.width.toShort)
     writeShort(sector.length.toShort)
-  }
-
-  private def writeDimension(dimension: Dimension): Unit = {
-    write(dimension.id)
-    write(dimension.regions.length)
-    dimension.regions.foreach(writeRegion)
   }
 
   private def writeRegion(region: Region): Unit = {

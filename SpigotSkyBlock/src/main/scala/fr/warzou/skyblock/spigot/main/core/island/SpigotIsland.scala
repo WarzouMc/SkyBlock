@@ -5,7 +5,7 @@ import fr.warzou.skyblock.adapter.api.core.entity.Entity
 import fr.warzou.skyblock.adapter.api.core.world.block.Block
 import fr.warzou.skyblock.adapter.api.core.world.location.Location
 import fr.warzou.skyblock.adapter.spigot.entity.SpigotEntity
-import fr.warzou.skyblock.adapter.spigot.world.SpigotLocation
+import fr.warzou.skyblock.adapter.spigot.world.location.SpigotLocation
 import fr.warzou.skyblock.api.common.module.ModuleHandler
 import fr.warzou.skyblock.api.core.island.Island
 import fr.warzou.skyblock.api.core.modules.island.IslandModule

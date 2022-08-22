@@ -3,7 +3,7 @@ package fr.warzou.skyblock.adapter.spigot.entity
 import fr.warzou.skyblock.adapter.api.common.wrap.{Unwrapper, Wrapper}
 import fr.warzou.skyblock.adapter.api.core.entity.{Entity, EntityWrapper}
 import fr.warzou.skyblock.adapter.api.core.world.location.Location
-import fr.warzou.skyblock.adapter.spigot.world.SpigotLocation
+import fr.warzou.skyblock.adapter.spigot.world.location.SpigotLocation
 import fr.warzou.skyblock.nms.versioning.api.NMSVersioningAPI
 import fr.warzou.skyblock.nms.versioning.api.entity.EntityWrap
 import fr.warzou.skyblock.utils.ServerVersion

@@ -5,6 +5,7 @@ import fr.warzou.skyblock.api.common.module.{Module, ModuleHandler}
 import fr.warzou.skyblock.api.core.island.Island
 import fr.warzou.skyblock.api.core.modules.island.IslandModule
 import fr.warzou.skyblock.utils.cuboid.Cuboid
+import fr.warzou.skyblock.utils.island.IslandMapUtils
 
 import java.io.File
 import java.util.UUID
@@ -28,7 +29,6 @@ case class SkyBlock(handler: ModuleHandler) {
 
   def createIsland(name: String, cuboid: Cuboid): Island = handler.createIsland(name, cuboid)
 
-  //todo getIsland
   def getIsland(uuid: UUID): Option[Island] = handler.getModule[IslandModule](classOf[IslandModule]).get.islandByUUID(uuid)
 
   def getIsland(name: String): Island = handler.getModule(classOf[IslandModule]).get.islandsByName(name).head
@@ -41,5 +41,12 @@ case class SkyBlock(handler: ModuleHandler) {
     // create islands folder
     val islands = new File(folder, "islands")
     islands.mkdir()
+
+    // create world directory
+    val worlds = new File(folder, "worlds")
+    val stored = new File(worlds, "stored")
+    val used = new File(worlds, "used")
+    stored.mkdirs()
+    used.mkdir()
   }
 }
