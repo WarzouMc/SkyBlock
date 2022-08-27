@@ -35,5 +35,8 @@ case class SpigotDimension(plugin: MinecraftPlugin, world: World, nmsWorld: NMSW
     }
   }
 
-  private[world] def load(): Unit = Bukkit.createWorld(WorldCreator.name(s"${world.name}_$name"))
+  private[world] def load(): Unit = {
+    //todo create .id file (think about another solution)
+    Bukkit.createWorld(WorldCreator.name(s"${world.name}_$name"))
+  }
 }
