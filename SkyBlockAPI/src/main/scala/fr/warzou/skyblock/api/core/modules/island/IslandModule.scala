@@ -31,6 +31,8 @@ abstract class IslandModule(private val adapter: AdapterAPI) extends Module {
 
   def setFile(target: Island, newFileName: String): Unit = linksMap.map.setValue(target.uuid, newFileName)
 
+  def allIsland(): List[Island] = islands.values.toList
+
   def islandByUUID(uuid: UUID): Option[Island] = islands.fromKey(uuid)
 
   def islandByFileName(fileName: String): Option[Island] = linksMap.getUUID(fileName) match {

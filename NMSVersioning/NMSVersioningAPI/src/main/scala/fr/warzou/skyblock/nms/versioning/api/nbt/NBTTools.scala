@@ -2,6 +2,7 @@ package fr.warzou.skyblock.nms.versioning.api.nbt
 
 import fr.warzou.skyblock.nms.versioning.api.block.BlockWrap
 import fr.warzou.skyblock.nms.versioning.api.entity.EntityWrap
+import fr.warzou.skyblock.nms.versioning.api.nbt.compress.mca.MCACompresser
 
 trait NBTTools {
 
@@ -12,4 +13,6 @@ trait NBTTools {
   def applyNBT[A](entity: EntityWrap[A], bytes: Array[Byte]): Unit
 
   def applyNBT[A](block: BlockWrap[A], bytes: Array[Byte]): Unit
+
+  def mcaCompresser(array: Array[Byte]): MCACompresser
 }

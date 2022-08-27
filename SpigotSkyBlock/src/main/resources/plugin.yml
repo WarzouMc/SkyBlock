@@ -5,3 +5,4 @@ main: fr.warzou.skyblock.spigot.main.SpigotSkyBlock
 commands:
   place:
     description: place an island...
+  tpp:

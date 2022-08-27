@@ -5,7 +5,7 @@ import fr.warzou.skyblock.nms.versioning.api
 import fr.warzou.skyblock.nms.versioning.api.block.BlockWrap
 import fr.warzou.skyblock.nms.versioning.api.entity.EntityWrap
 import fr.warzou.skyblock.nms.versioning.api.nbt.NBTTools
-import fr.warzou.skyblock.nms.versioning.api.world.NMSWorld
+import fr.warzou.skyblock.nms.versioning.api.world.WorldType
 import fr.warzou.skyblock.nms.versioning.spigot.v1_14_4.world.NMSWorld
 import fr.warzou.skyblock.utils.cuboid.Cuboid
 import net.minecraft.server.v1_14_R1.AxisAlignedBB
@@ -31,7 +31,7 @@ class NMSVersion extends api.NMSVersion {
     EntityWrap(_entity)
   }
 
-  override def getNMSWorld(world: World): NMSWorld = NMSWorld(world)
+  override def getNMSWorld(world: World, worldType: WorldType): NMSWorld = NMSWorld(world, worldType)
 
   override def enumerateEntities(adapter: AdapterAPI, cuboid: Cuboid): List[_] = {
     val bb: AxisAlignedBB = new AxisAlignedBB(cuboid.minX, cuboid.minY, cuboid.minZ, cuboid.maxX, cuboid.maxY, cuboid.maxZ)

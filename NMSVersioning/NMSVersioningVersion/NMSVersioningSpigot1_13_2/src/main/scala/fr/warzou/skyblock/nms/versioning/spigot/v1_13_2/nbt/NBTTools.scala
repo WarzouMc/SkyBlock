@@ -3,6 +3,7 @@ package fr.warzou.skyblock.nms.versioning.spigot.v1_13_2.nbt
 import fr.warzou.skyblock.nms.versioning.api.block.BlockWrap
 import fr.warzou.skyblock.nms.versioning.api.nbt
 import fr.warzou.skyblock.nms.versioning.api.entity.EntityWrap
+import fr.warzou.skyblock.nms.versioning.api.nbt.compress.mca.MCACompresser
 import net.minecraft.server.v1_13_R2.{BlockPosition, NBTCompressedStreamTools, NBTTagCompound, NBTTagInt}
 import org.bukkit.block.Block
 import org.bukkit.craftbukkit.v1_13_R2.CraftWorld
@@ -66,4 +67,7 @@ class NBTTools extends nbt.NBTTools {
   }
 
   private def toNBTTagCompound(bytes: Array[Byte]): NBTTagCompound = NBTCompressedStreamTools.a(new ByteArrayInputStream(bytes))
+
+  //todo
+  override def mcaCompresser(array: Array[Byte]): MCACompresser = ???
 }

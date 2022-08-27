@@ -68,9 +68,9 @@ class HashBijectiveMap[K, V](private var capacity: Int, private val loadFactor: 
     if (array(_index) == null) None else array(_index).getKey(value)
   }
 
-  override def keys: mutable.Set[K] = keySet
+  override def keys: Set[K] = keySet.toSet
 
-  override def values: mutable.Set[V] = valueSet
+  override def values: Set[V] = valueSet.toSet
 
   override def iterator: Iterator[Entry[K, V]] = Itr(array)
 

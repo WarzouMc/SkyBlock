@@ -34,6 +34,6 @@ case class SectorMap(version: ServerVersion, uuid: UUID, name: String, startIsla
   extends IslandMap
 // map_type 0
 case class IndividualWorld(version: ServerVersion, uuid: UUID, name: String, startIsland: UUID, creation: Long,
-                           spawnLocation: Option[Location], memberSpawnLocation: Option[Location], worlds: List[World],
+                           spawnLocation: Option[Location], memberSpawnLocation: Option[Location], world: World,
                            players: List[Player])
   extends IslandMap

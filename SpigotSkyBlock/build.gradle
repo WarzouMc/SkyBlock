@@ -8,6 +8,7 @@ dependencies {
 
     api project(':SkyBlockAPI')
     api project(':IslandFormat')
+    api project(':IslandMapFormat')
     api project(':Utils')
     api project(':Adapter:SpigotAdapter')
 }

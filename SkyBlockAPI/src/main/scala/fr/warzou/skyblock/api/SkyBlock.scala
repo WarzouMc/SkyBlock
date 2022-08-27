@@ -29,6 +29,8 @@ case class SkyBlock(handler: ModuleHandler) {
 
   def createIsland(name: String, cuboid: Cuboid): Island = handler.createIsland(name, cuboid)
 
+  def islandList(): List[Island] = handler.getModule[IslandModule](classOf[IslandModule]).get.allIsland()
+
   def getIsland(uuid: UUID): Option[Island] = handler.getModule[IslandModule](classOf[IslandModule]).get.islandByUUID(uuid)
 
   def getIsland(name: String): Island = handler.getModule(classOf[IslandModule]).get.islandsByName(name).head

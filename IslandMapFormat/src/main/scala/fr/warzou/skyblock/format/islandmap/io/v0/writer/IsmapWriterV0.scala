@@ -4,17 +4,17 @@ import fr.warzou.skyblock.adapter.api.AdapterAPI
 import fr.warzou.skyblock.adapter.api.core.entity.Player
 import fr.warzou.skyblock.adapter.api.core.world.location.Location
 import fr.warzou.skyblock.adapter.api.core.world.sector.Sector
-import fr.warzou.skyblock.adapter.api.core.world.world.{Region, World}
+import fr.warzou.skyblock.adapter.api.core.world.world.{Dimension, Region, World}
 import fr.warzou.skyblock.format.islandmap.core.{IndividualWorld, IslandMap, SectorMap}
 import fr.warzou.skyblock.format.islandmap.core.io.Writer
-import fr.warzou.skyblock.utils.{ServerVersion, Tick}
+import fr.warzou.skyblock.utils.{ServerVersion, TickUtils}
 import org.jetbrains.annotations.NotNull
 
-import java.io.OutputStream
+import java.io.{File, FileInputStream, OutputStream}
 import java.nio.ByteBuffer
 import java.util.UUID
 
-class WriterV0(adapter: AdapterAPI) extends Writer {
+class IsmapWriterV0(adapter: AdapterAPI) extends Writer {
   private var outputStream: OutputStream = _
   private var islandMap: IslandMap = _
 
@@ -26,7 +26,7 @@ class WriterV0(adapter: AdapterAPI) extends Writer {
 
     writeCommonInfo()
     writeStatistics()
-    if (mapType() == 0) writeWorlds() else writeSectors()
+    if (mapType() == 0) writeWorld() else writeSectors()
   }
 
   private def writeCommonInfo(): Unit = {
@@ -38,7 +38,7 @@ class WriterV0(adapter: AdapterAPI) extends Writer {
     write(serverVersion.revision)
 
     writeLong(islandMap.creation)
-    writeLong(Tick.millisToTick(System.currentTimeMillis()))
+    writeLong(TickUtils.millisToTick(System.currentTimeMillis()))
 
     writeUUID(islandMap.uuid)
     writeString(islandMap.name)
@@ -83,13 +83,28 @@ class WriterV0(adapter: AdapterAPI) extends Writer {
     writeInt(player.xpTotal)
   }
 
-  private def writeWorlds(): Unit = islandMap.asInstanceOf[IndividualWorld].worlds.foreach(writeWorld)
+  private def writeWorld(): Unit = {
+    val world = islandMap.asInstanceOf[IndividualWorld].world
+    writeString(world.name)
+    writeFile(world.level)
+    write(world.dimCount)
+    world.dimensions.foreach(writeDimension)
+  }
 
-  private def writeWorld(world: World): Unit = {
-    write(world.id)
-    write(world.worldEnvironmentId)
-    write(world.regionCount)
-    world.regions.foreach(writeRegion)
+  private def writeDimension(dimension: Dimension): Unit = {
+    write(if (dimension.isCustom) 1 else 0)
+    writeString(dimension.name)
+    write(dimension.id)
+    writeShort(dimension.regionCount.toShort)
+    dimension.regions().foreach(writeRegion)
+  }
+
+  private def writeRegion(region: Region): Unit = {
+    println("write region")
+    writeInt(region.x)
+    writeInt(region.z)
+    writeInt(region.mca.length)
+    writeArray(region.compressMCA())
   }
 
   private def writeSectors(): Unit = islandMap.asInstanceOf[SectorMap].sectors.foreach(writeSector)
@@ -98,13 +113,6 @@ class WriterV0(adapter: AdapterAPI) extends Writer {
     writeLocation(sector.location)
     writeShort(sector.width.toShort)
     writeShort(sector.length.toShort)
-  }
-
-  private def writeRegion(region: Region): Unit = {
-    writeInt(region.x)
-    writeInt(region.z)
-    writeInt(region.mca.length)
-    writeArray(region.mca)
   }
 
   private def writeUUID(uuid: UUID): Unit = {
@@ -127,6 +135,11 @@ class WriterV0(adapter: AdapterAPI) extends Writer {
   private def writeNBT(nbt: Array[Byte]): Unit = {
     writeShort(nbt.length.toShort)
     writeArray(nbt)
+  }
+
+  private def writeFile(file: File): Unit = {
+    val inputStream = new FileInputStream(file)
+    writeArray(inputStream.readAllBytes())
   }
 
   private def writeArray(array: Array[Byte]): Unit = outputStream.write(array)

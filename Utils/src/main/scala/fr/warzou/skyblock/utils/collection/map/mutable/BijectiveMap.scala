@@ -58,15 +58,15 @@ trait BijectiveMap[K, V] extends Iterable[Entry[K, V]] {
 
   /**
    * Collect all keys of this BijectiveMap
-   * @return all keys of BiMap in a [[Set]]
+   * @return all keys of BijectiveMap in a [[Set]]
    */
-  def keys: mutable.Set[K]
+  def keys: Set[K]
 
   /**
    * Collect all values of this BijectiveMap
-   * @return all values of BiMap in a [[Set]]
+   * @return all values of BijectiveMap in a [[Set]]
    */
-  def values: mutable.Set[V]
+  def values: Set[V]
 
   /**
    * Create a new BijectiveMap who inverse this map keys and values

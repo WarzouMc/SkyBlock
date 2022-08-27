@@ -2,45 +2,35 @@ package fr.warzou.skyblock.adapter.spigot.world.world
 
 import fr.warzou.skyblock.adapter.api.core.plugin.MinecraftPlugin
 import fr.warzou.skyblock.adapter.api.core.world.world
-import fr.warzou.skyblock.adapter.api.core.world.world.Region
 import fr.warzou.skyblock.nms.versioning.api.NMSVersioningAPI
+import fr.warzou.skyblock.nms.versioning.api.world.Overworld
 import org.bukkit.World
-import org.bukkit.World.Environment
 
-import java.io.{ByteArrayInputStream, File, FileFilter, FileInputStream}
+import java.io.File
 
-case class SpigotWorld(plugin: MinecraftPlugin, _id: Int, _world: World) extends world.World {
+case class SpigotWorld(plugin: MinecraftPlugin, _world: World) extends world.World {
 
-  override def id: Int = _id
+  private val nmsWorld = NMSVersioningAPI.getVersionAPI(plugin).getNMSWorld(_world, Overworld())
 
-  override def worldEnvironmentId: Int = _world.getEnvironment match {
-    case Environment.NORMAL => 0
-    case Environment.NETHER => -1
-    case Environment.THE_END => 1
+  override def name: String = _world.getName
+
+  override def level: File = nmsWorld.level
+
+  override def dimensions: List[SpigotDimension] = {
+    val directory = nmsWorld.directory
+    val _name = directory.getName
+    val parent = directory.getParentFile
+    val dimensionFolders = parent.listFiles((_, name) => name.startsWith(s"${_name}_")).map(file => (file,
+      file.listFiles.find(_.getName.endsWith(".id")).map(_.getName.replaceAll(".id", "").toInt)))
+
+    SpigotDimension(plugin, this, nmsWorld, isCustom = false, 0, "") ::
+      dimensionFolders.map(tuple => tuple._1.getName).filter(_ != name).map(dim => {
+        if (dim.endsWith("_nether")) SpigotDimension(plugin, this, nmsWorld, isCustom = false, -1, "nether")
+        else if (dim.endsWith("_the_end")) SpigotDimension(plugin, this, nmsWorld, isCustom = false, 1, "the_end")
+        else SpigotDimension(plugin, this, nmsWorld, isCustom = true, 1, dim.replaceFirst(_name + "_", ""))
+      }
+    ).toList
   }
 
-  override def regions: List[Region] = {
-    val directory = NMSVersioningAPI.getVersionAPI(plugin).getNMSWorld(_world).directory
-    regionExplorer(new File(directory,
-      if (worldEnvironmentId == 0) "region"
-      else s"DIM$worldEnvironmentId${File.pathSeparator}region")
-    )
-  }
-
-  private def regionExplorer(regionDirectory: File): List[Region] =
-    recRegionExplorer(regionDirectory.listFiles((_, name) => name.endsWith(".mca")).toList)
-
-  private def recRegionExplorer(files: List[File]): List[Region] = files match {
-    case Nil => Nil
-    case file :: tail => mcaToRegion(file) :: recRegionExplorer(tail)
-  }
-
-  private def mcaToRegion(file: File): Region = {
-    val nameSplit = file.getName.split('.')
-    val x = Integer.parseInt(nameSplit(1))
-    val y = Integer.parseInt(nameSplit(2))
-    val inputStream = new FileInputStream(file)
-    val bytes = inputStream.readAllBytes()
-    Region(x, y, bytes)
-  }
+  override def load(): Unit = dimensions.foreach(_.load())
 }

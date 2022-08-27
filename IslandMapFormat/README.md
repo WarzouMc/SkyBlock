@@ -59,12 +59,12 @@ The main goal of this file structure is to store a world into a single file.
     <td colspan="3"><a href="#Stats-structure">stats</a></td>
   </tr>
   <tr>
-    <td>world/sector_count</td>
+    <td>sector_count</td>
     <td colspan="3">u1</td>
   </tr>
   <tr>
     <td>island</td>
-    <td colspan="3"><a href="#World-structure">world</a>/<a href="#Sector-structure">sector</a>[world/sector_count] (map_type=0/1)</td>
+    <td colspan="3"><a href="#World-structure">world</a>/<a href="#Sector-structure">sector</a>[sector_count] (map_type=0/1)</td>
   </tr>
 </tbody>
 </table>
@@ -194,8 +194,39 @@ The main goal of this file structure is to store a world into a single file.
   </tr>
 </thead>
   <tr>
-    <td>id</td>
+    <td>name</td>
+    <td><a href="#String-structure">string</a></td>
+  </tr>
+  <tr>
+    <td>level_stat</td>
+    <td>level.dat file (u1[length of file])</td>
+  </tr>
+  <tr>
+    <td>dim_count</td>
     <td>u1</td>
+  </tr>
+  <tr>
+    <td>dimensions</td>
+    <td><a href="#Dimension-structure">dimension</a>[dim_count]</td>
+  </tr>
+</table>
+
+## Dimension structure
+
+<table style="text-align:center">
+<thead>
+  <tr>
+    <th>Name</th>
+    <th>Byte</th>
+  </tr>
+</thead>
+  <tr>
+    <td>is_custom</td>
+    <td>u1</td>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td><a href="#String-structure">string</a></td>
   </tr>
   <tr>
     <td>type_id</td>
@@ -203,7 +234,7 @@ The main goal of this file structure is to store a world into a single file.
   </tr>
   <tr>
     <td>region_count</td>
-    <td>u1</td>
+    <td>u2</td>
   </tr>
   <tr>
     <td>regions</td>
