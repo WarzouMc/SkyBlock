@@ -1,18 +1,25 @@
 package fr.warzou.skyblock.api
 
 import fr.warzou.skyblock.adapter.api.AdapterAPI
-import fr.warzou.skyblock.api.common.module.{Module, ModuleHandler}
+import fr.warzou.skyblock.api.common.module.ModuleHandler
 import fr.warzou.skyblock.api.core.island.Island
 import fr.warzou.skyblock.api.core.modules.island.IslandModule
+import fr.warzou.skyblock.api.managers.IslandManager
 import fr.warzou.skyblock.utils.cuboid.Cuboid
-import fr.warzou.skyblock.utils.island.IslandMapUtils
 
 import java.io.File
 import java.util.UUID
 
-case class SkyBlock(handler: ModuleHandler) {
+//todo split into some sub managing classes
+case class SkyBlockAPI(handler: ModuleHandler) {
+
+  if (SkyBlockAPI.isInitialized) throw new IllegalStateException("Already initialized api !")
+  SkyBlockAPI.isInitialized = true
+  SkyBlockAPI.skyBlockAPI = this
 
   val islandsFolder: File = new File(adapter.plugin.dataFolder, "islands")
+  val islandManager = new IslandManager(handler.getModule[IslandModule](classOf[IslandModule])
+    .getOrElse(throw new RuntimeException("No IslandModule is enable !")))
 
   def enableAPI(): Unit = {
     createMainFiles()
@@ -51,4 +58,13 @@ case class SkyBlock(handler: ModuleHandler) {
     stored.mkdirs()
     used.mkdir()
   }
+}
+
+object SkyBlockAPI {
+  private var isInitialized = false
+  private var skyBlockAPI: SkyBlockAPI = _
+
+  def adapaterAPI: AdapterAPI = skyBlockAPI.adapter
+
+  def islandManager: IslandManager = skyBlockAPI.islandManager
 }

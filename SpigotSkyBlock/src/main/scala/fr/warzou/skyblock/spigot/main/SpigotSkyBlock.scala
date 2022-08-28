@@ -24,7 +24,7 @@ import java.util.UUID
 class SpigotSkyBlock extends JavaPlugin {
 
   private val handler = SpigotModuleHandler(this)
-  private val api = fr.warzou.skyblock.api.SkyBlock(handler)
+  private val api = fr.warzou.skyblock.api.SkyBlockAPI(handler)
 
   override def onEnable(): Unit = {
     getCommand("place").setExecutor(this)
