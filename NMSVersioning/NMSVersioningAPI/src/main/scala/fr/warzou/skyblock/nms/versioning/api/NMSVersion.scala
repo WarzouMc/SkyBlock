@@ -1,10 +1,10 @@
 package fr.warzou.skyblock.nms.versioning.api
 
 import fr.warzou.skyblock.adapter.api.AdapterAPI
-import fr.warzou.skyblock.nms.versioning.api.block.BlockWrap
-import fr.warzou.skyblock.nms.versioning.api.entity.EntityWrap
-import fr.warzou.skyblock.nms.versioning.api.nbt.NBTTools
-import fr.warzou.skyblock.nms.versioning.api.world.{NMSWorld, WorldType}
+import fr.warzou.skyblock.nms.versioning.api.core.block.BlockWrap
+import fr.warzou.skyblock.nms.versioning.api.core.entity.EntityWrap
+import fr.warzou.skyblock.nms.versioning.api.core.nbt.NBTTools
+import fr.warzou.skyblock.nms.versioning.api.core.world.{NMSWorld, WorldType}
 import fr.warzou.skyblock.utils.cuboid.Cuboid
 import org.bukkit.World
 

@@ -1,4 +1,4 @@
-package fr.warzou.skyblock.nms.versioning.api.block
+package fr.warzou.skyblock.nms.versioning.api.core.block
 
 import fr.warzou.skyblock.adapter.api.core.plugin.MinecraftPlugin
 import fr.warzou.skyblock.nms.versioning.api.NMSVersioningAPI

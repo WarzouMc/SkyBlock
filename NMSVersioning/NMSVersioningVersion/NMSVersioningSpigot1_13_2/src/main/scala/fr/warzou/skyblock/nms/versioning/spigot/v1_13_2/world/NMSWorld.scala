@@ -1,7 +1,8 @@
 package fr.warzou.skyblock.nms.versioning.spigot.v1_13_2.world
 
-import fr.warzou.skyblock.nms.versioning.api.world
-import fr.warzou.skyblock.nms.versioning.api.world._
+import fr.warzou.skyblock.nms.versioning.api.core.world.{Custom, NMSWorld, Nether, Overworld, TheEnd, WorldType}
+import fr.warzou.skyblock.nms.versioning.api.core.world
+import fr.warzou.skyblock.nms.versioning.api.core.world.chunk.NMSChunk
 import org.bukkit.World
 import org.bukkit.craftbukkit.v1_13_R2.CraftWorld
 
@@ -21,4 +22,8 @@ case class NMSWorld(_world: World, worldType: WorldType) extends world.NMSWorld 
     case TheEnd() => new File(directory, s"DIM1${File.separator}region")
     case Overworld() | Custom(_, _) => new File(directory, "region")
   }
+
+  override def getChunk(x: Int, z: Int): NMSChunk = ???
+
+  override def getChunk(x: Int, y: Int, z: Int): NMSChunk = ???
 }

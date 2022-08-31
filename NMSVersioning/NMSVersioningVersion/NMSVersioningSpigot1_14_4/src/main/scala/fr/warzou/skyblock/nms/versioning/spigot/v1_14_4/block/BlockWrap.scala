@@ -1,6 +1,6 @@
 package fr.warzou.skyblock.nms.versioning.spigot.v1_14_4.block
 
-import fr.warzou.skyblock.nms.versioning.api.block
+import fr.warzou.skyblock.nms.versioning.api.core.block
 import net.minecraft.server.v1_14_R1.BlockPosition
 import org.bukkit.block.Block
 import org.bukkit.craftbukkit.v1_14_R1.CraftWorld

@@ -11,8 +11,8 @@ import fr.warzou.skyblock.api.core.island.Island
 import fr.warzou.skyblock.api.core.modules.island.IslandModule
 import fr.warzou.skyblock.format.island.core.RawIsland
 import fr.warzou.skyblock.nms.versioning.api.NMSVersioningAPI
-import fr.warzou.skyblock.nms.versioning.api.block.BlockWrap
-import fr.warzou.skyblock.nms.versioning.api.entity.EntityWrap
+import fr.warzou.skyblock.nms.versioning.api.core.block.BlockWrap
+import fr.warzou.skyblock.nms.versioning.api.core.entity.EntityWrap
 import fr.warzou.skyblock.spigot.main.core.island.SpigotIsland.{locationToInt, xyzToInt}
 import fr.warzou.skyblock.utils.ServerVersion
 import fr.warzou.skyblock.utils.cuboid.Cuboid

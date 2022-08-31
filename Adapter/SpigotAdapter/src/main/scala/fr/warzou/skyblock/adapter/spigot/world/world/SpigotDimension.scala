@@ -3,7 +3,7 @@ package fr.warzou.skyblock.adapter.spigot.world.world
 import fr.warzou.skyblock.adapter.api.core.plugin.MinecraftPlugin
 import fr.warzou.skyblock.adapter.api.core.world.world.{Dimension, Region, World}
 import fr.warzou.skyblock.nms.versioning.api.NMSVersioningAPI
-import fr.warzou.skyblock.nms.versioning.api.world.NMSWorld
+import fr.warzou.skyblock.nms.versioning.api.core.world.NMSWorld
 import org.bukkit.{Bukkit, WorldCreator}
 
 import java.io.{File, FileInputStream}
@@ -31,7 +31,7 @@ case class SpigotDimension(plugin: MinecraftPlugin, world: World, nmsWorld: NMSW
     val bytes = inputStream.readAllBytes()
     new Region(x, y, bytes) {
       //todo change notCompress to compress ...
-      override def compressMCA(): Array[Byte] = NMSVersioningAPI.getVersionAPI(plugin).getNBTTools.mcaCompresser(bytes).notCompress
+      override def compressMCA(): Array[Byte] = ???
     }
   }
 

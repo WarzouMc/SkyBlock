@@ -10,7 +10,7 @@ import fr.warzou.skyblock.format.island.core.io.Reader
 import fr.warzou.skyblock.utils.cuboid.Cuboid
 import fr.warzou.skyblock.utils.{IOUtils, ServerVersion}
 
-import java.io.{File, FileInputStream, FileReader}
+import java.io.{EOFException, File, FileInputStream, FileReader}
 import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
 import java.util.UUID
@@ -114,7 +114,7 @@ case class IslandFileReader(adapterAPI: AdapterAPI, fileName: String) extends Re
 
   private def readByte(): Int = {
     val int = reader.read()
-    if (int == -1) throw new IndexOutOfBoundsException("Try to read a byte after the file end !")
+    if (int == -1) throw new EOFException()
     int
   }
 

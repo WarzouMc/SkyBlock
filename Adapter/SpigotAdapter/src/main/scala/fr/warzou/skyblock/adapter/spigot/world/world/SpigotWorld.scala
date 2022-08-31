@@ -3,7 +3,7 @@ package fr.warzou.skyblock.adapter.spigot.world.world
 import fr.warzou.skyblock.adapter.api.core.plugin.MinecraftPlugin
 import fr.warzou.skyblock.adapter.api.core.world.world
 import fr.warzou.skyblock.nms.versioning.api.NMSVersioningAPI
-import fr.warzou.skyblock.nms.versioning.api.world.Overworld
+import fr.warzou.skyblock.nms.versioning.api.core.world.Overworld
 import org.bukkit.World
 
 import java.io.File

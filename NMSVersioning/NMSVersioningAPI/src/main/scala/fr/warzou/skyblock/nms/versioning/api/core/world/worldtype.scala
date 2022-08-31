@@ -1,4 +1,4 @@
-package fr.warzou.skyblock.nms.versioning.api.world
+package fr.warzou.skyblock.nms.versioning.api.core.world
 
 sealed trait WorldType {
   def id: Int
