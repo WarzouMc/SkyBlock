@@ -21,12 +21,14 @@ class IsmapWriterV0(adapter: AdapterAPI) extends Writer {
   override def version: Int = 0
 
   override def write(@NotNull _outputStream: OutputStream, @NotNull map: IslandMap): Unit = {
+    println("start write")
     outputStream = _outputStream
     islandMap = map
 
     writeCommonInfo()
     writeStatistics()
     if (mapType() == 0) writeWorld() else writeSectors()
+    println("end write")
   }
 
   private def writeCommonInfo(): Unit = {
@@ -103,8 +105,8 @@ class IsmapWriterV0(adapter: AdapterAPI) extends Writer {
     println("write region")
     writeInt(region.x)
     writeInt(region.z)
-    writeInt(region.mca.length)
-    writeArray(region.compressMCA())
+    writeInt(region.chunks.length)
+    region.chunks.foreach(chunk => writeArray(chunk.toByteArray))
   }
 
   private def writeSectors(): Unit = islandMap.asInstanceOf[SectorMap].sectors.foreach(writeSector)

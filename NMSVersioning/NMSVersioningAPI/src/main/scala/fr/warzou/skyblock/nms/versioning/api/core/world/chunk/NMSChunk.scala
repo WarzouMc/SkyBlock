@@ -4,7 +4,7 @@ trait NMSChunk {
 
   def isLoaded: Boolean
 
-  def getSections: Array[NMSChunkSection]
+  def sections: Array[NMSChunkSection]
 
   def toCustomChunkFormat: Array[Byte]
 

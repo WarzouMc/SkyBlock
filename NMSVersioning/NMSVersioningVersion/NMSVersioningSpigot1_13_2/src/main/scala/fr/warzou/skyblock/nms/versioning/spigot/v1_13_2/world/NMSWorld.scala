@@ -3,6 +3,7 @@ package fr.warzou.skyblock.nms.versioning.spigot.v1_13_2.world
 import fr.warzou.skyblock.nms.versioning.api.core.world.{Custom, NMSWorld, Nether, Overworld, TheEnd, WorldType}
 import fr.warzou.skyblock.nms.versioning.api.core.world
 import fr.warzou.skyblock.nms.versioning.api.core.world.chunk.NMSChunk
+import net.minecraft.server.v1_13_R2.{ChunkRegionLoader, RegionFileCache}
 import org.bukkit.World
 import org.bukkit.craftbukkit.v1_13_R2.CraftWorld
 
@@ -22,6 +23,11 @@ case class NMSWorld(_world: World, worldType: WorldType) extends world.NMSWorld 
     case TheEnd() => new File(directory, s"DIM1${File.separator}region")
     case Overworld() | Custom(_, _) => new File(directory, "region")
   }
+
+  override def chunkExist(file: File, x: Int, z: Int): Boolean =
+    nms.getChunkProvider.isLoaded(x, z) || nms.getChunkProvider.chunkLoader.asInstanceOf[ChunkRegionLoader].chunkExists(x, z)
+
+  override def chunkExist(file: File, x: Int, y: Int, z: Int): Boolean = chunkExist(file, x, z)
 
   override def getChunk(x: Int, z: Int): NMSChunk = ???
 

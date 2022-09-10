@@ -18,17 +18,19 @@ case class SkyBlockAPI(handler: ModuleHandler) {
   SkyBlockAPI.skyBlockAPI = this
 
   val islandsFolder: File = new File(adapter.plugin.dataFolder, "islands")
-  val islandManager = new IslandManager(handler.getModule[IslandModule](classOf[IslandModule])
-    .getOrElse(throw new RuntimeException("No IslandModule is enable !")))
+  private var _islandManager: IslandManager = _
 
   def enableAPI(): Unit = {
     createMainFiles()
     handler.enableAllModules()
+    initIslandManager()
   }
 
   def disableAPI(): Unit = {
     handler.disableAllModules()
   }
+
+  def islandManager: IslandManager = _islandManager
 
   def adapter: AdapterAPI = handler.adapter
 
@@ -41,6 +43,11 @@ case class SkyBlockAPI(handler: ModuleHandler) {
   def getIsland(uuid: UUID): Option[Island] = handler.getModule[IslandModule](classOf[IslandModule]).get.islandByUUID(uuid)
 
   def getIsland(name: String): Island = handler.getModule(classOf[IslandModule]).get.islandsByName(name).head
+
+  private def initIslandManager(): Unit = {
+    _islandManager = new IslandManager(handler.getModule[IslandModule](classOf[IslandModule])
+      .getOrElse(throw new RuntimeException("No IslandModule is enable !")))
+  }
 
   private def createMainFiles(): Unit = {
     // create data folder

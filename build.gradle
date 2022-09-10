@@ -46,6 +46,7 @@ ext {
 librairies.scala = 'org.scala-lang:scala-library:2.13.8'
 librairies.scalaTest = 'org.scalatest:scalatest_2.11:3.2.11'
 librairies.junit = 'junit:junit:4.13.2'
+librairies.lz4 = 'org.lz4:lz4-java:1.8.0'
 addSpigotVersion(librairies, 'spigot112', '1.12.2')
 addSpigotVersion(librairies, 'spigot113', '1.13.2')
 addSpigotVersion(librairies, 'spigot114', '1.14.4')

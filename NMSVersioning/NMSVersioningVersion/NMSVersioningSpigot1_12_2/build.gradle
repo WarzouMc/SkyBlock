@@ -1,4 +1,5 @@
 dependencies {
     compileOnly librairies.spigot112
     implementation librairies.spigot112API
+    implementation librairies.lz4
 }

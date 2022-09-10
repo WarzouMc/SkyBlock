@@ -1,16 +1,18 @@
 package fr.warzou.skyblock.nms.versioning.api.core.world.chunk
 
-import fr.warzou.skyblock.nms.versioning.api.utils.io.Nibble
+import fr.warzou.skyblock.nms.versioning.api.utils.io.{Nibble, NibbleArray}
 
 trait NMSChunkSection {
 
-  def y: Int
+  def y: Byte
 
-  def blockLights: Array[Nibble]
+  def blocks: Array[Short]
 
-  def blocks: Array[Byte]
+  def datas: NibbleArray
 
-  def datas: Array[Nibble]
+  def blockLights: NibbleArray
 
-  def skyLights: Array[Nibble]
+  def skyLights: NibbleArray
+
+  def toByteArray: Array[Byte]
 }

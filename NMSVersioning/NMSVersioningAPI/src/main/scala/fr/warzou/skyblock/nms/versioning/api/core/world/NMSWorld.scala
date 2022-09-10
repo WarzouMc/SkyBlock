@@ -13,6 +13,10 @@ trait NMSWorld {
 
   def regionFolder: File
 
+  def chunkExist(file: File, x: Int, z: Int): Boolean
+
+  def chunkExist(file: File, x: Int, y: Int, z: Int): Boolean
+
   def getChunk(x: Int, z: Int): NMSChunk
 
   def getChunk(x: Int, y: Int, z: Int): NMSChunk

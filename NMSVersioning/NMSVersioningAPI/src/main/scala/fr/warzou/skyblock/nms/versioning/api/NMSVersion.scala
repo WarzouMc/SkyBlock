@@ -16,7 +16,7 @@ trait NMSVersion {
 
   def entityWrap[A](entity: A): EntityWrap[A]
 
-  def getNMSWorld(world: World, worldType: WorldType): NMSWorld
+  def getNMSWorld(world: World, string: WorldType): NMSWorld
 
   def enumerateEntities(adapter: AdapterAPI, cuboid: Cuboid): List[_]
 }

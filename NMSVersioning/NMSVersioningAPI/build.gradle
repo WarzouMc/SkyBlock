@@ -1,6 +1,7 @@
 dependencies {
     compileOnly librairies.spigot112
     implementation librairies.scala
+    implementation librairies.lz4
 
     testImplementation librairies.scalaTest
     testImplementation librairies.junit
