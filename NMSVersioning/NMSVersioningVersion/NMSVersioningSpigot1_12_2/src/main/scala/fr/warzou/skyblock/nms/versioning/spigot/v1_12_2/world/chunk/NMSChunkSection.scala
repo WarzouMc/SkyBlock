@@ -8,18 +8,21 @@ import net.minecraft.server.v1_12_R1.{Block, Chunk, ChunkSection, IBlockData}
 import scala.collection.mutable.ListBuffer
 
 case class NMSChunkSection(section: ChunkSection, source: Chunk) extends chunk.NMSChunkSection {
+
+  private val iBlockDatas: Array[IBlockData] = iBlockDataDef
+
   override def y: Byte = section.getYPosition.toByte
 
   //todo check for same structure of chunkformat
-  override def blocks: Array[Short] = iBlockDatas.map(data => Block.getId(data.getBlock).toShort)
+  override val blocks: Array[Short] = iBlockDatas.map(data => Block.getId(data.getBlock).toShort)
 
-  override def datas: NibbleArray = new NibbleArray(iBlockDatas.map(data => data.getBlock.toLegacyData(data).toNibble))
+  override val datas: NibbleArray = new NibbleArray(iBlockDatas.map(data => data.getBlock.toLegacyData(data).toNibble))
 
-  override def blockLights: NibbleArray = new NibbleArray(section.getEmittedLightArray.asBytes().map(_.toNibble))
+  override val blockLights: NibbleArray = new NibbleArray(section.getEmittedLightArray.asBytes().map(_.toNibble))
 
-  override def skyLights: NibbleArray = new NibbleArray((section.getSkyLightArray.asBytes().map(_.toNibble)))
+  override val skyLights: NibbleArray = new NibbleArray(section.getSkyLightArray.asBytes().map(_.toNibble))
 
-  override def toByteArray: Array[Byte] = {
+  override val toByteArray: Array[Byte] = {
     ListBuffer.empty[Byte]
       .addOne(y)
       .addAll(toByteArray(blocks))
@@ -29,7 +32,16 @@ case class NMSChunkSection(section: ChunkSection, source: Chunk) extends chunk.N
       .toArray
   }
 
-  private val iBlockDatas: Array[IBlockData] = {
+  private def toByteArray(shortArray: Array[Short]): Array[Byte] = {
+    val array = new Array[Byte](shortArray.length * 2)
+    shortArray.indices.foreach(i => {
+      array(i * 2) = ((shortArray(i) & 0xFF00) >> 8).toByte
+      array(i * 2 + 1) = (shortArray(i) & 0x00FF).toByte
+    })
+    array
+  }
+
+  private def iBlockDataDef: Array[IBlockData] = {
     val palette = section.getBlocks
     val blockDatas = new Array[IBlockData](16 * 16 * 16)
     for (i <- 0 until 16 * 16 * 16) {
@@ -39,14 +51,5 @@ case class NMSChunkSection(section: ChunkSection, source: Chunk) extends chunk.N
       blockDatas(i) = palette.a(x, _y, z)
     }
     blockDatas
-  }
-
-  private def toByteArray(shortArray: Array[Short]): Array[Byte] = {
-    val array = new Array[Byte](shortArray.length * 2)
-    shortArray.indices.foreach(i => {
-      array(i * 2) = ((shortArray(i) & 0xFF00) >> 8).toByte
-      array(i * 2 + 1) = (shortArray(i) & 0x00FF).toByte
-    })
-    array
   }
 }

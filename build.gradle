@@ -2,7 +2,6 @@ import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
     id 'com.github.johnrengelman.shadow' version '7.0.0'
-    id 'fr.il_totore.manadrop' version '0.4.2'
 }
 
 allprojects {
@@ -60,9 +59,4 @@ librairies.annotations = 'org.jetbrains:annotations:21.0.1'
 static void addSpigotVersion(LinkedHashMap map, String name, String version) {
     map.put(name, 'org.spigotmc:spigot:' + version + '-R0.1-SNAPSHOT')
     map.put(name + 'API', 'org.spigotmc:spigot-api:' + version + '-R0.1-SNAPSHOT')
-}
-
-buildTools {
-    versions '1.12.2', '1.14.4', '1.15.2'
-    workDir = file("work/")
 }
