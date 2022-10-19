@@ -1,0 +1,6 @@
+dependencies {
+    implementation librairies.junit
+    implementation librairies.annotations
+
+    api project(':Utils')
+}

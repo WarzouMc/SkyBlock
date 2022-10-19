@@ -2,6 +2,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
     id 'com.github.johnrengelman.shadow' version '7.0.0'
+    id 'java'
 }
 
 allprojects {
@@ -15,11 +16,11 @@ allprojects {
     repositories {
         mavenCentral()
         mavenLocal()
-        maven { url 'https://raw.githubusercontent.com/Iltotore/maven/master' }
     }
 
     jar.archiveFileName = "${project.name}.jar"
     shadowJar.archiveFileName = jar.archiveFileName
+    shadowJar.minimize()
 
     processResources.from(sourceSets.main.resources.srcDirs) {
         duplicatesStrategy = DuplicatesStrategy.INCLUDE

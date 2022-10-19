@@ -30,4 +30,6 @@ case object ArrayUtils {
     else if (iterator.next() == element) n
     else indexOf(iterator, element, n + 1)
   }
+
+  def growArray[A](array: Array[A], grow: Int): Array[A] = array ++ Array[A](grow)
 }

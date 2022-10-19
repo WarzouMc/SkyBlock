@@ -20,4 +20,5 @@ findProject(':NMSVersioning:NMSVersioningVersion:NMSVersioningSpigot1_13_2')?.na
 include 'NMSVersioning:NMSVersioningVersion:NMSVersioningSpigot1_14_4'
 findProject(':NMSVersioning:NMSVersioningVersion:NMSVersioningSpigot1_14_4')?.name = 'NMSVersioningSpigot1_14_4'
 include 'IslandMapFormat'
+include 'ChunkRandomAccessSystem'
 

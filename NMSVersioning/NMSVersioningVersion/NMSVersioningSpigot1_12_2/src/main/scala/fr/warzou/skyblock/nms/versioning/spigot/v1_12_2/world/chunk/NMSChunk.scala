@@ -28,7 +28,7 @@ case class NMSChunk(world: NMSWorld, x: Int, y: Int) extends chunk.NMSChunk {
 
   override val sections: Array[NMSChunkSection] = nmsChunk.getSections.filterNot(_ == null).map(NMSChunkSection(_, nmsChunk))
 
-  override val entities: (Int, Array[Byte]) = {
+  override def entities: (Int, Array[Byte]) = {
     val entities_ = craftChunk.getEntities
 
     (entities_.length, entities_.map(entity => nbtTool.parse(EntityWrap.of(entity)))
@@ -39,7 +39,7 @@ case class NMSChunk(world: NMSWorld, x: Int, y: Int) extends chunk.NMSChunk {
       ))
   }
 
-  override val tileEntities: (Int, Array[Byte]) = {
+  override def tileEntities: (Int, Array[Byte]) = {
     val tileEntities_ = craftChunk.getTileEntities
 
     (tileEntities_.length, tileEntities_.map(_.getBlock)
@@ -51,7 +51,7 @@ case class NMSChunk(world: NMSWorld, x: Int, y: Int) extends chunk.NMSChunk {
       ))
   }
 
-  override val tileTicks: (Int, Array[Byte]) = {
+  override def tileTicks: (Int, Array[Byte]) = {
     val list = nmsChunk.world.getWorld.getHandle.a(nmsChunk, false)
     if (list == null)
       (0, Array.emptyByteArray)
