@@ -1,4 +1,4 @@
-package fr.warzou.skyblock.cras.core.index;
+package fr.warzou.skyblock.cras.v1mdr.core.index;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -35,16 +35,18 @@ public class IndexTable implements Iterable<SectionIndex> {
     @NotNull
     @Override
     public Iterator<SectionIndex> iterator() {
-        return new IndexIterator(this.indices);
+        return new IndexIterator(this);
     }
 
     private static class IndexIterator implements Iterator<SectionIndex> {
 
+        private final IndexTable table;
         private final byte[] indices;
         private int currentRawIndex = 0;
 
-        private IndexIterator(byte[] indices) {
-            this.indices = indices;
+        private IndexIterator(IndexTable table) {
+            this.table = table;
+            this.indices = table.indices;
         }
 
         @Override
@@ -60,11 +62,11 @@ public class IndexTable implements Iterable<SectionIndex> {
             return read();
         }
 
-        private SectionIndex read() {
+        private @NotNull SectionIndex read() {
             int index = ByteBuffer.wrap(this.indices, this.currentRawIndex += SectionIndex.INDEX_SIZE, SectionIndex.INDEX_SIZE).getInt();
             int start = ByteBuffer.wrap(this.indices, this.currentRawIndex += SectionIndex.START_SIZE, SectionIndex.START_SIZE).getInt();
             int end = ByteBuffer.wrap(this.indices, this.currentRawIndex += SectionIndex.END_SIZE, SectionIndex.END_SIZE).getInt();
-            return new SectionIndex(index, start, end);
+            return new SectionIndex(this.table, start, end, index);
         }
     }
 }

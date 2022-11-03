@@ -1,0 +1,115 @@
+@startuml
+
+package main {
+    package common {
+        class ChunkObject {
+            -location: int
+            -chunk: byte[]
+
+            +getLocation(): int
+            +getChunk(): byte[]
+        }
+
+        class Element {
+            -sections: List<Section>
+
+            +getSections(): List<Section>
+        }
+    }
+    package core {
+        package section {
+            package array {
+                class DataArray {
+                    -indices: IndexedSectionLocation[2048]
+
+                    +iterator(): Iterator[IndexedSection]
+                }
+
+                class FreeArray {
+                    -indices: SectionLocation[2048]
+
+                    +iterator(): Iterator[Section]
+                }
+            }
+            class Section {
+                -size: int
+                -hasNext: boolean
+                -next: short
+
+                +getSize(): int
+                +hasNext(): boolean
+                +getNext(): short
+            }
+            package location {
+                class SectionLocation {
+                    -start: int
+                    -end: int
+
+                    +getStart(): int
+                    +getEnd(): int
+                }
+
+                class IndexedSectionLocation {
+                    -index: short
+                    -chunk: boolean
+                    -chunkLocation: int
+
+                    +getIndex(): short
+                    +isChunk(): boolean
+                    +chunkLocation(): int
+                }
+
+                IndexedSectionLocation -up-|> SectionLocation
+            }
+            FreeArray::indices .down. SectionLocation
+            DataArray::indices .down. IndexedSectionLocation
+        }
+        package access {
+            class RandomAccessSystem {
+                -asynchronousFileChannel: AsynchronousFileChannel
+                -datas: DataArray
+                -free: FreeArray
+
+                ~readSection(index: short): Section
+                ~readElement(index: short): Element
+                ~writeElement(element: Element)
+                ~removeElement(element: Element)
+                -writeSection(index: short)
+                -readDataArray(): DataArray
+                -readFreeArray(): FreeArray
+            }
+            class Accessor {
+                -system: RandomAccessSystem
+                -asynchronousFileChannel: AsynchronousFileChannel
+
+                +getChunk(location: int): ChunkObject
+                +addChunk(location: int, chunk: byte[])
+                +removeChunk(location: int)
+            }
+            Accessor::getChunk .. ChunkObject
+            Accessor::getChunk --> RandomAccessSystem::readElement
+            Accessor::system .. RandomAccessSystem
+            Accessor::removeChunk -> RandomAccessSystem::removeElement
+            Accessor::addChunk -> RandomAccessSystem::writeElement
+            RandomAccessSystem::readSection .. Section
+            RandomAccessSystem::readElement .. Element
+            RandomAccessSystem::readDataArray .. DataArray
+            RandomAccessSystem::readFreeArray .. FreeArray
+        }
+    }
+    class ChunkRandomAccessSystem {
+        -chunkFile: File
+        -accessor: Accessor
+
+        +getChunk(x: short, y: short): ChunkObject
+        +addChunk(chunk: ChunkObject)
+        +removeChunk(x: short, z: short)
+        -toLocation(x: short, z: short): int
+    }
+
+    ChunkRandomAccessSystem::accessor .up. Accessor
+    ChunkRandomAccessSystem::getChunk -up-> Accessor::getChunk
+    ChunkRandomAccessSystem::addChunk --> Accessor::addChunk
+    ChunkRandomAccessSystem::removeChunk --> Accessor::removeChunk
+}
+@enduml

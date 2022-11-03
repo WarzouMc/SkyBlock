@@ -1,6 +1,6 @@
-package fr.warzou.skyblock.cras.core.tag;
+package fr.warzou.skyblock.cras.v1mdr.core.tag;
 
-import fr.warzou.skyblock.cras.core.index.SectionIndex;
+import fr.warzou.skyblock.cras.v1mdr.core.index.SectionIndex;
 
 import java.util.Optional;
 

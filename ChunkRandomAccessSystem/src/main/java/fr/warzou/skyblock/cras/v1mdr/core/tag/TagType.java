@@ -1,4 +1,4 @@
-package fr.warzou.skyblock.cras.core.tag;
+package fr.warzou.skyblock.cras.v1mdr.core.tag;
 
 public enum TagType {
 
