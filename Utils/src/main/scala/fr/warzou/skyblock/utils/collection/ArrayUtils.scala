@@ -31,5 +31,5 @@ case object ArrayUtils {
     else indexOf(iterator, element, n + 1)
   }
 
-  def growArray[A](array: Array[A], grow: Int): Array[A] = array ++ Array[A](grow)
+  def growArray[A](array: Array[A], grow: Int): Array[A] = (array ++ Array(grow)).asInstanceOf[Array[A]]
 }

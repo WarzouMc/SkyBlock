@@ -45,6 +45,8 @@ package main {
                     -start: int
                     -end: int
 
+                    {static} +toSectionLocation(bytes: byte[]): SectionLocation
+                    +toByteArray(): byte[]
                     +getStart(): int
                     +getEnd(): int
                 }
@@ -54,9 +56,10 @@ package main {
                     -chunk: boolean
                     -chunkLocation: int
 
+                    {static} +toSectionLocation(bytes: byte[]): IndexedSectionLocation
                     +getIndex(): short
                     +isChunk(): boolean
-                    +chunkLocation(): int
+                    +getChunkLocation(): int
                 }
 
                 IndexedSectionLocation -up-|> SectionLocation
@@ -67,6 +70,7 @@ package main {
         package access {
             class RandomAccessSystem {
                 -asynchronousFileChannel: AsynchronousFileChannel
+                -randomFileStart: int
                 -datas: DataArray
                 -free: FreeArray
 
@@ -81,6 +85,7 @@ package main {
             class Accessor {
                 -system: RandomAccessSystem
                 -asynchronousFileChannel: AsynchronousFileChannel
+                -randomFileStart: int
 
                 +getChunk(location: int): ChunkObject
                 +addChunk(location: int, chunk: byte[])
@@ -99,11 +104,15 @@ package main {
     }
     class ChunkRandomAccessSystem {
         -chunkFile: File
+        -randomFileStart: int
         -accessor: Accessor
 
+        {static} +createEmptyTables(name: String): byte[]
         +getChunk(x: short, y: short): ChunkObject
         +addChunk(chunk: ChunkObject)
         +removeChunk(x: short, z: short)
+        +getChunkFile(): File
+        +getRandomFileStart(): int
         -toLocation(x: short, z: short): int
     }
 

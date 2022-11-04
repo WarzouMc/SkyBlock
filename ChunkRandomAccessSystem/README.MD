@@ -8,7 +8,7 @@ bytes to the end of the file.
 section location is added in `FREE_ARRAY`.
 
 # Project structure
-[diamgram](uml/ChunkRandomAccessSystem.png)
+![diamgram](uml/ChunkRandomAccessSystem.png)
 
 # File structure :
 

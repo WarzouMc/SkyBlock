@@ -18,11 +18,18 @@ public class ChunkRandomAccessSystem {
     public static final int FREE_ARRAY_BYTES_COUNT = FREE_ARRAY_SIZE * FREE_SECTION_LOCATION_SIZE;
 
     private final File chunkFile;
+    private final int randomFileStart;
     private final Accessor accessor;
 
-    public ChunkRandomAccessSystem(File chunkFile) throws IOException {
+    public ChunkRandomAccessSystem(File chunkFile, int randomFileStart) throws IOException {
         this.chunkFile = chunkFile;
-        this.accessor = new Accessor(AsynchronousFileChannel.open(this.chunkFile.toPath(), StandardOpenOption.READ, StandardOpenOption.WRITE));
+        this.randomFileStart = randomFileStart;
+        this.accessor = new Accessor(AsynchronousFileChannel.open(this.chunkFile.toPath(), StandardOpenOption.READ, StandardOpenOption.WRITE),
+                randomFileStart);
+    }
+
+    public static byte[] createEmptyTables(String name) {
+        return new byte[DATA_ARRAY_BYTES_COUNT + FREE_ARRAY_BYTES_COUNT];
     }
 
     public void addChunk(ChunkObject chunk) {
@@ -35,6 +42,14 @@ public class ChunkRandomAccessSystem {
 
     public void removeChunk(short x, short z) {
         this.accessor.removeChunk(toLocation(x, z));
+    }
+
+    public File getChunkFile() {
+        return this.chunkFile;
+    }
+
+    public int getRandomFileStart() {
+        return this.randomFileStart;
     }
 
     private int toLocation(short x, short z) {

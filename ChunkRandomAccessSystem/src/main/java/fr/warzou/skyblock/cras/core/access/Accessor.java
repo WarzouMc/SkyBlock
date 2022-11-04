@@ -7,11 +7,13 @@ import java.nio.channels.AsynchronousFileChannel;
 public class Accessor {
 
     private final AsynchronousFileChannel asynchronousFileChannel;
+    private final int randomFileStart;
     private final RandomAccessSystem system;
 
-    public Accessor(AsynchronousFileChannel asynchronousFileChannel) {
+    public Accessor(AsynchronousFileChannel asynchronousFileChannel, int randomFileStart) {
         this.asynchronousFileChannel = asynchronousFileChannel;
-        this.system = new RandomAccessSystem(this.asynchronousFileChannel);
+        this.randomFileStart = randomFileStart;
+        this.system = new RandomAccessSystem(this.asynchronousFileChannel, randomFileStart);
     }
 
     public ChunkObject getChunk(int location) {
