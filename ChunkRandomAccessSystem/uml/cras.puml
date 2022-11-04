@@ -42,8 +42,8 @@ package main {
             }
             package location {
                 class SectionLocation {
-                    -start: int
-                    -end: int
+                    #start: int
+                    #end: int
 
                     {static} +toSectionLocation(bytes: byte[]): SectionLocation
                     +toByteArray(): byte[]
@@ -102,7 +102,7 @@ package main {
             RandomAccessSystem::readFreeArray .. FreeArray
         }
     }
-    class ChunkRandomAccessSystem {
+    class ChunkRandomAccessSystem #DDDDFF {
         -chunkFile: File
         -randomFileStart: int
         -accessor: Accessor
